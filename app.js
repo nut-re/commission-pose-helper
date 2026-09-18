@@ -4438,10 +4438,53 @@ class App {
       gradStopsEl.innerHTML = '';
       gradStops.forEach((color, i) => {
         const wrap = document.createElement('div'); wrap.className = 'cs-chip-grad-stop-wrap';
+
+        // 컬러 스와치 (type=color)
         const inp = document.createElement('input');
         inp.type = 'color'; inp.className = 'cs-chip-grad-swatch'; inp.value = color;
-        inp.addEventListener('input', () => { gradStops[i] = inp.value; updateGradPreview(); });
+
+        // HEX 텍스트 입력
+        const hexInp = document.createElement('input');
+        hexInp.type = 'text';
+        hexInp.className = 'cs-chip-grad-hex-input';
+        hexInp.value = color.toUpperCase();
+        hexInp.maxLength = 7;
+        hexInp.placeholder = '#RRGGBB';
+
+        // 스와치 → hex 텍스트 동기화
+        inp.addEventListener('input', () => {
+          gradStops[i] = inp.value;
+          hexInp.value = inp.value.toUpperCase();
+          updateGradPreview();
+        });
+
+        // hex 텍스트 → 스와치 동기화
+        hexInp.addEventListener('input', () => {
+          let v = hexInp.value.trim();
+          if (!v.startsWith('#')) v = '#' + v;
+          if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+            gradStops[i] = v;
+            inp.value = v;
+            updateGradPreview();
+          }
+        });
+        hexInp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            let v = hexInp.value.trim();
+            if (!v.startsWith('#')) v = '#' + v;
+            if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+              gradStops[i] = v;
+              inp.value = v;
+              hexInp.value = v.toUpperCase();
+              updateGradPreview();
+            }
+          }
+        });
+        hexInp.addEventListener('click', (e) => e.stopPropagation());
+
         wrap.appendChild(inp);
+        wrap.appendChild(hexInp);
+
         if (gradStops.length > 2) {
           const rm = document.createElement('button');
           rm.className = 'cs-chip-grad-rm-btn'; rm.title = '이 색상 제거';

@@ -1710,15 +1710,16 @@ body {
 /* 색상 정지점 래퍼 */
 .cs-chip-grad-stops {
   display: flex;
-  gap: 5px;
-  flex-wrap: nowrap;
+  gap: 6px;
+  flex-direction: column;
   align-items: flex-start;
+  width: 100%;
 }
 .cs-chip-grad-stop-wrap {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
   position: relative;
 }
 .cs-chip-grad-swatch {
@@ -1730,9 +1731,35 @@ body {
   cursor: pointer;
   background: none;
   padding: 2px !important;
+  flex-shrink: 0;
 }
 .cs-chip-grad-swatch::-webkit-color-swatch-wrapper { padding: 0; border-radius: 3px; }
 .cs-chip-grad-swatch::-webkit-color-swatch { border: none; border-radius: 3px; }
+
+/* 그라디언트 stop HEX 텍스트 입력 */
+.cs-chip-grad-hex-input {
+  width: 72px;
+  height: 28px;
+  padding: 0 6px;
+  background: var(--c-input);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  color: var(--c-text);
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.5px;
+  transition: border-color 0.15s;
+}
+.cs-chip-grad-hex-input:focus {
+  outline: none;
+  border-color: var(--c-accent);
+}
+.cs-chip-grad-hex-input::placeholder {
+  color: var(--c-muted);
+  opacity: 0.5;
+}
 
 /* 정지점 제거 버튼 */
 .cs-chip-grad-rm-btn {

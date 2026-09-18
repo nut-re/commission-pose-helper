@@ -643,7 +643,7 @@ class App {
       // 컬러칩 5종 주입
       const chips = char.chips || {};
       clonedRef.querySelectorAll('.cs-color-swatch').forEach(sw => {
-        const key = sw.dataset.chipKey;
+        const key = sw.dataset.csChipKey;
         const st = chips[key];
         if (st) {
           if (st.baseMode === 'color') {
@@ -4359,7 +4359,7 @@ class App {
       if (tabDraw) tabDraw.style.display = tab === 'draw' ? 'block' : 'none';
 
       if (tab === 'draw' && activeChip) {
-        const key = activeChip.dataset.chipKey;
+        const key = activeChip.dataset.csChipKey;
         const st  = chipState.get(key) || getDefaultState();
         renderDrawCanvas(st);
       }
@@ -4380,7 +4380,7 @@ class App {
     // ── 단색 적용 ────────────────────────────────
     const applyColor = (hex) => {
       if (!activeChip) return;
-      const key = activeChip.dataset.chipKey;
+      const key = activeChip.dataset.csChipKey;
       const st  = chipState.get(key) || getDefaultState();
       st.baseMode = 'color';
       st.color = hex;
@@ -4392,7 +4392,7 @@ class App {
     // ── 이미지 적용 ──────────────────────────────
     const applyImage = (dataUrl) => {
       if (!activeChip) return;
-      const key = activeChip.dataset.chipKey;
+      const key = activeChip.dataset.csChipKey;
       const st  = chipState.get(key) || getDefaultState();
       st.baseMode = 'image';
       st.imageUrl = dataUrl;
@@ -4408,7 +4408,7 @@ class App {
     // ── 이미지 제거 ──────────────────────────────
     const clearImage = () => {
       if (!activeChip) return;
-      const key = activeChip.dataset.chipKey;
+      const key = activeChip.dataset.csChipKey;
       const st  = chipState.get(key) || getDefaultState();
       st.baseMode = 'color';
       st.imageUrl = null;
@@ -4424,7 +4424,7 @@ class App {
       const css = `linear-gradient(${gradDir}deg, ${gradStops.join(', ')})`;
       if (gradPreview) gradPreview.style.background = css;
       if (!activeChip) return;
-      const key = activeChip.dataset.chipKey;
+      const key = activeChip.dataset.csChipKey;
       const st  = chipState.get(key) || getDefaultState();
       st.baseMode = 'gradient';
       st.gradient = { stops: [...gradStops], dir: gradDir };
@@ -4516,7 +4516,7 @@ class App {
       if (drawToggle) {
         drawToggle.addEventListener('change', () => {
           if (!activeChip) return;
-          const key = activeChip.dataset.chipKey;
+          const key = activeChip.dataset.csChipKey;
           const st  = chipState.get(key) || getDefaultState();
           st.shapeEnabled = drawToggle.checked;
           chipState.set(key, st);
@@ -4531,7 +4531,7 @@ class App {
           document.querySelectorAll('.cs-chip-draw-shape').forEach(b => b.classList.remove('is-active'));
           btn.classList.add('is-active');
           if (!activeChip) return;
-          const key = activeChip.dataset.chipKey;
+          const key = activeChip.dataset.csChipKey;
           const st  = chipState.get(key) || getDefaultState();
           st.shapeData.shape = btn.dataset.shape;
           st.shapeEnabled = true; // 도형 버튼을 누르면 자동으로 레이어 켜짐
@@ -4543,7 +4543,7 @@ class App {
       if (drawColorIn) {
         drawColorIn.addEventListener('input', () => {
           if (!activeChip) return;
-          const key = activeChip.dataset.chipKey;
+          const key = activeChip.dataset.csChipKey;
           const st  = chipState.get(key) || getDefaultState();
           st.shapeData.shapeColor = drawColorIn.value;
           chipState.set(key, st);
@@ -4555,7 +4555,7 @@ class App {
       if (drawSizeIn) {
         drawSizeIn.addEventListener('input', () => {
           if (!activeChip) return;
-          const key = activeChip.dataset.chipKey;
+          const key = activeChip.dataset.csChipKey;
           const st  = chipState.get(key) || getDefaultState();
           st.shapeData.size = parseInt(drawSizeIn.value);
           chipState.set(key, st);
@@ -4568,7 +4568,7 @@ class App {
         drawClearBt.addEventListener('click', (e) => {
           e.stopPropagation();
           if (!activeChip) return;
-          const key = activeChip.dataset.chipKey;
+          const key = activeChip.dataset.csChipKey;
           const st  = chipState.get(key) || getDefaultState();
           st.shapeEnabled = false; // 레이어 끄기
           st.shapeData = { shape: 'circle', shapeColor: '#1a1a1a', size: 65 };
@@ -4588,7 +4588,7 @@ class App {
     // ── 팝업 열기 ────────────────────────────────
     const openPopup = (chipEl) => {
       activeChip = chipEl;
-      const key  = chipEl.dataset.chipKey || '';
+      const key  = chipEl.dataset.csChipKey || '';
       labelEl.textContent = chipLabels[key] || key.toUpperCase();
 
       let st = chipState.get(key);
@@ -4702,7 +4702,7 @@ class App {
     this._getAllChipsState = () => {
       const result = {};
       document.querySelectorAll('.cs-color-swatch').forEach(chip => {
-        const key = chip.dataset.chipKey;
+        const key = chip.dataset.csChipKey;
         if (key) {
           const st = chipState.get(key) || getDefaultState(rgbToHex(chip.style.backgroundColor || '#ffffff'));
           result[key] = JSON.parse(JSON.stringify(st));
@@ -4712,8 +4712,10 @@ class App {
     };
 
     this._restoreAllChipsState = (savedChips) => {
+      // 이전 캐릭터의 잔여 데이터(undefined 키 포함)가 남지 않도록 Map 초기화
+      chipState.clear();
       document.querySelectorAll('.cs-color-swatch').forEach(chip => {
-        const key = chip.dataset.chipKey;
+        const key = chip.dataset.csChipKey;
         if (!key) return;
         const st = (savedChips && savedChips[key]) ? JSON.parse(JSON.stringify(savedChips[key])) : getDefaultState('#ffffff');
         chipState.set(key, st);

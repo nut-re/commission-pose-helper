@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commission Helper – 커미션 신청서 제작 툴</title>
+  <meta name="description" content="커미션 신청서·연성 지시서를 빠르게 제작하는 브라우저 기반 구도 설명 툴">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M 4 32 C 4 22, 28 22, 28 32' fill='none' stroke='%23000000' stroke-width='2'/%3E%3Ccircle cx='16' cy='12' r='8.5' fill='none' stroke='%23000000' stroke-width='2'/%3E%3Cline x1='16' y1='3.5' x2='16' y2='20.5' stroke='%23000000' stroke-width='2'/%3E%3Cline x1='7.5' y1='12' x2='24.5' y2='12' stroke='%23000000' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css?v=20260918_T1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body class="">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="app-header" id="app-header">
+  <div class="logo-area">
+    <i class="fa-solid fa-file-signature logo-icon"></i>
+    <span class="logo-title">Commission Helper</span>
+    <span class="logo-sub">커미션 신청서 제작 툴</span>
+  </div>
+  <div class="header-actions">
+    <button id="tutorial-btn" class="icon-btn" title="사용 안내 보기" aria-label="사용 안내 보기">
+      <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+    </button>
+    <button id="undo-btn" class="icon-btn" title="실행 취소 (Ctrl+Z)" aria-label="실행 취소" disabled>
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+    </button>
+    <button id="redo-btn" class="icon-btn" title="다시 실행 (Ctrl+Y)" aria-label="다시 실행" disabled>
+      <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+    </button>
+    <div class="h-sep"></div>
+
+    <button id="reset-btn" class="hdr-btn ghost-btn danger-btn" title="전체 초기화">
+      <i class="fa-solid fa-trash-can" aria-hidden="true"></i><span class="btn-text"> 초기화</span>
+    </button>
+    <button id="load-btn" class="hdr-btn ghost-btn" title="프로젝트 불러오기">
+      <i class="fa-solid fa-folder-open" aria-hidden="true"></i><span class="btn-text"> 불러오기</span>
+    </button>
+    <input type="file" id="load-file" accept=".json" style="display:none">
+    <button id="save-btn" class="hdr-btn ghost-btn" title="프로젝트 저장">
+      <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i><span class="btn-text"> 저장</span>
+    </button>
+    <div class="h-sep"></div>
+    <div class="export-group">
+      <select id="export-scope" title="내보내기 범위 선택" style="padding: 0 8px; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-panel); color: var(--c-text); font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; outline: none; transition: border-color 0.2s;">
+        <option value="all" selected>🌟 전체 합본 (포즈 + 모든 캐릭터)</option>
+        <option value="all-split">⚖️ 캔버스 중앙 + 캐릭터 양분할</option>
+        <option value="current">👤 현재 캐릭터만 (포즈 + 1인)</option>
+        <option value="sheets-only">📑 캐릭터 시트만 (N인 가로 합본)</option>
+        <option value="current-sheet-only">📄 현재 캐릭터 시트만 (1인 단독)</option>
+        <option value="canvas-only">🖼️ 포즈 캔버스만</option>
+      </select>
+      <select id="export-dpr" title="내보내기 배율" style="padding: 0 8px; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-panel); color: var(--c-text); font-family: inherit; font-size: 13px; cursor: pointer; outline: none; transition: border-color 0.2s;">
+        <option value="1">1x</option>
+        <option value="2" selected>2x</option>
+        <option value="3">3x</option>
+        <option value="4">4x</option>
+      </select>
+      <select id="export-fmt">
+        <option value="png">PNG</option>
+        <option value="jpg">JPG</option>
+        <option value="webp">WEBP</option>
+        <option value="svg">SVG</option>
+      </select>
+      <button id="preview-btn" class="hdr-btn ghost-btn" title="출력 이미지 미리보기">
+        <i class="fa-solid fa-eye" aria-hidden="true"></i> 미리보기
+      </button>
+      <button id="export-btn" class="hdr-btn primary-hdr-btn" aria-label="이미지 내보내기">
+        <i class="fa-solid fa-download" aria-hidden="true"></i> 내보내기
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ WORKSPACE ═══════════════ -->
+<div class="workspace" id="workspace">
+
+  <!-- LEFT PANEL -->
+  <aside class="side-panel left-panel" id="left-panel">
+
+    <!-- § 캔버스 설정 -->
+    <div class="side-section">
+      <div class="side-section-hdr"><i class="fa-solid fa-crop-simple"></i> 캔버스</div>
+      <label class="lbl" for="canvas-ratio">종횡비</label>
+      <select id="canvas-ratio" class="ctrl">
+        <option value="1:1" selected>정사각형 (1:1)</option>
+        <option value="3:4">세로 (3:4)</option>
+        <option value="2:3">세로 (2:3)</option>
+        <option value="9:16">세로 (9:16)</option>
+        <option value="4:3">가로 (4:3)</option>
+        <option value="16:9">가로 (16:9)</option>
+        <option value="3:1">가로 헤더 (3:1)</option>
+        <option value="custom">사용자 지정</option>
+      </select>
+      <div id="custom-size" class="two-col" style="display:none">
+        <div><label class="lbl" for="cw">가로 비율</label><input type="number" id="cw" class="ctrl" value="4" min="1" max="100" step="any" placeholder="4"></div>
+        <div><label class="lbl" for="ch">세로 비율</label><input type="number" id="ch" class="ctrl" value="3" min="1" max="100" step="any" placeholder="3"></div>
+      </div>
+      <label class="lbl" for="bg-picker">캔버스 배경</label>
+      <div class="color-row">
+        <input type="color" id="bg-picker" class="swatch" value="#ffffff">
+        <input type="text"  id="bg-hex"    class="ctrl mono" value="#ffffff">
+      </div>
+
+    </div>
+
+    <!-- § 그리기 도구 -->
+    <div class="side-section">
+      <div class="side-section-hdr"><i class="fa-solid fa-toolbox"></i> 그리기 도구</div>
+      <div class="tool-grid">
+        <button class="tool-btn is-active" data-tool="select" title="선택 (V)"><i class="fa-solid fa-arrow-pointer" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="pen"    title="펜 (P)"><i class="fa-solid fa-pen" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="eraser" title="지우개 (E)"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="text"   title="텍스트 (T)"><i class="fa-solid fa-font" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="arrow"  title="화살표 (A)"><i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="rect"   title="사각형 (R)"><i class="fa-regular fa-square" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="circle" title="원 (C)"><i class="fa-regular fa-circle" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="image"  title="이미지 삽입"><i class="fa-solid fa-image" aria-hidden="true"></i></button>
+      </div>
+      <input type="file" id="img-file" accept="image/*" style="display:none">
+
+      <div id="tool-opts" class="sub-box" style="display:none">
+        <label class="lbl" for="shape-w">선/테두리 굵기 <span id="sw-val">4</span>px</label>
+        <input type="range" id="shape-w" class="ctrl-bar-range" min="1" max="40" value="4">
+        <div id="shape-style-wrapper">
+          <label class="lbl" for="shape-style" style="margin-top:6px;">스타일</label>
+          <select id="shape-style" class="ctrl">
+            <option value="stroke">기본</option>
+            <option value="fill">채우기 (도형 전용)</option>
+            <option value="both">검은 테두리 추가</option>
+            <option value="outline-white">흰 테두리 추가</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- § 색상 설정 (독립 패널) -->
+    <div class="side-section">
+      <div class="side-section-hdr"><i class="fa-solid fa-palette"></i> 색상</div>
+      <div class="color-row">
+        <input type="color" id="tool-picker" class="swatch" value="#000000">
+        <input type="text"  id="tool-hex"    class="ctrl mono" value="#000000">
+        <button id="eye-btn" class="icon-sm" title="스포이드" aria-label="스포이드" style="display:none"><i class="fa-solid fa-eye-dropper" aria-hidden="true"></i></button>
+      </div>
+      <div id="recent-colors" class="cs-chip-row"></div>
+    </div>
+
+    <!-- § 인물 추가 -->
+    <div class="side-section">
+      <button id="add-dummy" class="big-btn primary-btn">
+        <i class="fa-solid fa-user-plus"></i> 인물 추가
+      </button>
+    </div>
+
+    <!-- § 선택 객체 속성 -->
+    <div class="side-section" id="props" style="display:none">
+      <div class="side-section-hdr"><i class="fa-solid fa-sliders"></i> 선택 객체</div>
+
+      <!-- 인물 전용 -->
+      <div id="dummy-props" style="display:none">
+        <label class="lbl">편집 모드</label>
+        <div class="mode-bar">
+          <button id="mode-xform" class="mode-btn is-active"><i class="fa-solid fa-arrows-up-down-left-right" aria-hidden="true"></i> 전체 변형</button>
+          <button id="mode-pose"  class="mode-btn"><i class="fa-solid fa-person-rays" aria-hidden="true"></i> 관절 포즈</button>
+        </div>
+        <div class="two-btn-row">
+          <button id="dummy-flip"  class="action-btn"><i class="fa-solid fa-left-right" aria-hidden="true"></i> 좌우반전</button>
+          <button id="dummy-reset" class="action-btn"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 포즈 초기화</button>
+        </div>
+        <div class="two-btn-row" style="margin-top:6px;">
+          <button id="pose-copy"  class="action-btn"><i class="fa-regular fa-copy" aria-hidden="true"></i> 포즈 복사</button>
+          <button id="pose-paste" class="action-btn" disabled><i class="fa-solid fa-paste" aria-hidden="true"></i> 포즈 붙여넣기</button>
+        </div>
+
+
+        <!-- ★ 파츠 & 레이어 (상단으로 승격 + 일체화) -->
+        <div class="parts-layer-section">
+          <label class="lbl" for="part-sel" style="margin-top:12px;">선택된 파츠 (레이어 전용)</label>
+          <select id="part-sel" class="ctrl">
+            <option value="all">전체</option>
+            <option value="head">머리</option>
+            <option value="neck">목</option>
+            <option value="chest">상체</option>
+            <option value="waist">허리</option>
+            <option value="pelvis">골반</option>
+            <option value="lUpperArm">왼 위팔</option>
+            <option value="lLowerArm">왼 아래팔</option>
+            <option value="lHand">왼 손</option>
+            <option value="rUpperArm">오른 위팔</option>
+            <option value="rLowerArm">오른 아래팔</option>
+            <option value="rHand">오른 손</option>
+            <option value="lThigh">왼 허벅지</option>
+            <option value="lCalf">왼 종아리</option>
+            <option value="lFoot">왼 발</option>
+            <option value="rThigh">오른 허벅지</option>
+            <option value="rCalf">오른 종아리</option>
+            <option value="rFoot">오른 발</option>
+          </select>
+
+          <!-- 레이어 (파츠 바로 아래) -->
+          <div class="layer-header-row">
+            <label class="lbl" id="layer-lbl" style="margin:0;">레이어</label>
+            <div style="display:flex; align-items:center; gap:5px;">
+              <span id="layer-depth-badge" class="layer-depth-badge">기본</span>
+              <button id="l-reset" class="layer-reset-btn" title="레이어 오프셋 초기화" aria-label="레이어 오프셋 초기화"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <div class="layer-row">
+            <button id="l-front" class="layer-btn" title="맨 앞" aria-label="맨 앞으로"><i class="fa-solid fa-angles-up" aria-hidden="true"></i></button>
+            <button id="l-fwd"   class="layer-btn" title="앞으로" aria-label="앞으로"><i class="fa-solid fa-angle-up" aria-hidden="true"></i></button>
+            <button id="l-bwd"   class="layer-btn" title="뒤로" aria-label="뒤로"><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>
+            <button id="l-back"  class="layer-btn" title="맨 뒤" aria-label="맨 뒤로"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 텍스트 전용 -->
+      <div id="text-props" style="display:none">
+        <label class="lbl" for="text-content-input">텍스트 내용</label>
+        <textarea id="text-content-input" class="ctrl text-content-area" rows="3" placeholder="내용을 입력하세요"></textarea>
+        <label class="lbl" for="font-size" style="margin-top:8px;">글자 크기 <span id="fs-val">24</span>px</label>
+        <input type="range" id="font-size" class="ctrl-bar-range" min="10" max="80" value="24">
+        <p class="text-edit-hint">💡 글자를 더블클릭해도 바로 수정할 수 있어요</p>
+      </div>
+
+      <!-- 이미지 전용 -->
+      <div id="image-props" style="display:none">
+      </div>
+
+      <!-- 공통: 크기 -->
+      <div style="padding-top:10px; border-top:1px solid var(--c-border);">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;">
+          <label class="lbl" for="obj-scale" style="margin:0;">크기</label>
+          <button id="obj-scale-reset" class="layer-reset-btn" title="기본 크기로 리셋" aria-label="기본 크기로 리셋"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="range" id="obj-scale" class="ctrl-bar-range" min="10" max="1500" step="1" value="100" style="flex:1;">
+          <input type="number" id="obj-scale-num" class="ctrl" min="10" max="1500" value="100" style="width:65px;" aria-label="크기 비율 수치 입력">
+          <span>%</span>
+        </div>
+      </div>
+
+      <!-- 스틱맨 전용: 포즈 프리셋 (크기 밑으로 이동) -->
+      <div id="pose-presets-section" style="display:none; padding-top:12px; border-top:1px solid var(--c-border); margin-top:6px;">
+        <label class="lbl" style="margin:0; margin-bottom:8px;">포즈 프리셋</label>
+        <div id="pose-presets-list" class="ctrl-bar-preset-grid"></div>
+      </div>
+
+      <!-- 공통: 레이어 (인물 제외 – 인물은 위에 파츠와 묶여있음) -->
+      <div id="common-layer-section">
+        <label class="lbl" id="layer-lbl-common">레이어</label>
+        <div class="layer-row">
+          <button id="l-front-common" class="layer-btn" title="맨 앞" aria-label="맨 앞으로"><i class="fa-solid fa-angles-up" aria-hidden="true"></i></button>
+          <button id="l-fwd-common"   class="layer-btn" title="앞으로" aria-label="앞으로"><i class="fa-solid fa-angle-up" aria-hidden="true"></i></button>
+          <button id="l-bwd-common"   class="layer-btn" title="뒤로" aria-label="뒤로"><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>
+          <button id="l-back-common"  class="layer-btn" title="맨 뒤" aria-label="맨 뒤로"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></button>
+        </div>
+      </div>
+
+      <!-- 공통: 복제/삭제 -->
+      <div class="two-btn-row">
+        <button id="obj-dup" class="action-btn"><i class="fa-solid fa-copy" aria-hidden="true"></i> 복제</button>
+        <button id="obj-del" class="action-btn is-danger"><i class="fa-solid fa-trash" aria-hidden="true"></i> 삭제</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- OUTPUT CONTAINER: left(canvas+desc) + right(ref panel) -->
+  <div id="output-container" class="output-container">
+
+  <!-- LEFT GROUP: CANVAS + DESC -->
+  <div class="canvas-area" id="canvas-area">
+    <!-- CANVAS + DESC GROUP WRAPPER (밀착 묶음) -->
+    <div class="canvas-group-wrap" id="canvas-group-wrap">
+
+      <div id="canvas-wrap" class="canvas-wrap">
+        <svg id="main-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr-head" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,1 L10,5 L0,9 Z" fill="context-stroke"/>
+            </marker>
+          </defs>
+          <rect id="svg-bg" width="100%" height="100%" fill="#ffffff"/>
+          <g id="g-obj"></g>
+          <g id="g-ctrl"></g>
+        </svg>
+        <div class="canvas-watermark" title="제작자">틀 제작 @nut__guryoyo</div>
+      </div>
+
+      <!-- ═══ 구도 설명란 (Composition Description) ═══ -->
+      <div id="cs-comp-outer" class="cs-comp-outer">
+        <!-- 헤더 바 -->
+        <div id="cs-comp-header" class="cs-comp-header">
+          <span class="cs-comp-title">구도 설명</span>
+          <div class="cs-comp-actions">
+            <button id="cs-comp-theme-btn" class="cs-comp-desc-btn" title="구도 설명란 테마 및 폰트 설정">
+              <i class="fa-solid fa-palette" aria-hidden="true"></i> 테마/폰트
+            </button>
+            <button id="cs-comp-fold-btn" class="cs-comp-desc-btn cs-comp-fold-btn" title="구도 설명란 접기/펼치기" aria-label="구도 설명란 접기/펼치기">
+              <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 본체 슬라이드 영역 (단일 회색 서술 텍스트창) -->
+        <div id="cs-comp-body" class="cs-comp-body">
+          <div id="cs-comp-features-input" class="cs-comp-single-textarea" contenteditable="true" placeholder="- 전체적인 구도, 카메라 시점, 조명/분위기 등을 서술해 주세요."></div>
+        </div>
+
+        <!-- 테마/폰트 팝업 -->
+        <div id="cs-comp-theme-popup" class="cs-comp-theme-popup" style="display:none;">
+          <div class="cs-comp-popup-sec-title">테마 연동</div>
+          <div class="cs-comp-popup-row" style="margin-bottom:12px;">
+            <label class="cs-comp-popup-label" for="cs-comp-link-sheet-toggle">🔗 시트 테마와 연동</label>
+            <label class="cs-toggle-switch" for="cs-comp-link-sheet-toggle">
+              <input type="checkbox" id="cs-comp-link-sheet-toggle">
+              <span class="cs-toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="cs-comp-popup-sec-title">테마 색상</div>
+          <div class="cs-comp-popup-row">
+            <label class="cs-comp-popup-label" for="cs-comp-main-picker">헤더 바 색상</label>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <input type="color" id="cs-comp-main-picker" class="swatch" value="#2E2E2E" style="width:28px;height:28px;">
+              <input type="text" id="cs-comp-main-hex" class="ctrl mono" value="#2E2E2E" style="width:68px;height:28px;font-size:11px;">
+            </div>
+          </div>
+          <div class="cs-comp-popup-row">
+            <label class="cs-comp-popup-label" for="cs-comp-sub-picker">서브 타이틀 배경</label>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <input type="color" id="cs-comp-sub-picker" class="swatch" value="#E6E6E6" style="width:28px;height:28px;">
+              <input type="text" id="cs-comp-sub-hex" class="ctrl mono" value="#E6E6E6" style="width:68px;height:28px;font-size:11px;">
+            </div>
+          </div>
+          <div class="cs-comp-popup-row">
+            <label class="cs-comp-popup-label" for="cs-comp-bg-picker">전체 배경색</label>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <input type="color" id="cs-comp-bg-picker" class="swatch" value="#FFFFFF" style="width:28px;height:28px;">
+              <input type="text" id="cs-comp-bg-hex" class="ctrl mono" value="#FFFFFF" style="width:68px;height:28px;font-size:11px;">
+            </div>
+          </div>
+          <div class="cs-comp-popup-row">
+            <label class="cs-comp-popup-label" for="cs-comp-body-picker">본문 글자색</label>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <input type="color" id="cs-comp-body-picker" class="swatch" value="#1E293B" style="width:28px;height:28px;">
+              <input type="text" id="cs-comp-body-hex" class="ctrl mono" value="#1E293B" style="width:68px;height:28px;font-size:11px;">
+            </div>
+          </div>
+
+          <div class="cs-comp-popup-sec-title">글자 설정</div>
+          <div class="cs-comp-popup-row">
+            <label class="cs-comp-popup-label" for="cs-comp-fs-range">글자 크기 (<span id="cs-comp-fs-val">13</span>px)</label>
+            <input type="range" id="cs-comp-fs-range" class="ctrl-bar-range" min="11" max="18" value="13" style="width:120px;">
+          </div>
+          <div class="cs-comp-popup-row">
+            <label class="cs-comp-popup-label" for="cs-comp-fw-select">글자 굵기</label>
+            <select id="cs-comp-fw-select" class="ctrl" style="width:120px;height:28px;font-size:12px;">
+              <option value="300">얇게 (Light)</option>
+              <option value="400" selected>보통 (Regular)</option>
+              <option value="500">중간 (Medium)</option>
+              <option value="700">굵게 (Bold)</option>
+            </select>
+          </div>
+
+          <div style="margin-top:10px; display:flex; justify-content:flex-end;">
+            <button id="cs-comp-reset-btn" class="cs-comp-action-btn" style="flex:none; padding:0 12px; height:28px; font-size:11px;">
+              <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 기본값으로 초기화
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT REFERENCE PANEL (책갈피 도킹 탭 구조) -->
+  <div class="ref-panel-wrapper" id="ref-panel-wrapper">
+    <!-- 책갈피 탭 덱 (패널 좌측 바깥에 세로 도킹) -->
+    <div class="cs-bookmark-deck" id="cs-bookmark-deck">
+      <div class="cs-bookmark-tabs" id="cs-bookmark-tabs">
+        <!-- JS에 의해 A, B, C 책갈피 탭들이 세로로 생성됨 -->
+      </div>
+      <button id="cs-add-char-btn" class="cs-bookmark-tab add-tab" title="새 캐릭터 정보 시트 추가" aria-label="새 캐릭터 추가">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      </button>
+      <button id="ref-toggle" class="cs-bookmark-tab toggle-tab" title="신청서 패널 접기/펼치기" aria-label="신청서 패널 접기/펼치기">
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- 우측 패널 본체 (722px 1개 시트 크기 유지) -->
+    <aside class="side-panel right-panel" id="ref-panel">
+      <div class="cs-sheet-wrap" id="cs-sheet-wrap">
+        <!-- 오른쪽 패널 우측 상단 플로팅 버튼 그룹 -->
+        <div class="cs-panel-float-group">
+          <button id="cs-theme-toggle-btn" class="cs-panel-float-btn" title="신청서 테마 색상 일괄 변경">
+            <i class="fa-solid fa-palette" aria-hidden="true"></i> 시트 테마
+          </button>
+          <button id="add-free-img-btn" class="cs-panel-float-btn" title="패널 여백에 자유 이미지 추가">
+            <i class="fa-solid fa-image" aria-hidden="true"></i> 이미지 추가
+          </button>
+          <button id="add-free-text-btn" class="cs-panel-float-btn" title="패널 여백에 자유 텍스트 추가">
+            <i class="fa-solid fa-font" aria-hidden="true"></i> 텍스트 추가
+          </button>
+        </div>
+        <input type="file" id="free-img-file" accept="image/*" style="display:none">
+        
+        <!-- TOP SECTION: Left(Header Bar + 3:4 Main Image) | Right(5 Color Chips) -->
+        <div class="cs-top-section">
+          <!-- LEFT COLUMN: Dark Header Bar + Main Image Box (Same Width Guaranteed) -->
+          <div class="cs-main-left-col">
+            <!-- (1) HEADER BAR (#2E2E2E Dark Bar with A. & Specs) -->
+            <div class="cs-hdr-bar">
+              <input type="text" id="cs-name-input" class="cs-name-input" value="A." placeholder="A.">
+              <div class="cs-char-info-box">
+                <input type="text" id="cs-orig-name-input" class="cs-info-input" value="원어 이름" placeholder="원어 이름">
+                <input type="text" id="cs-spec-input" class="cs-info-input" value="키 / 체형" placeholder="키 / 체형">
+              </div>
+            </div>
+            <!-- (2) 3:4 MAIN IMAGE SLOT -->
+            <div class="cs-main-img-box" id="cs-main-img-box" data-slot-id="main-img">
+              <div class="cs-slot-placeholder">
+                <i class="fa-solid fa-image"></i>
+                <span>메인 이미지</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: (3) COLOR CHIPS (5 FIXED: THEMA to SKIN) -->
+          <div class="cs-color-chips-column">
+            <div class="cs-color-cs-chip-item">
+              <div class="cs-color-swatch" id="cs-cs-chip-thema" style="background-color:#ffffff;" data-cs-chip-key="thema" data-tooltip="#ffffff"></div>
+              <span class="cs-color-label">THEMA</span>
+            </div>
+            <div class="cs-color-cs-chip-item">
+              <div class="cs-color-swatch" id="cs-cs-chip-hair" style="background-color:#ffffff;" data-cs-chip-key="hair" data-tooltip="#ffffff"></div>
+              <span class="cs-color-label">HAIR</span>
+            </div>
+            <div class="cs-color-cs-chip-item">
+              <div class="cs-color-swatch" id="cs-cs-chip-eyel" style="background-color:#ffffff;" data-cs-chip-key="eyel" data-tooltip="#ffffff"></div>
+              <span class="cs-color-label">EYE(L)</span>
+            </div>
+            <div class="cs-color-cs-chip-item">
+              <div class="cs-color-swatch" id="cs-cs-chip-eyer" style="background-color:#ffffff;" data-cs-chip-key="eyer" data-tooltip="#ffffff"></div>
+              <span class="cs-color-label">EYE(R)</span>
+            </div>
+            <div class="cs-color-cs-chip-item">
+              <div class="cs-color-swatch" id="cs-cs-chip-skin" style="background-color:#ffffff;" data-cs-chip-key="skin" data-tooltip="#ffffff"></div>
+              <span class="cs-color-label">SKIN</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 1: Keywords + Key Points | 2 Sub Cards (Top) -->
+        <div class="cs-row cs-row-1">
+          <!-- LEFT: KEYWORDS + KEY POINTS -->
+          <div class="cs-col-left">
+            <div class="cs-keyword-box">
+              <input type="text" id="cs-keyword-input" class="cs-keyword-input" value="#성격 키워드 #성격 키워드 #성격 키워드" placeholder="#성격 키워드">
+            </div>
+            <div class="cs-block-box">
+              <div class="cs-block-title" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>중요 포인트</span>
+                <button class="cs-align-toggle" data-target="cs-keypoint-input" title="텍스트 정렬 전환 (좌/중/우)"><i class="fa-solid fa-align-left"></i></button>
+              </div>
+              <div id="cs-keypoint-input" class="cs-block-textarea" data-align="left" contenteditable="true" placeholder="빠지면 안 되는 중요한 특징을 서술해 주세요.">빠지면 안 되는 중요한 특징을 서술해 주세요.</div>
+            </div>
+          </div>
+          <!-- RIGHT: 2 SUB IMAGE BOXES -->
+          <div class="cs-col-right">
+            <div class="cs-sub-img-pair">
+              <div class="cs-sub-img-box" id="cs-sub-img-1" data-slot-id="sub-1"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <div class="cs-sub-img-box" id="cs-sub-img-2" data-slot-id="sub-2"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 3: Exterior Features | 2 Sub Cards (Bot) -->
+        <div class="cs-row cs-row-3">
+          <!-- LEFT: EXTERIOR FEATURES -->
+          <div class="cs-col-left">
+            <div class="cs-block-box">
+              <div class="cs-block-title cs-block-title-sub" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: baseline; gap: 4px;">
+                  <span>외관 특징</span>
+                  <span class="cs-sub-note">보는 사람 기준 서술</span>
+                </div>
+                <button class="cs-align-toggle" data-target="cs-features-input" title="텍스트 정렬 전환 (좌/중/우)"><i class="fa-solid fa-align-left"></i></button>
+              </div>
+              <div id="cs-features-input" class="cs-block-textarea" data-align="left" contenteditable="true" placeholder="- 외관 특징을 서술해 주세요.">- 외관 특징을 서술해 주세요.<br>- 외관 특징을 서술해 주세요.<br>- 외관 특징을 서술해 주세요.<br>- 외관 특징을 서술해 주세요.</div>
+            </div>
+          </div>
+          <!-- RIGHT: 2 SUB IMAGE BOXES -->
+          <div class="cs-col-right">
+            <div class="cs-sub-img-pair">
+              <div class="cs-sub-img-box" id="cs-sub-img-3" data-slot-id="sub-3"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <div class="cs-sub-img-box" id="cs-sub-img-4" data-slot-id="sub-4"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER: 출처 란 & 고정 워터마크 (40px 바닥 여백 활용) -->
+        <div class="cs-footer-bar">
+          <div class="cs-source-box">
+            <label class="cs-source-label" for="cs-source-input">출처 :</label>
+            <input type="text" id="cs-source-input" class="cs-source-input" placeholder="@nut__commission / 등 자료 출처">
+          </div>
+          <div class="cs-watermark-fixed" title="제작자">
+            <span>틀 제작 @nut__guryoyo</span>
+          </div>
+        </div>
+
+      </div><!-- /cs-sheet-wrap -->
+    </aside>
+  </div><!-- /ref-panel-wrapper -->
+
+  </div><!-- /output-container -->
+</div><!-- /workspace -->
+
+<!-- ═══════════════ COLOR CHIP PICKER POPUP ═══════════════ -->
+<div id="cs-chip-color-popup" style="display:none;">
+  <!-- 헤더: 라벨 (위) + 탭 버튼 (아래) — column 레이아웃으로 4탭 수용 -->
+  <div class="cs-chip-popup-header">
+    <span class="cs-chip-popup-label" id="cs-chip-popup-label">THEMA</span>
+    <div class="cs-chip-popup-tabs">
+      <button class="cs-chip-tab is-active" data-tab="color"    title="단색"><i class="fa-solid fa-palette"></i> 색상</button>
+      <button class="cs-chip-tab"        data-tab="gradient" title="그라디언트"><i class="fa-solid fa-circle-half-stroke"></i> 그라디</button>
+      <button class="cs-chip-tab"        data-tab="image"    title="이미지"><i class="fa-solid fa-image"></i> 이미지</button>
+      <button class="cs-chip-tab"        data-tab="draw"     title="도형 그리기"><i class="fa-solid fa-shapes"></i> 도형</button>
+    </div>
+  </div>
+
+  <!-- 탭 패널: 색상 -->
+  <div id="cs-chip-tab-color" class="cs-chip-tab-panel">
+    <div class="color-row">
+      <input type="color" id="cs-chip-picker" class="swatch">
+      <input type="text"  id="cs-chip-hex"    class="ctrl mono" maxlength="7" placeholder="#ffffff">
+      <button id="cs-chip-clear-btn" class="icon-sm" title="흰색으로 초기화" aria-label="흰색으로 초기화"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <!-- 탭 패널: 그라디언트 -->
+  <div id="cs-chip-tab-gradient" class="cs-chip-tab-panel" style="display:none;">
+    <!-- 미리보기 바 -->
+    <div id="cs-chip-grad-preview" class="cs-chip-grad-preview"></div>
+    <!-- 방향 선택 -->
+    <div class="cs-chip-grad-row">
+      <span class="cs-chip-grad-label">방향</span>
+      <div class="cs-chip-grad-dirs">
+        <button class="cs-chip-grad-dir is-active" data-deg="180" title="위 → 아래">
+          <i class="fa-solid fa-arrow-down" style="pointer-events:none"></i>
+        </button>
+        <button class="cs-chip-grad-dir" data-deg="90" title="왼 → 오른">
+          <i class="fa-solid fa-arrow-down" style="transform:rotate(-90deg);pointer-events:none"></i>
+        </button>
+        <button class="cs-chip-grad-dir" data-deg="135" title="↖ → ↘">
+          <i class="fa-solid fa-arrow-down" style="transform:rotate(-45deg);pointer-events:none"></i>
+        </button>
+        <button class="cs-chip-grad-dir" data-deg="45" title="↙ → ↗">
+          <i class="fa-solid fa-arrow-down" style="transform:rotate(-135deg);pointer-events:none"></i>
+        </button>
+      </div>
+    </div>
+    <!-- 색상 정지점 -->
+    <div class="cs-chip-grad-row cs-chip-grad-color-row">
+      <span class="cs-chip-grad-label">색상</span>
+      <div id="cs-chip-grad-stops" class="cs-chip-grad-stops"></div>
+      <button id="cs-chip-grad-add" class="cs-chip-grad-add-btn" title="색상 추가" aria-label="그라디언트 색상 추가">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 탭 패널: 이미지 -->
+  <div id="cs-chip-tab-image" class="cs-chip-tab-panel" style="display:none;">
+    <div id="cs-chip-img-drop" class="cs-chip-img-drop">
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <span>클릭 또는 드래그하여<br>업로드</span>
+    </div>
+    <input type="file" id="cs-chip-img-file" accept="image/*" style="display:none;">
+     <button id="cs-chip-img-clear" class="cs-chip-img-clear-btn" style="display:none;">
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 이미지 제거
+    </button>
+  </div>
+
+  <!-- 탭 패널: 도형 -->
+  <div id="cs-chip-tab-draw" class="cs-chip-tab-panel" style="display:none;">
+    <!-- 도형 레이어 사용 ON/OFF 토글 -->
+    <div class="cs-chip-draw-toggle-row">
+      <label class="cs-chip-toggle-label" for="cs-chip-draw-toggle">
+        <input type="checkbox" id="cs-chip-draw-toggle">
+        <span class="cs-chip-toggle-slider"></span>
+        <span class="cs-chip-toggle-text">도형 레이어 적용</span>
+      </label>
+      <span id="cs-chip-draw-status-badge" class="cs-chip-status-badge off">OFF</span>
+    </div>
+
+    <!-- 캔버스 미리보기 -->
+    <canvas id="cs-chip-draw-canvas" class="cs-chip-draw-canvas" width="200" height="200"></canvas>
+
+    <!-- 도형 선택 (6종) -->
+    <div class="cs-chip-draw-row">
+      <span class="cs-chip-draw-label">도형</span>
+      <div class="cs-chip-draw-shapes">
+        <button class="cs-chip-draw-shape is-active" data-shape="circle"   title="채워진 원">●</button>
+        <button class="cs-chip-draw-shape"        data-shape="oval"     title="세로 타원 (동공)">⬯</button>
+        <button class="cs-chip-draw-shape"        data-shape="ring"     title="선만 있는 원 (윤곽)">○</button>
+        <button class="cs-chip-draw-shape"        data-shape="dot"      title="작은 채워진 원">•</button>
+        <button class="cs-chip-draw-shape"        data-shape="bullseye" title="외곽 링 + 중심 점 (◎)">◎</button>
+        <button class="cs-chip-draw-shape"        data-shape="sparkle"  title="반짝이 4포인트 (✦)">✦</button>
+      </div>
+    </div>
+    <!-- 색상 + 크기 -->
+    <div class="cs-chip-draw-row">
+      <span class="cs-chip-draw-label">색상</span>
+      <input type="color" id="cs-chip-draw-color" class="swatch cs-chip-draw-swatch" value="#1a1a1a">
+      <span class="cs-chip-draw-label" style="margin-left:4px;">크기</span>
+      <input type="range" id="cs-chip-draw-size" class="cs-chip-draw-range" min="15" max="90" value="65">
+    </div>
+    <button id="cs-chip-draw-clear" class="cs-chip-img-clear-btn" style="margin-top:8px;">
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 초기화
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ SHEET THEME POPUP ═══════════════ -->
+<div id="cs-theme-popup" class="cs-theme-popup" style="display:none;">
+  <div class="cs-theme-popup-hdr">
+    <span><i class="fa-solid fa-palette" aria-hidden="true"></i> 시트 테마 컬러</span>
+    <button id="cs-theme-popup-close" class="icon-sm" title="닫기" aria-label="닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+  </div>
+  
+  <div class="cs-theme-popup-body">
+    <!-- 인물 더미 색상 연동 토글 -->
+    <div class="cs-theme-link-dummy-row">
+      <label class="cs-theme-link-label" for="theme-link-dummy-toggle"><i class="fa-solid fa-link" aria-hidden="true"></i> 인물(더미) 색상과 연동</label>
+      <label class="cs-toggle-switch" for="theme-link-dummy-toggle" title="인물 더미의 색상을 시트 메인 테마 색상으로 자동 동기화합니다.">
+        <input type="checkbox" id="theme-link-dummy-toggle">
+        <span class="cs-toggle-slider"></span>
+      </label>
+    </div>
+
+    <!-- 테마 프리셋 -->
+    <div class="cs-theme-sec-title">테마 프리셋</div>
+    <div class="cs-theme-presets-grid" id="cs-theme-presets-grid"></div>
+
+    <!-- 세부 색상 커스텀 -->
+    <div class="cs-theme-sec-title" style="margin-top:12px;">세부 색상 커스텀</div>
+    <div class="cs-theme-custom-rows">
+      <div class="cs-theme-color-row">
+        <label class="cs-theme-color-label" for="theme-color-main">메인 테마</label>
+        <input type="color" id="theme-color-main" class="swatch cs-theme-swatch" value="#2E2E2E">
+        <input type="text" id="theme-hex-main" class="ctrl mono cs-theme-hex" maxlength="7" value="#2E2E2E">
+      </div>
+      <div class="cs-theme-color-row">
+        <label class="cs-theme-color-label" for="theme-color-sub">서브 배경</label>
+        <input type="color" id="theme-color-sub" class="swatch cs-theme-swatch" value="#E6E6E6">
+        <input type="text" id="theme-hex-sub" class="ctrl mono cs-theme-hex" maxlength="7" value="#E6E6E6">
+      </div>
+      <div class="cs-theme-color-row">
+        <label class="cs-theme-color-label" for="theme-color-title">제목 글자</label>
+        <input type="color" id="theme-color-title" class="swatch cs-theme-swatch" value="#FFFFFF">
+        <input type="text" id="theme-hex-title" class="ctrl mono cs-theme-hex" maxlength="7" value="#FFFFFF">
+      </div>
+      <div class="cs-theme-color-row">
+        <label class="cs-theme-color-label" for="theme-color-body">본문 글자</label>
+        <input type="color" id="theme-color-body" class="swatch cs-theme-swatch" value="#1E293B">
+        <input type="text" id="theme-hex-body" class="ctrl mono cs-theme-hex" maxlength="7" value="#1E293B">
+      </div>
+      <div class="cs-theme-color-row">
+        <label class="cs-theme-color-label" for="theme-color-bg">시트 배경</label>
+        <input type="color" id="theme-color-bg" class="swatch cs-theme-swatch" value="#FFFFFF">
+        <input type="text" id="theme-hex-bg" class="ctrl mono cs-theme-hex" maxlength="7" value="#FFFFFF">
+      </div>
+    </div>
+
+    <button id="cs-theme-reset-btn" class="cs-chip-img-clear-btn" style="margin-top:12px;">
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 기본 차콜 테마로 리셋
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ PREVIEW MODAL ═══════════════ -->
+<div id="preview-modal" class="modal-backdrop" style="display:none">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span><i class="fa-solid fa-eye" aria-hidden="true"></i> 내보내기 미리보기</span>
+      <button id="preview-close" class="icon-btn" aria-label="미리보기 닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <div class="modal-body" id="preview-body">
+      <img id="preview-img" alt="미리보기" style="max-width:100%;border-radius:6px;">
+    </div>
+    <div class="modal-footer">
+      <span class="modal-info" id="preview-info"></span>
+      <div style="display:flex;gap:8px">
+        <button id="preview-close2" class="hdr-btn">닫기</button>
+        <button id="preview-save"   class="hdr-btn primary-hdr-btn"><i class="fa-solid fa-download" aria-hidden="true"></i> 저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE CROP MODAL -->
+<div id="crop-modal" class="modal-backdrop" style="display:none">
+  <div class="modal-box crop-box">
+    <div class="modal-header">
+      <span><i class="fa-solid fa-crop" aria-hidden="true"></i> 이미지 크롭</span>
+      <button id="crop-close" class="icon-btn" aria-label="크롭 창 닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <div class="modal-body" style="padding:16px;">
+      <div class="crop-container" id="crop-container">
+        <div class="crop-viewport" id="crop-viewport">
+          <img id="crop-img" alt="크롭 원본">
+        </div>
+      </div>
+      <p class="crop-tip"><i class="fa-solid fa-circle-info"></i> 마우스 드래그로 이미지 이동, 휠로 확대/축소하여 영역을 조정하세요.</p>
+    </div>
+    <div class="modal-footer">
+      <button id="crop-cancel" class="hdr-btn">취소</button>
+      <button id="crop-save" class="hdr-btn primary-hdr-btn"><i class="fa-solid fa-check" aria-hidden="true"></i> 적용</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- CONFIRM MODAL -->
+<div id="confirm-modal" class="modal-backdrop" style="display:none">
+  <div class="modal-box confirm-box">
+    <div class="modal-header">
+      <span><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> 확인</span>
+    </div>
+    <div class="modal-body">
+      <p id="confirm-msg" style="padding:10px 0;font-size:14px;line-height:1.6;"></p>
+    </div>
+    <div class="modal-footer">
+      <button id="confirm-no"  class="hdr-btn">취소</button>
+      <button id="confirm-yes" class="hdr-btn primary-hdr-btn danger-hdr">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROMPT MODAL -->
+<div id="prompt-modal" class="modal-backdrop" style="display:none">
+  <div class="modal-box confirm-box">
+    <div class="modal-header">
+      <span><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> 입력</span>
+    </div>
+    <div class="modal-body" style="display:flex; flex-direction:column; gap:12px; padding:15px 20px;">
+      <p id="prompt-msg" style="font-size:14px;line-height:1.6;margin:0;"></p>
+      <input type="text" id="prompt-input" style="width:100%; box-sizing:border-box; height:36px; border:1px solid var(--c-border); border-radius:6px; padding:0 12px; font-family:inherit; font-size:14px;" />
+    </div>
+    <div class="modal-footer">
+      <button id="prompt-no"  class="hdr-btn">취소</button>
+      <button id="prompt-yes" class="hdr-btn primary-hdr-btn">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT MODAL -->
+<div id="alert-modal" class="modal-backdrop" style="display:none">
+  <div class="modal-box confirm-box">
+    <div class="modal-header">
+      <span><i class="fa-solid fa-circle-info" aria-hidden="true"></i> 알림</span>
+    </div>
+    <div class="modal-body">
+      <p id="alert-msg" style="padding:10px 0;font-size:14px;line-height:1.6;"></p>
+    </div>
+    <div class="modal-footer">
+      <button id="alert-ok" class="hdr-btn primary-hdr-btn">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE WARNING MODAL -->
+<div id="mobile-warning-modal" class="modal-backdrop mobile-warning-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="mobile-warning-title" aria-describedby="mobile-warning-desc">
+  <div class="modal-box confirm-box mobile-warning-box">
+    <div class="modal-header">
+      <span id="mobile-warning-title"><i class="fa-solid fa-desktop" aria-hidden="true"></i> 데스크톱 사용 권장</span>
+    </div>
+    <div class="modal-body" style="display:block;padding:20px 24px;">
+      <div class="mobile-warning-icon" aria-hidden="true">🖥️</div>
+      <p id="mobile-warning-desc" class="mobile-warning-text">
+        이 웹앱은 <strong>데스크톱 환경에서의 사용을 권장</strong>합니다.
+      </p>
+      <ul class="mobile-warning-list">
+        <li><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> 마우스·키보드 기반 조작으로 설계되어, 터치 환경에서는 일부 기능이 정상적으로 작동하지 않을 수 있습니다.</li>
+        <li><i class="fa-solid fa-display" aria-hidden="true"></i> 캔버스 편집, 레이어 조작, 속성 패널 등은 넓은 화면과 정밀한 포인팅 장치에 최적화되어 있습니다.</li>
+        <li><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> 더 나은 경험을 위해 <strong>PC 또는 태블릿(가로 모드)</strong>에서 이용해 주세요.</li>
+      </ul>
+    </div>
+    <div class="modal-footer" style="justify-content:center;gap:10px;">
+      <button id="mobile-warning-ok" class="hdr-btn primary-hdr-btn" style="min-width:120px;">알겠습니다</button>
+    </div>
+  </div>
+</div>
+
+<!-- TUTORIAL MODAL -->
+<div id="tutorial-modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tutorial-modal-title">
+  <div class="modal-box tutorial-box">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <span id="tutorial-modal-title"><i class="fa-solid fa-book-open" aria-hidden="true"></i> 사용 안내</span>
+      <button id="tutorial-close-top" class="icon-btn" title="닫기" aria-label="닫기" style="background: none; border: none; cursor: pointer; color: var(--c-text); font-size: 16px;">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="modal-body tutorial-modal-body">
+      <section class="tut-section">
+        <h2 class="tut-h2">📐 각 영역의 역할</h2>
+        <div class="tut-callout" style="margin-bottom: 14px;">
+          💡 좌측 캔버스와 우측 캐릭터 시트는 서로 완전히 별개입니다. 둘 다 함께 활용할 수도 있고, 필요한 한쪽만 작성하여 내보낼 수도 있습니다.
+        </div>
+        <ul class="tut-list">
+          <li><strong>좌측패널:</strong> 중앙 및 우측 패널 작성에 도움이 되는 도구 패널입니다.</li>
+          <li><strong>중앙 캔버스:</strong> 인물을 조작해 원하는 구도를 지정할 수 있습니다.</li>
+          <li><strong>구도 설명:</strong> 캔버스 하단의 [구도 설명] 패널을 통해 원하는 구도를 글로 적을 수 있습니다. 해당 패널을 접거나 펼치면 내보내는 이미지에도 반영됩니다.</li>
+          <li><strong>캐릭터 시트:</strong> 탭(A, B, C…)을 통해 캐릭터 시트를 작성하고 관리할 수 있습니다.</li>
+        </ul>
+      </section>
+
+      <section class="tut-section">
+        <h2 class="tut-h2">🕹️ 중앙 캔버스 인물 조작</h2>
+        <ul class="tut-list">
+          <li><strong>이동 / 크기 / 회전:</strong> 인물을 한 번 클릭해 드래그하거나, 테두리 핸들로 크기·회전을 조절합니다.</li>
+          <li><strong>포즈 편집 (더블클릭):</strong> 인물을 더블클릭 또는 좌측 패널의 [관절 포즈] 모드를 선택하면 파란 관절 핸들이 나타나 직접 포즈를 잡을 수 있습니다. 머리 파츠를 돌려 시선 방향도 조정할 수 있습니다.</li>
+          <li><strong>파츠 앞뒤 순서 (레이어) 변경:</strong> 더블클릭 상태에서 특정 파츠(예: 팔)를 클릭한 뒤 좌측 패널의 레이어 버튼(앞으로/뒤로)을 누르면 겹침 순서를 바꿀 수 있습니다.</li>
+          <li><strong>포즈 복사/붙여넣기:</strong> 좌측 패널의 [포즈 복사]로 다른 인물에게 붙여넣을 수 있습니다.</li>
+          <li><strong>포즈 프리셋:</strong> 기존에 만들어 둔 포즈를 활용하거나, 직접 프리셋을 만들어 저장할 수 있습니다.</li>
+        </ul>
+        <div class="tut-callout tut-warn">
+          ⚠️ 포즈가 안 움직이고 크기만 커지는데요? 인물을 <strong>더블클릭</strong>하지 않은 상태입니다!
+        </div>
+        <div class="tut-callout tut-warn">
+          ⚠️ 팔·다리의 앞뒤 겹침이 이상해요! <strong>더블클릭</strong> 후 해당 파츠를 선택하고 좌측 레이어 버튼을 눌러보세요.
+        </div>
+      </section>
+
+      <section class="tut-section">
+        <h2 class="tut-h2">🖊️ 그리기 도구</h2>
+        <ul class="tut-list">
+          <li><strong>선택:</strong> 좌측 패널에서 선택, 펜, 텍스트, 도형 등을 선택해 캔버스에 설명을 추가할 수 있습니다.</li>
+        </ul>
+      </section>
+
+      <section class="tut-section">
+        <h2 class="tut-h2">📋 캐릭터 시트 작성하기</h2>
+        <ul class="tut-list">
+          <li><strong>이미지 슬롯:</strong> 빈 슬롯을 클릭해 이미지를 넣고, <strong>추가된 이미지를 다시 클릭하여 크롭(구도)을 수정</strong>할 수 있습니다.</li>
+          <li><strong>컬러파레트:</strong> 단색, 그라디언트, 도형 기능을 제공하며, 이미지를 넣을 수도 있습니다. 특이동공, 투톤 등의 색상 표현에 활용해보세요.</li>
+          <li><strong>자유 꾸미기:</strong> 시트 상단의 [이미지 추가], [텍스트 추가] 버튼 등으로 정해진 슬롯 외에도 시트의 빈 공간을 자유롭게 채울 수 있습니다. SD나 의상 설명 등을 추가하는 데 활용할 수 있습니다.</li>
+        </ul>
+      </section>
+
+      <section class="tut-section">
+        <h2 class="tut-h2">📑 다중 캐릭터 관리</h2>
+        <ul class="tut-list">
+          <li>우측 탭(A, B, C…)을 클릭해 캐릭터를 추가하고 탭을 위아래로 드래그해 순서를 바꿀 수 있습니다. 작성한 시트를 삭제할 수 있으며, 삭제한 시트는 복구할 수 없습니다.</li>
+          <li>시트 테마 색상을 변경해 전체 시트 분위기를 한 번에 바꿀 수 있습니다.</li>
+        </ul>
+      </section>
+
+      <section class="tut-section">
+        <h2 class="tut-h2">💾 저장 &amp; 내보내기</h2>
+        <ul class="tut-list">
+          <li><strong>저장:</strong> [저장] 버튼으로 작업 전체를 .json 파일로 보관하고 언제든 다시 불러올 수 있습니다.</li>
+          <li><strong>내보내기:</strong> 상단 [내보내기]에서 전체 합본 / 캐릭터 시트만 / 포즈 캔버스만 등 원하는 부분만 선택해 이미지로 저장합니다.</li>
+        </ul>
+      </section>
+
+      <section class="tut-section">
+        <h2 class="tut-h2">⌨️ 접근성 안내</h2>
+        <ul class="tut-list">
+          <li>PC 환경에 맞춰 제작되었으며, 모바일에서는 정상적으로 사용할 수 없습니다.</li>
+          <li>상단 메뉴 및 우측 정보 입력칸은 키보드(Tab)로 탐색할 수 있습니다.</li>
+          <li>단, 캔버스의 구도 배치와 포즈 드래그 조작은 마우스 또는 펜 입력이 필요합니다.</li>
+        </ul>
+      </section>
+
+    </div>
+    <div class="modal-footer" style="justify-content: flex-end;">
+      <button id="tutorial-close-btn" class="hdr-btn primary-hdr-btn">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- STARTUP MODAL -->
+<div id="startup-modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="startup-modal-title">
+  <div class="modal-box startup-box">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <span id="startup-modal-title"><i class="fa-solid fa-palette" aria-hidden="true"></i> Commission Helper란?</span>
+      <button id="startup-close-top" class="icon-btn" title="닫기" aria-label="닫기" style="background: none; border: none; cursor: pointer; color: var(--c-text); font-size: 16px;">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="modal-body startup-modal-body">
+      <p class="startup-desc">
+        커미션 신청서 및 구도 지시서를 구성할 수 있는 제작 도구입니다.
+      </p>
+      <p class="startup-sub-desc">
+        추가 안내는 상단 헤더의 책 아이콘(<i class="fa-solid fa-book-open" aria-hidden="true"></i>) 또는<br>아래 버튼을 통해 확인하실 수 있습니다.
+      </p>
+      <div class="startup-btn-row">
+        <button id="startup-tutorial-btn" class="hdr-btn primary-hdr-btn">사용 안내 보기</button>
+        <button id="startup-close-btn" class="hdr-btn">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 접근성 상태 메시지 (화면 밖으로 숨김) -->
+<div id="a11y-status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+<canvas id="export-canvas" style="display:none"></canvas>
+<script src="namespace.js?v=20260908_V160"></script>
+<script src="image-slots.js?v=20260908_V160"></script>
+<script src="free-objects.js?v=20260918_V168"></script>
+<script src="text-formatter.js?v=20260908_V160"></script>
+<script src="app.js?v=20260918_V168"></script>
+<script src="skeleton-engine.js?v=20260918_V169"></script>
+<script src="history-manager.js?v=20260918_V169"></script>
+<script src="modal-manager.js?v=20260918_V169"></script>
+</body>
+</html>

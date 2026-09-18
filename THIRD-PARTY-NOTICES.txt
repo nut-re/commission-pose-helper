@@ -1,0 +1,36 @@
+# Third-Party Notices and Credits
+
+This project uses the following third-party resources. 
+We sincerely thank the creators and maintainers of these projects.
+
+--------------------------------------------------------------------------------
+1. html2canvas (v1.4.1)
+--------------------------------------------------------------------------------
+* Copyright (c) 2022 Niklas von Hertzen
+* Licensed under the MIT License
+* Source: https://html2canvas.hertzen.com/ / https://github.com/niklasvh/html2canvas
+
+--------------------------------------------------------------------------------
+2. Font Awesome Free (v6.4.0)
+--------------------------------------------------------------------------------
+* Copyright (c) Fonticons, Inc.
+* Licenses:
+  - Icons: Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0)
+  - Fonts: Licensed under SIL Open Font License 1.1 (OFL-1.1)
+  - Code: Licensed under the MIT License
+* Source: https://fontawesome.com
+
+--------------------------------------------------------------------------------
+3. Google Fonts (Noto Sans KR, Outfit)
+--------------------------------------------------------------------------------
+* Licensed under SIL Open Font License 1.1 (OFL-1.1)
+* Sources: 
+  - https://fonts.google.com/specimen/Noto+Sans+KR
+  - https://fonts.google.com/specimen/Outfit
+
+--------------------------------------------------------------------------------
+4. Paperlogy (페이퍼로지) Font
+--------------------------------------------------------------------------------
+* Copyright (c) 2024 The PAPERLOGY Authors
+* Licensed under the SIL Open Font License, Version 1.1 (OFL-1.1)
+* Source: https://github.com/Freesentation/paperlogy

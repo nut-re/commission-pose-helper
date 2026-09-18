@@ -3095,6 +3095,37 @@ class App {
     const svgBg = document.getElementById('svg-bg');
     if (svgBg) svgBg.setAttribute('fill', '#ffffff');
 
+    // 캐릭터 시트 완전 초기화
+    if (typeof createDefaultCharacter === 'function') {
+      this.characters = [createDefaultCharacter('c1', 'A')];
+      this.activeCharId = 'c1';
+      if (typeof this._renderBookmarkTabs === 'function') this._renderBookmarkTabs();
+      if (typeof this._switchCharacter === 'function') this._switchCharacter(this.activeCharId);
+    }
+
+    // 테마 설정 초기화
+    if (typeof this._applySheetTheme === 'function') {
+       this.sheetTheme = { id: 'mono', presetId: 'mono', main: '#2E2E2E', sub: '#E6E6E6', title: '#FFFFFF', body: '#1E293B', bg: '#FFFFFF' };
+       this._applySheetTheme(this.sheetTheme, 'mono');
+    }
+
+    // 구도 설명 테마 초기화
+    if (this.compDesc && typeof this._applyCompDescTheme === 'function') {
+       this.compDesc = { visible: true, folded: false, keypoint: '', features: '', theme: { presetId: 'mono', main: '#2E2E2E', sub: '#555555', title: '#ffffff', body: '#ffffff', bg: '#f9f9f9', link: true, fs: 14, fw: 500 } };
+       this._applyCompDescTheme(this.compDesc.theme);
+       const kp = document.getElementById('cs-comp-keypoint-input');
+       const ft = document.getElementById('cs-comp-features-input');
+       if (kp) kp.innerText = '';
+       if (ft) ft.innerHTML = '';
+       const outer = document.getElementById('cs-comp-outer');
+       if (outer) {
+         outer.classList.toggle('hidden', false);
+         outer.classList.toggle('folded', false);
+       }
+       const sideToggle = document.getElementById('canvas-comp-desc-toggle');
+       if (sideToggle) sideToggle.checked = true;
+    }
+
     // Add initial dummy (조용히 추가)
     this.addDummy(null, null, true);
 

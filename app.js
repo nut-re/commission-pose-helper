@@ -644,20 +644,27 @@ class App {
       const chips = char.chips || {};
       clonedRef.querySelectorAll('.cs-color-swatch').forEach(sw => {
         const key = sw.dataset.csChipKey;
-        const st = chips[key];
-        if (st) {
-          if (st.baseMode === 'color') {
-            sw.style.backgroundColor = st.color || '#ffffff';
-            sw.style.backgroundImage = '';
-          } else if (st.baseMode === 'gradient') {
-            sw.style.backgroundColor = 'transparent';
-            sw.style.backgroundImage = 'linear-gradient(' + st.gradient.dir + 'deg, ' + st.gradient.stops.join(', ') + ')';
-            sw.style.backgroundSize = '100% 100%';
-          } else if (st.baseMode === 'image') {
-            sw.style.backgroundColor = 'transparent';
-            sw.style.backgroundImage = 'url(' + st.imageUrl + ')';
-            sw.style.backgroundSize = 'cover';
-          }
+        // 기존 배열 형태면 무시하고 기본값 적용
+        let st = Array.isArray(chips) ? null : chips[key];
+        
+        // st가 없으면 기본 흰색 상태로 렌더링되도록 강제 초기화
+        if (!st) {
+          st = { baseMode: 'color', color: '#ffffff' };
+        }
+
+        if (st.baseMode === 'color') {
+          sw.style.backgroundColor = st.color || '#ffffff';
+          sw.style.backgroundImage = '';
+        } else if (st.baseMode === 'gradient') {
+          sw.style.backgroundColor = 'transparent';
+          const dir = st.gradient?.dir || 180;
+          const stops = st.gradient?.stops || ['#ffffff', '#aaaaaa'];
+          sw.style.backgroundImage = `linear-gradient(${dir}deg, ${stops.join(', ')})`;
+          sw.style.backgroundSize = '100% 100%';
+        } else if (st.baseMode === 'image') {
+          sw.style.backgroundColor = 'transparent';
+          sw.style.backgroundImage = st.imageUrl ? `url(${st.imageUrl})` : '';
+          sw.style.backgroundSize = 'cover';
         }
       });
 
@@ -3425,13 +3432,7 @@ class App {
         'sub-3': createDefaultSlotState(),
         'sub-4': createDefaultSlotState()
       },
-      chips: [
-        { color: '#ffffff', type: 'solid', angle: 0, shape: 'square' },
-        { color: '#ffffff', type: 'solid', angle: 0, shape: 'square' },
-        { color: '#ffffff', type: 'solid', angle: 0, shape: 'square' },
-        { color: '#ffffff', type: 'solid', angle: 0, shape: 'square' },
-        { color: '#ffffff', type: 'solid', angle: 0, shape: 'square' }
-      ],
+      chips: {},
       theme: { presetId: 'mono', main: '#2E2E2E', sub: '#E6E6E6', title: '#FFFFFF', body: '#1E293B', bg: '#FFFFFF' },
       freeObjects: []
     });
@@ -4712,8 +4713,6 @@ class App {
     };
 
     this._restoreAllChipsState = (savedChips) => {
-      // 이전 캐릭터의 잔여 데이터(undefined 키 포함)가 남지 않도록 Map 초기화
-      chipState.clear();
       document.querySelectorAll('.cs-color-swatch').forEach(chip => {
         const key = chip.dataset.csChipKey;
         if (!key) return;

@@ -1519,20 +1519,29 @@ class App {
     if (!badge || !obj) return;
 
     if (obj.type === 'stickman' && this.selectedPart !== 'all') {
-      // 파츠 레이어: 해당 파츠의 partOffset 값으로 상대 단계 표시
+      // 파츠 레이어: partOffset 값 + 다른 오브젝트와의 교차 여부 표시
       const offset = (obj.partOffsets && obj.partOffsets[this.selectedPart]) || 0;
+      // 이 파츠의 실효 zIndex = obj.zIndex * 100 + offset
+      const effectiveZ = (obj.zIndex || 0) * 100 + offset;
+      // 다른 오브젝트(이 인물 제외)의 zIndex * 100 중 이 파츠보다 아래/위 개수 계산
+      const otherZs = this.objects.filter(o => o.id !== obj.id).map(o => (o.zIndex || 0) * 100);
+      const aboveCount = otherZs.filter(z => z > effectiveZ).length;
+      const baseZ = (obj.zIndex || 0) * 100;
+
       if (offset === 0) {
         badge.textContent = '기본';
         badge.className = 'layer-depth-badge badge-default';
       } else if (offset > 0) {
-        badge.textContent = `↑ 앞 +${offset}단계`;
+        const crossed = otherZs.filter(z => z > baseZ && z <= effectiveZ).length;
+        badge.textContent = crossed > 0 ? `↑ 앞 (${crossed}개 추월)` : `↑ 앞 +${offset}`;
         badge.className = 'layer-depth-badge badge-front';
       } else {
-        badge.textContent = `↓ 뒤 ${offset}단계`;
+        const crossed = otherZs.filter(z => z < baseZ && z >= effectiveZ).length;
+        badge.textContent = crossed > 0 ? `↓ 뒤 (${crossed}개 뒤로)` : `↓ 뒤 ${offset}`;
         badge.className = 'layer-depth-badge badge-back';
       }
     } else {
-      // 전체 파츠 선택: 전체 인물 중 zIndex 순위 표시
+      // 전체 파츠 선택: 전체 오브젝트 중 zIndex 순위 표시
       const sorted = [...this.objects].sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
       const rank = sorted.findIndex(o => o.id === obj.id) + 1;
       const total = sorted.length;
@@ -1569,16 +1578,22 @@ class App {
     if (!s) return;
     this._pushHistory();
     if (s.type === 'stickman' && this.selectedPart !== 'all') {
-      let delta = 1;
-      const currentOffsets = Object.values(s.partOffsets || {});
-      const curVal = s.partOffsets[this.selectedPart] || 0;
+      // 파츠 레이어 이동 — 전체 오브젝트의 zIndex 범위를 기준으로 front/back 계산
+      // zIndex 공간: obj.zIndex * 100 + partOffset
+      // 따라서 외부 오브젝트를 완전히 넘어서려면 delta >= 100 필요
+      const allZIndices = this.objects.map(o => (o.zIndex || 0) * 100);
+      const globalMax = allZIndices.length ? Math.max(...allZIndices) : 0;
+      const globalMin = allZIndices.length ? Math.min(...allZIndices) : 0;
+      const curOffset = s.partOffsets[this.selectedPart] || 0;
+      const curEffective = (s.zIndex || 0) * 100 + curOffset;
 
+      let delta = 1;
       if (dir === 'front') {
-        const maxVal = currentOffsets.length ? Math.max(...currentOffsets) : 0;
-        delta = Math.max(1, maxVal - curVal + 2);
+        // 모든 오브젝트 중 최상위보다 위로 이동
+        delta = Math.max(1, globalMax - curEffective + 110);
       } else if (dir === 'back') {
-        const minVal = currentOffsets.length ? Math.min(...currentOffsets) : 0;
-        delta = Math.min(-1, minVal - curVal - 2);
+        // 모든 오브젝트 중 최하위보다 아래로 이동
+        delta = Math.min(-1, globalMin - curEffective - 110);
       } else if (dir === 'fwd') {
         delta = 1;
       } else if (dir === 'bwd') {
@@ -1611,7 +1626,8 @@ class App {
       rCalf: ['rFoot']
     };
     const newVal = (stickman.partOffsets[part] || 0) + delta;
-    stickman.partOffsets[part] = Math.max(-50, Math.min(50, newVal));
+    // 클램핑을 ±500으로 확장하여 여러 오브젝트(도형, 다른 인물)를 자유롭게 넘나들 수 있게 함
+    stickman.partOffsets[part] = Math.max(-500, Math.min(500, newVal));
     (children[part] || []).forEach(ch => this._shiftPartOffsets(stickman, ch, delta));
   }
 
@@ -1765,7 +1781,9 @@ class App {
         parts.forEach(p => {
           const hl = (obj === this.selected && this.selectedPart === p.name);
           items.push({
-            zIndex: (obj.zIndex * 1000) + (obj.partOffsets[p.name] || 0),
+            // zIndex 단위: obj.zIndex * 100 으로 도형과 동일한 공간 공유
+            // partOffset 은 파츠 간 내부 순서 및 도형과의 교차를 동시에 담당
+            zIndex: (obj.zIndex * 100) + (obj.partOffsets[p.name] || 0),
             drawFn: () => p.draw(hl),
             stickmanId: obj.id,
             partName: p.name,
@@ -1774,7 +1792,8 @@ class App {
         });
       } else {
         items.push({
-          zIndex: obj.zIndex * 1000,
+          // 도형의 zIndex도 * 100 단위로 통일하여 파츠와 동일한 공간에서 경쟁
+          zIndex: obj.zIndex * 100,
           drawFn: () => this._drawStdObj(obj),
           objRef: obj
         });

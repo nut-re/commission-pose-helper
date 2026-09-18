@@ -3108,6 +3108,9 @@ class App {
   // ── PROJECT SAVE / LOAD ───────────────────────
   _saveProject() {
     announceStatus('프로젝트가 저장되었습니다.');
+    if (typeof this._saveCurrentCharacterData === 'function') {
+      this._saveCurrentCharacterData();
+    }
     const data = {
       version: '2.6',
       canvasBg: this.canvasBg,
@@ -3118,7 +3121,9 @@ class App {
       refCategory: this.refCategory,
       refSlots: this.refSlots,
       sheetTheme: this.sheetTheme,
-      compDesc: this.compDesc
+      compDesc: this.compDesc,
+      characters: this.characters,
+      activeCharId: this.activeCharId
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
     this._download(URL.createObjectURL(blob), 'commission_project.json');
@@ -3558,6 +3563,7 @@ class App {
         }
       });
     };
+    this._saveCurrentCharacterData = saveCurrentCharacterData;
 
     // 책갈피 탭들 렌더링
     this._renderBookmarkTabs = () => {

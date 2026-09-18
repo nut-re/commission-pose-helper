@@ -1523,9 +1523,10 @@ class App {
       const offset = (obj.partOffsets && obj.partOffsets[this.selectedPart]) || 0;
       // 이 파츠의 실효 zIndex = obj.zIndex * 100 + offset
       const effectiveZ = (obj.zIndex || 0) * 100 + offset;
-      // 다른 오브젝트(이 인물 제외)의 zIndex * 100 중 이 파츠보다 아래/위 개수 계산
-      const otherZs = this.objects.filter(o => o.id !== obj.id).map(o => (o.zIndex || 0) * 100);
-      const aboveCount = otherZs.filter(z => z > effectiveZ).length;
+      // 다른 오브젝트의 실효 zIndex (도형은 +50 오프셋 반영)
+      const otherZs = this.objects
+        .filter(o => o.id !== obj.id)
+        .map(o => o.type === 'stickman' ? (o.zIndex || 0) * 100 : (o.zIndex || 0) * 100 + 50);
       const baseZ = (obj.zIndex || 0) * 100;
 
       if (offset === 0) {
@@ -1578,21 +1579,23 @@ class App {
     if (!s) return;
     this._pushHistory();
     if (s.type === 'stickman' && this.selectedPart !== 'all') {
-      // 파츠 레이어 이동 — 전체 오브젝트의 zIndex 범위를 기준으로 front/back 계산
-      // zIndex 공간: obj.zIndex * 100 + partOffset
-      // 따라서 외부 오브젝트를 완전히 넘어서려면 delta >= 100 필요
-      const allZIndices = this.objects.map(o => (o.zIndex || 0) * 100);
-      const globalMax = allZIndices.length ? Math.max(...allZIndices) : 0;
-      const globalMin = allZIndices.length ? Math.min(...allZIndices) : 0;
+      // 파츠 레이어 이동 — 실효 zIndex 공간 기준 계산
+      // 파츠: obj.zIndex * 100 + partOffset
+      // 도형: obj.zIndex * 100 + 50  (도형은 +50 오프셋)
+      const allEffective = this.objects.map(o =>
+        o.type === 'stickman' ? (o.zIndex || 0) * 100 : (o.zIndex || 0) * 100 + 50
+      );
+      const globalMax = allEffective.length ? Math.max(...allEffective) : 0;
+      const globalMin = allEffective.length ? Math.min(...allEffective) : 0;
       const curOffset = s.partOffsets[this.selectedPart] || 0;
       const curEffective = (s.zIndex || 0) * 100 + curOffset;
 
       let delta = 1;
       if (dir === 'front') {
-        // 모든 오브젝트 중 최상위보다 위로 이동
+        // 모든 오브젝트(도형 포함)의 실효 최상위보다 위로 이동
         delta = Math.max(1, globalMax - curEffective + 110);
       } else if (dir === 'back') {
-        // 모든 오브젝트 중 최하위보다 아래로 이동
+        // 모든 오브젝트(도형 포함)의 실효 최하위보다 아래로 이동
         delta = Math.min(-1, globalMin - curEffective - 110);
       } else if (dir === 'fwd') {
         delta = 1;
@@ -1601,6 +1604,7 @@ class App {
       }
       this._shiftPartOffsets(s, this.selectedPart, delta);
     } else {
+      // 오브젝트 전체 레이어 (인물 전체 or 도형 등)
       if (dir === 'front') s.zIndex = this._nextZ();
       else if (dir === 'back') s.zIndex = Math.min(...this.objects.map(o => o.zIndex || 0)) - 1;
       else if (dir === 'fwd') s.zIndex += 1;
@@ -1608,6 +1612,7 @@ class App {
     }
     this._render();
     this._updateLayerLbl(); // 레이어 조작 즉시 뱃지 반영
+
   }
 
   _shiftPartOffsets(stickman, part, delta) {
@@ -1784,6 +1789,7 @@ class App {
             // zIndex 단위: obj.zIndex * 100 으로 도형과 동일한 공간 공유
             // partOffset 은 파츠 간 내부 순서 및 도형과의 교차를 동시에 담당
             zIndex: (obj.zIndex * 100) + (obj.partOffsets[p.name] || 0),
+            order: items.length, // 안정 정렬 보조 키
             drawFn: () => p.draw(hl),
             stickmanId: obj.id,
             partName: p.name,
@@ -1792,15 +1798,21 @@ class App {
         });
       } else {
         items.push({
-          // 도형의 zIndex도 * 100 단위로 통일하여 파츠와 동일한 공간에서 경쟁
-          zIndex: obj.zIndex * 100,
+          // 도형은 +50 오프셋: 인물 파츠 기본 범위(-12~+9)와 겹치지 않도록
+          // 파츠가 의도적으로 도형을 넘어서려면 offset >= 51 or <= -51 필요
+          zIndex: obj.zIndex * 100 + 50,
+          order: items.length, // 안정 정렬 보조 키
           drawFn: () => this._drawStdObj(obj),
           objRef: obj
         });
       }
     });
 
-    items.sort((a, b) => a.zIndex - b.zIndex);
+    // 안정 정렬: zIndex가 같으면 삽입 순서(order) 기준 유지 → 렌더마다 순서 변동 방지
+    items.sort((a, b) => {
+      const dz = a.zIndex - b.zIndex;
+      return dz !== 0 ? dz : a.order - b.order;
+    });
     items.forEach(item => {
       const el = item.drawFn();
       if (el && item.stickmanId) {

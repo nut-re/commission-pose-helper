@@ -595,7 +595,7 @@ class App {
         { id: 'cs-orig-name-input', val: char.origName || '',              isMulti: false },
         { id: 'cs-spec-input',      val: char.spec || '',                  isMulti: false },
         { id: 'cs-keyword-input',   val: char.keywords || '',              isMulti: false },
-        { id: 'cs-keypoint-input',  val: char.keypoints || '',             isMulti: false },
+        { id: 'cs-keypoint-input',  val: char.keypoints || '',             isMulti: true },
         { id: 'cs-features-input',  val: char.features || '',              isMulti: true },
         { id: 'cs-source-input',    val: char.source || '',                isMulti: false }
       ];

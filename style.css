@@ -2695,9 +2695,7 @@ body {
 
 /* ── 구도 설명란 전용 테마 & 폰트 설정 팝업 ── */
 .cs-comp-theme-popup {
-  position: absolute;
-  top: 44px;
-  right: 12px;
+  position: fixed;
   width: 320px;
   background: #ffffff;
   border: 1px solid #cbd5e1;

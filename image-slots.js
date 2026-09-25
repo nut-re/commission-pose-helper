@@ -53,9 +53,13 @@ function getBgPopup() {
     bgPopupEl.querySelector('#slot-bg-hex').value = e.target.value;
     applyBgColor(e.target.value);
   });
-  bgPopupEl.querySelector('#slot-bg-hex').addEventListener('change', function(e) {
+  bgPopupEl.querySelector('#slot-bg-hex').addEventListener('input', function(e) {
     var c = e.target.value.trim();
     if (!/^#/.test(c)) c = '#' + c;
+    // 3자리 축약형 지원 (예: #fff -> #ffffff)
+    if (/^#[0-9a-fA-F]{3}$/.test(c)) {
+      c = '#' + c[1] + c[1] + c[2] + c[2] + c[3] + c[3];
+    }
     if (/^#[0-9a-fA-F]{6}$/.test(c)) {
       bgPopupEl.querySelector('#slot-bg-native').value = c;
       applyBgColor(c);

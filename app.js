@@ -1067,6 +1067,7 @@ class App {
       return;
     }
     if (this.tool === 'pen') {
+      this._pushHistory(); // ← before 스냅샷: 그리기 시작 직전
       this.isDrawing = true;
       this.drawPts = [{ x: pt.x, y: pt.y }];
       this.tempEl = svgEl('path', { stroke: this.drawingColor, 'stroke-width': this.penWidth,
@@ -1076,6 +1077,7 @@ class App {
       return;
     }
     if (['rect','circle','arrow'].includes(this.tool)) {
+      this._pushHistory(); // ← before 스냅샷: 도형 그리기 시작 직전
       this.isDrawing = true;
       this.shapeOrigin = { x: pt.x, y: pt.y };
       const tag = this.tool === 'arrow' ? 'line' : this.tool;
@@ -1104,8 +1106,11 @@ class App {
     // Drawing update
     if (this.isDrawing && this.tempEl) {
       if (this.tool === 'pen') {
-        this.drawPts.push({ x: pt.x, y: pt.y });
-        this.tempEl.setAttribute('d', this._ptsToPath(this.drawPts));
+        const lastPt = this.drawPts[this.drawPts.length - 1];
+        if (!lastPt || Math.hypot(pt.x - lastPt.x, pt.y - lastPt.y) >= 3) {
+          this.drawPts.push({ x: pt.x, y: pt.y });
+          this.tempEl.setAttribute('d', this._ptsToPath(this.drawPts));
+        }
       } else if (this.tool === 'rect') {
         const o = this.shapeOrigin;
         const x = Math.min(pt.x, o.x), y = Math.min(pt.y, o.y);
@@ -1266,6 +1271,8 @@ class App {
     this.dragMode = null;
     this.dragJoint = null;
     DragBus.clear();
+    // ← after 스냅샷: pointerdown의 before와 쌍을 이룸.
+    //   변경이 없는 단순 클릭은 deduplication이 자동으로 걸러줌.
     this._pushHistory();
     this._render(); // Make sure it re-renders immediately!
   }
@@ -1855,6 +1862,7 @@ class App {
           this.lastClickObj = obj;
 
           if (this.editMode === 'transform') {
+            this._pushHistory(); // ← before 스냅샷: 이동 시작 직전
             this.dragMode = 'move';
             const pt = svgPt(this.svg, e);
             this.dragOff = { x: pt.x - obj.x, y: pt.y - obj.y };
@@ -1871,6 +1879,7 @@ class App {
             };
             const jointKey = partToJoint[item.partName];
             if (jointKey) {
+              this._pushHistory(); // ← before 스냅샷: 파츠 포즈 드래그 시작 직전
               this.dragMode = 'pose';
               this.dragJoint = jointKey;
               this.activeJoint = jointKey; // 노란 강조 표시 활성화
@@ -2240,6 +2249,7 @@ class App {
       }
 
       this._select(obj);
+      this._pushHistory(); // ← before 스냅샷: 일반 오브젝트 이동 시작 직전
       this.dragMode = 'move';
       const pt = svgPt(this.svg, e);
       this.dragOff = { x: pt.x - obj.x, y: pt.y - obj.y };
@@ -2248,7 +2258,20 @@ class App {
   }
 
   _ptsToPath(pts, ox = 0, oy = 0) {
-    return pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x + ox} ${p.y + oy}`).join(' ');
+    if (pts.length === 0) return '';
+    if (pts.length === 1) return `M ${pts[0].x + ox} ${pts[0].y + oy} Z`;
+    
+    let path = `M ${pts[0].x + ox} ${pts[0].y + oy}`;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const midX = (p1.x + p2.x) / 2;
+      const midY = (p1.y + p2.y) / 2;
+      path += ` Q ${p1.x + ox} ${p1.y + oy}, ${midX + ox} ${midY + oy}`;
+    }
+    const last = pts[pts.length - 1];
+    path += ` L ${last.x + ox} ${last.y + oy}`;
+    return path;
   }
 
   _getStickmanUnscaledBBox(obj) {
@@ -2359,6 +2382,7 @@ class App {
     const rotHandle = svgEl('circle', { cx: cx, cy: cy - hh - 20, r: 5, class: 'ctrl-dot rotate' });
     rotHandle.addEventListener('pointerdown', e => {
       e.stopPropagation();
+      this._pushHistory(); // ← before 스냅샷: 회전 시작 직전
       const pt = svgPt(this.svg, e);
       this.dragMode = 'rotate';
       this.initAngle = obj.angle;
@@ -2374,6 +2398,7 @@ class App {
       hnd.style.cursor = (idx % 2 === 0) ? 'nwse-resize' : 'nesw-resize';
       hnd.addEventListener('pointerdown', e => {
         e.stopPropagation();
+        this._pushHistory(); // ← before 스냅샷: 스케일 조정 시작 직전
         const pt = svgPt(this.svg, e);
         this.dragMode = 'scale';
         this.initScale = obj.scale;
@@ -2419,6 +2444,7 @@ class App {
     rootG.appendChild(rootHit);
     const startRootDrag = e => {
       e.stopPropagation();
+      this._pushHistory(); // ← before 스냅샷: 인물 이동 시작 직전
       this.dragMode = 'move';
       this.dragJoint = 'root';
       this.activeJoint = null;
@@ -2451,6 +2477,7 @@ class App {
       g.appendChild(hit);
       const startDrag = e => {
         e.stopPropagation();
+        this._pushHistory(); // ← before 스냅샷: 관절 포즈 드래그 시작 직전
         this.dragMode = 'pose';
         this.dragJoint = k;
         this.activeJoint = k;
@@ -2522,6 +2549,7 @@ class App {
 
       const startFacingDrag = e => {
         e.stopPropagation();
+        this._pushHistory(); // ← before 스냅샷: 시선 드래그 시작 직전
         this.dragMode = 'facing';
         this.dragCenter = headCenter;
         this.dragThetaRoll = thetaRoll;
@@ -3096,12 +3124,10 @@ class App {
     if (svgBg) svgBg.setAttribute('fill', '#ffffff');
 
     // 캐릭터 시트 완전 초기화
-    if (typeof createDefaultCharacter === 'function') {
-      this.characters = [createDefaultCharacter('c1', 'A')];
-      this.activeCharId = 'c1';
-      if (typeof this._renderBookmarkTabs === 'function') this._renderBookmarkTabs();
-      if (typeof this._switchCharacter === 'function') this._switchCharacter(this.activeCharId);
-    }
+    this.characters = [this._createDefaultCharacter('c1', 'A')];
+    this.activeCharId = 'c1';
+    if (typeof this._renderBookmarkTabs === 'function') this._renderBookmarkTabs();
+    if (typeof this._switchCharacter === 'function') this._switchCharacter(this.activeCharId);
 
     // 테마 설정 초기화
     if (typeof this._applySheetTheme === 'function') {
@@ -3109,21 +3135,35 @@ class App {
        this._applySheetTheme(this.sheetTheme, 'mono');
     }
 
-    // 구도 설명 테마 초기화
-    if (this.compDesc && typeof this._applyCompDescTheme === 'function') {
-       this.compDesc = { visible: true, folded: false, keypoint: '', features: '', theme: { presetId: 'mono', main: '#2E2E2E', sub: '#555555', title: '#ffffff', body: '#ffffff', bg: '#f9f9f9', link: true, fs: 14, fw: 500 } };
-       this._applyCompDescTheme(this.compDesc.theme);
-       const kp = document.getElementById('cs-comp-keypoint-input');
-       const ft = document.getElementById('cs-comp-features-input');
-       if (kp) kp.innerText = '';
-       if (ft) ft.innerHTML = '';
-       const outer = document.getElementById('cs-comp-outer');
-       if (outer) {
-         outer.classList.toggle('hidden', false);
-         outer.classList.toggle('folded', false);
-       }
-       const sideToggle = document.getElementById('canvas-comp-desc-toggle');
-       if (sideToggle) sideToggle.checked = true;
+    // 구도 설명란 완전 초기화
+    if (typeof this._applyCompDescTheme === 'function') {
+      this.compDesc = {
+        visible: true,
+        folded: false,
+        keypoint: '',
+        features: '',
+        theme: {
+          main: '#2E2E2E',
+          sub: '#E6E6E6',
+          bg: '#FFFFFF',
+          titleText: '#FFFFFF',
+          bodyText: '#1E293B',
+          fontSize: 13,
+          fontWeight: 400
+        },
+        linkSheetTheme: false
+      };
+      this._applyCompDescTheme(this.compDesc.theme);
+      const kp = document.getElementById('cs-comp-keypoint-input');
+      const ft = document.getElementById('cs-comp-features-input');
+      if (kp) kp.innerText = '';
+      if (ft) ft.innerHTML = '';
+      const outer = document.getElementById('cs-comp-outer');
+      if (outer) {
+        outer.classList.remove('hidden', 'folded');
+      }
+      const sideToggle = document.getElementById('canvas-comp-desc-toggle');
+      if (sideToggle) sideToggle.checked = true;
     }
 
     // Add initial dummy (조용히 추가)
@@ -3176,6 +3216,40 @@ class App {
     const refCat = document.getElementById('ref-cat');
     if (refCat) refCat.value = this.refCategory;
     this.refSlots = data.refSlots || [];
+
+    // ── 캐릭터 시트 복원 ─────────────────────────────────────────
+    if (Array.isArray(data.characters) && data.characters.length > 0) {
+      const SLOT_KEYS = ['main-img', 'sub-1', 'sub-2', 'sub-3', 'sub-4'];
+      // 각 캐릭터 객체를 기본값으로 보정 (이전 버전 JSON과의 호환성)
+      this.characters = data.characters.map(saved => {
+        const def = this._createDefaultCharacter(saved.id || ('c_' + Date.now()), saved.letter || 'A');
+        const merged = { ...def, ...saved };
+        // 이미지 슬롯 누락 항목 보정
+        if (!merged.images || typeof merged.images !== 'object') {
+          merged.images = def.images;
+        } else {
+          SLOT_KEYS.forEach(k => {
+            if (!merged.images[k]) merged.images[k] = this._createDefaultSlotState();
+          });
+        }
+        if (!merged.chips || typeof merged.chips !== 'object') merged.chips = {};
+        if (!merged.theme || typeof merged.theme !== 'object') merged.theme = { ...def.theme };
+        if (!Array.isArray(merged.freeObjects)) merged.freeObjects = [];
+        return merged;
+      });
+
+      // activeCharId 복원 – 없으면 첫 번째 탭
+      const savedActiveId = data.activeCharId;
+      this.activeCharId = (savedActiveId && this.characters.find(c => c.id === savedActiveId))
+        ? savedActiveId
+        : this.characters[0].id;
+
+      // 탭 렌더링 → 시트 데이터 화면에 표시
+      if (typeof this._renderBookmarkTabs === 'function') this._renderBookmarkTabs();
+      if (typeof this._switchCharacter   === 'function') this._switchCharacter(this.activeCharId);
+    }
+    // ──────────────────────────────────────────────────────────────
+
     if (data.sheetTheme && typeof this._applySheetTheme === 'function') {
       this._applySheetTheme(data.sheetTheme, data.sheetTheme.presetId || 'mono');
     }
@@ -3431,6 +3505,31 @@ class App {
       }
     }
   }
+  // ── 캐릭터 기본 데이터 팩토리 (클래스 메서드 – 어디서든 접근 가능) ─
+  _createDefaultSlotState() {
+    return { original: null, scale: 1, offsetX: 0, offsetY: 0, rotate: 0, bgColor: '#ffffff' };
+  }
+
+  _createDefaultCharacter(id, letter) {
+    const s = () => this._createDefaultSlotState();
+    return {
+      id, letter,
+      name: letter + '.',
+      origName: '원어 이름',
+      spec: '키 / 체형',
+      keywords: '#성격 키워드 #성격 키워드 #성격 키워드',
+      keypoints: '빠지면 안 되는 중요한 특징을 서술해 주세요.',
+      features: '- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.',
+      source: '',
+      images: {
+        'main-img': s(), 'sub-1': s(), 'sub-2': s(), 'sub-3': s(), 'sub-4': s()
+      },
+      chips: {},
+      theme: { presetId: 'mono', main: '#2E2E2E', sub: '#E6E6E6', title: '#FFFFFF', body: '#1E293B', bg: '#FFFFFF' },
+      freeObjects: []
+    };
+  }
+
   // ── 다인(N인) 캐릭터 책갈피(도킹 탭) 시스템 & 데이터 스위칭 ─────
   _initBookmarkDeck() {
     const tabsContainer = document.getElementById('cs-bookmark-tabs');
@@ -3440,42 +3539,9 @@ class App {
 
     const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    // 슬롯 1개당 기본 상태 생성 헬퍼
-    const createDefaultSlotState = () => ({
-      original: null,
-      scale: 1,
-      offsetX: 0,
-      offsetY: 0,
-      rotate: 0,
-      bgColor: '#ffffff'
-    });
-
-    // 캐릭터 1명당 완전한 독립 데이터 스키마 생성 팩토리
-    const createDefaultCharacter = (id, letter) => ({
-      id: id,
-      letter: letter,
-      name: letter + '.',
-      origName: '원어 이름',
-      spec: '키 / 체형',
-      keywords: '#성격 키워드 #성격 키워드 #성격 키워드',
-      keypoints: '빠지면 안 되는 중요한 특징을 서술해 주세요.',
-      features: '- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.',
-      source: '',
-      images: {
-        'main-img': createDefaultSlotState(),
-        'sub-1': createDefaultSlotState(),
-        'sub-2': createDefaultSlotState(),
-        'sub-3': createDefaultSlotState(),
-        'sub-4': createDefaultSlotState()
-      },
-      chips: {},
-      theme: { presetId: 'mono', main: '#2E2E2E', sub: '#E6E6E6', title: '#FFFFFF', body: '#1E293B', bg: '#FFFFFF' },
-      freeObjects: []
-    });
-
-    // 각 캐릭터의 독립 데이터 저장소 (텍스트 필드, 이미지 5종, 컬러칩 5종, 테마, 스티커)
+    // 각 캐릭터의 독립 데이터 저장소 – 팩토리는 클래스 메서드(_createDefaultCharacter)로 분리됨
     this.characters = [
-      createDefaultCharacter('c1', 'A')
+      this._createDefaultCharacter('c1', 'A')
     ];
     this.activeCharId = 'c1';
 
@@ -3726,7 +3792,7 @@ class App {
         const usedLetters = new Set(this.characters.map(c => c.letter));
         const letter = [...LETTERS].find(l => !usedLetters.has(l)) || String(this.characters.length + 1);
         const newId = 'c_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-        const newChar = createDefaultCharacter(newId, letter);
+        const newChar = this._createDefaultCharacter(newId, letter);
         this.characters.push(newChar);
         this.activeCharId = newChar.id;
         this._renderBookmarkTabs();

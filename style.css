@@ -2057,10 +2057,6 @@ body {
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
-  /* 상하대칭 균등 여백 디폴트 */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 /* 수평 정렬 속성 지원 */

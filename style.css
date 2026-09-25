@@ -2057,6 +2057,9 @@ body {
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
+  /* 수직 가운데 정렬: grid align-content는 인라인 자식(b, i)을 블록화하지 않음 */
+  display: grid;
+  align-content: center;
 }
 
 /* 수평 정렬 속성 지원 */

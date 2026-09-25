@@ -4298,26 +4298,41 @@ class App {
   // <b>/<i> 태그가 블록 flex-item 으로 취급되어 강제 줄바꿈이 발생함.
   // 대신 순수 block 상태에서 padding-top 만 동적으로 조정한다.
   _centerBlockTextareas() {
+    const PADDING_BASE = 6; // CSS 기본값(px)
+
     const center = (el) => {
       if (!el) return;
-      // 패딩을 6px 기본값으로 리셋하고 실제 콘텐츠 높이 측정
-      el.style.paddingTop = '6px';
-      const avail   = el.clientHeight;      // 사용 가능한 전체 높이
-      const content = el.scrollHeight;      // 실제 콘텐츠 높이
-      const gap     = avail - content;
-      if (gap > 12) {
-        el.style.paddingTop = Math.floor(gap / 2) + 'px';
+      // 1) 패딩을 기본값으로 리셋
+      el.style.paddingTop    = PADDING_BASE + 'px';
+      el.style.paddingBottom = PADDING_BASE + 'px';
+
+      // 2) 이 시점의 clientHeight = flex: 1 로 늘어난 전체 칸 높이
+      //    scrollHeight = 실제 콘텐츠(텍스트) + 위아래 패딩 합산 높이
+      const outer   = el.clientHeight;
+      const inner   = el.scrollHeight;
+      const spare   = outer - inner;   // 남는 여백
+
+      if (spare > 0) {
+        // 위아래 패딩을 늘려서 콘텐츠를 수직 가운데로 밀기
+        const extra = Math.floor(spare / 2);
+        el.style.paddingTop    = (PADDING_BASE + extra) + 'px';
+        el.style.paddingBottom = (PADDING_BASE + extra) + 'px';
       }
     };
 
-    const targets = document.querySelectorAll('.cs-block-textarea');
+    const targets = Array.from(document.querySelectorAll('.cs-block-textarea'));
+
+    // 첫 실행은 레이아웃이 완전히 잡힌 다음 프레임에 수행
+    requestAnimationFrame(() => {
+      targets.forEach(el => center(el));
+    });
+
+    // 사용자 입력마다 재계산
     targets.forEach(el => {
-      center(el);
-      // 사용자가 입력할 때마다 재계산
       el.addEventListener('input', () => center(el));
     });
 
-    // 창 크기 바뀌면 전체 재계산
+    // 창 크기 변경 시 전체 재계산
     window.addEventListener('resize', () => {
       targets.forEach(el => center(el));
     });

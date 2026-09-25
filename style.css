@@ -2041,11 +2041,23 @@ body {
   opacity: 0.75;
 }
 
-.cs-block-textarea {
+/* 수직 가운데 정렬 래퍼: flex 컨텍스트는 여기에만 적용.
+   contenteditable(.cs-block-textarea) 자체에 flex/grid를 걸면
+   execCommand('bold') 등이 삽입하는 <b>/<i>가 블록 flex-item이 되어 줄바꿈 발생.
+   래퍼가 정렬을 담당하고 contenteditable은 순수 block으로 유지. */
+.cs-textarea-wrapper {
   flex: 1;
+  display: flex;
+  align-items: center;
+  overflow-y: auto;
+  background-color: var(--cs-sub-color);
+  min-height: 0;
+}
+
+.cs-block-textarea {
   width: 100%;
   border: none;
-  background-color: var(--cs-sub-color);
+  background-color: transparent;
   color: var(--cs-body-text);
   font-size: 14px;
   line-height: 1.45;
@@ -2054,10 +2066,8 @@ body {
   resize: none;
   font-family: var(--font);
   box-sizing: border-box;
-  overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
-  /* 수직 정렬은 JS(_centerBlockTextareas)에서 padding-top으로 처리 */
 }
 
 /* 수평 정렬 속성 지원 */

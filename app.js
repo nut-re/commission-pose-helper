@@ -222,7 +222,6 @@ class App {
     this._initChipColorPicker(); // 컬러칩 컬러 피커 초기화
     this._initSheetTheme();     // 캐릭터 시트 컬러 테마 시스템 초기화
     this._initCompDesc();       // 구도 설명란 컴포넌트 초기화
-    this._centerBlockTextareas(); // 텍스트 블록 수직 가운데 정렬 초기화
     // 기본 포즈 프리셋 데이터 정의 (총 10종)
     this.defaultPresets = [
       {
@@ -4291,51 +4290,6 @@ class App {
 
     // 초기 테마 적용
     this._applyCompDescTheme(this.compDesc.theme);
-  }
-
-  // ── 텍스트 블록 수직 가운데 정렬 (padding-top 기반) ──────────────
-  // display: flex/grid 를 쓰면 execCommand('bold') 등이 삽입하는
-  // <b>/<i> 태그가 블록 flex-item 으로 취급되어 강제 줄바꿈이 발생함.
-  // 대신 순수 block 상태에서 padding-top 만 동적으로 조정한다.
-  _centerBlockTextareas() {
-    const PADDING_BASE = 6; // CSS 기본값(px)
-
-    const center = (el) => {
-      if (!el) return;
-      // 1) 패딩을 기본값으로 리셋
-      el.style.paddingTop    = PADDING_BASE + 'px';
-      el.style.paddingBottom = PADDING_BASE + 'px';
-
-      // 2) 이 시점의 clientHeight = flex: 1 로 늘어난 전체 칸 높이
-      //    scrollHeight = 실제 콘텐츠(텍스트) + 위아래 패딩 합산 높이
-      const outer   = el.clientHeight;
-      const inner   = el.scrollHeight;
-      const spare   = outer - inner;   // 남는 여백
-
-      if (spare > 0) {
-        // 위아래 패딩을 늘려서 콘텐츠를 수직 가운데로 밀기
-        const extra = Math.floor(spare / 2);
-        el.style.paddingTop    = (PADDING_BASE + extra) + 'px';
-        el.style.paddingBottom = (PADDING_BASE + extra) + 'px';
-      }
-    };
-
-    const targets = Array.from(document.querySelectorAll('.cs-block-textarea'));
-
-    // 첫 실행은 레이아웃이 완전히 잡힌 다음 프레임에 수행
-    requestAnimationFrame(() => {
-      targets.forEach(el => center(el));
-    });
-
-    // 사용자 입력마다 재계산
-    targets.forEach(el => {
-      el.addEventListener('input', () => center(el));
-    });
-
-    // 창 크기 변경 시 전체 재계산
-    window.addEventListener('resize', () => {
-      targets.forEach(el => center(el));
-    });
   }
 
   // ── 컬러칩 색상 + 그라디언트 + 이미지 + 도형 레이어 피커 ──

@@ -4003,9 +4003,13 @@ class App {
     // 팝업 열기/닫기
     const openPopup = () => {
       const rect = toggleBtn.getBoundingClientRect();
-      let top = rect.bottom + 6, left = rect.right - 290;
-      if (left < 10) left = 10;
-      if (top + 450 > window.innerHeight) top = rect.top - 460;
+      const pw = 290, ph = 450;
+      let top = rect.bottom + 6, left = rect.right - pw;
+      // 4방향 경계 clamp
+      if (left < 8) left = 8;
+      if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+      if (top + ph > window.innerHeight - 8) top = rect.top - ph - 6;
+      if (top < 8) top = 8;
       popup.style.top = top + 'px';
       popup.style.left = left + 'px';
       popup.style.display = 'flex';
@@ -4167,6 +4171,21 @@ class App {
           closeCdPopup();
         } else {
           popup.style.display = 'block';
+          // 팝업 크기를 알기 위해 렌더링 후 위치 계산
+          requestAnimationFrame(() => {
+            const btnRect = themeBtn.getBoundingClientRect();
+            const pw = popup.offsetWidth || 240;
+            const ph = popup.offsetHeight || 280;
+            let top = btnRect.bottom + 6;
+            let left = btnRect.left;
+            // 4방향 경계 clamp
+            if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+            if (left < 8) left = 8;
+            if (top + ph > window.innerHeight - 8) top = btnRect.top - ph - 6;
+            if (top < 8) top = 8;
+            popup.style.top = top + 'px';
+            popup.style.left = left + 'px';
+          });
         }
       });
     }
@@ -4471,13 +4490,15 @@ class App {
     document.querySelectorAll('.cs-chip-tab').forEach(b =>
       b.addEventListener('click', (e) => { e.stopPropagation(); switchTab(b.dataset.tab); }));
 
-    // ── 팝업 위치 ────────────────────────────────
+    // ── 팝업 위치 (4방향 경계 clamp) ───────────────
     const positionPopup = (chipEl) => {
       const rect = chipEl.getBoundingClientRect();
       let top = rect.bottom + 6, left = rect.left;
       const pw = 280, ph = 410;
       if (left + pw > window.innerWidth  - 8) left = window.innerWidth  - pw - 8;
+      if (left < 8) left = 8;
       if (top  + ph > window.innerHeight - 8) top  = rect.top - ph - 6;
+      if (top < 8) top = 8;
       popup.style.top = top + 'px'; popup.style.left = left + 'px';
     };
 

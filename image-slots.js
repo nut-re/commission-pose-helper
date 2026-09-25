@@ -78,10 +78,24 @@ function openBgPopup(slotId, anchorEl) {
   pop.querySelector('#slot-bg-native').value = cur;
   pop.querySelector('#slot-bg-hex').value = cur;
   updateSwatchActive(cur);
-  var r = anchorEl.getBoundingClientRect();
-  pop.style.top  = (r.bottom + 4) + 'px';
-  pop.style.left = Math.max(4, r.right - 180) + 'px';
+  pop.style.visibility = 'hidden';
   pop.classList.add('show');
+  // 렌더링 후 팝업 크기를 알아야 경계 계산 가능
+  requestAnimationFrame(function() {
+    var r = anchorEl.getBoundingClientRect();
+    var pw = pop.offsetWidth  || 180;
+    var ph = pop.offsetHeight || 180;
+    var top  = r.bottom + 4;
+    var left = Math.max(4, r.right - pw);
+    // 4방향 경계 clamp
+    if (left + pw > window.innerWidth  - 4) left = window.innerWidth  - pw - 4;
+    if (left < 4) left = 4;
+    if (top  + ph > window.innerHeight - 4) top  = r.top - ph - 4;
+    if (top < 4) top = 4;
+    pop.style.top  = top  + 'px';
+    pop.style.left = left + 'px';
+    pop.style.visibility = '';
+  });
 }
 function closeBgPopup() { getBgPopup().classList.remove('show'); bgPopupTargetSlotId = null; }
 

@@ -640,31 +640,57 @@ class App {
         el.replaceWith(div);
       });
 
-      // 컬러칩 5종 주입
+      // 컬러칩 5종 주입 (베이스 색상/그라데이션/이미지 + 도형 레이어)
       const chips = char.chips || {};
       clonedRef.querySelectorAll('.cs-color-swatch').forEach(sw => {
         const key = sw.dataset.csChipKey;
-        // 기존 배열 형태면 무시하고 기본값 적용
         let st = Array.isArray(chips) ? null : chips[key];
-        
-        // st가 없으면 기본 흰색 상태로 렌더링되도록 강제 초기화
-        if (!st) {
-          st = { baseMode: 'color', color: '#ffffff' };
-        }
+        if (!st) st = { baseMode: 'color', color: '#ffffff' };
+
+        // 도형 레이어 dataURL 생성 (shapeEnabled 시)
+        const shapeUrl = (st.shapeEnabled && st.shapeData && typeof this._getChipShapeDataUrl === 'function')
+          ? this._getChipShapeDataUrl(st.shapeData)
+          : null;
 
         if (st.baseMode === 'color') {
           sw.style.backgroundColor = st.color || '#ffffff';
-          sw.style.backgroundImage = '';
+          if (shapeUrl) {
+            sw.style.backgroundImage    = `url(${shapeUrl})`;
+            sw.style.backgroundSize     = 'contain';
+            sw.style.backgroundPosition = 'center';
+            sw.style.backgroundRepeat   = 'no-repeat';
+          } else {
+            sw.style.backgroundImage = '';
+          }
         } else if (st.baseMode === 'gradient') {
           sw.style.backgroundColor = 'transparent';
-          const dir = st.gradient?.dir || 180;
+          const dir   = st.gradient?.dir  || 180;
           const stops = st.gradient?.stops || ['#ffffff', '#aaaaaa'];
-          sw.style.backgroundImage = `linear-gradient(${dir}deg, ${stops.join(', ')})`;
-          sw.style.backgroundSize = '100% 100%';
+          const gradCss = `linear-gradient(${dir}deg, ${stops.join(', ')})`;
+          if (shapeUrl) {
+            sw.style.backgroundImage    = `url(${shapeUrl}), ${gradCss}`;
+            sw.style.backgroundSize     = 'contain, 100% 100%';
+            sw.style.backgroundPosition = 'center, center';
+            sw.style.backgroundRepeat   = 'no-repeat, no-repeat';
+          } else {
+            sw.style.backgroundImage    = gradCss;
+            sw.style.backgroundSize     = '100% 100%';
+            sw.style.backgroundPosition = 'center';
+            sw.style.backgroundRepeat   = 'no-repeat';
+          }
         } else if (st.baseMode === 'image') {
           sw.style.backgroundColor = 'transparent';
-          sw.style.backgroundImage = st.imageUrl ? `url(${st.imageUrl})` : '';
-          sw.style.backgroundSize = 'cover';
+          if (shapeUrl && st.imageUrl) {
+            sw.style.backgroundImage    = `url(${shapeUrl}), url(${st.imageUrl})`;
+            sw.style.backgroundSize     = 'contain, cover';
+            sw.style.backgroundPosition = 'center, center';
+            sw.style.backgroundRepeat   = 'no-repeat, no-repeat';
+          } else {
+            sw.style.backgroundImage    = st.imageUrl ? `url(${st.imageUrl})` : '';
+            sw.style.backgroundSize     = 'cover';
+            sw.style.backgroundPosition = 'center';
+            sw.style.backgroundRepeat   = 'no-repeat';
+          }
         }
       });
 
@@ -4431,6 +4457,9 @@ class App {
       drawShapeOnContext(ctx, 200, 200, shapeData);
       return off.toDataURL('image/png');
     };
+
+    // ★ 클래스 외부(내보내기 등)에서도 호출 가능하도록 노출
+    this._getChipShapeDataUrl = getShapeDataUrl;
 
     // ── 칩 디스플레이 갱신 (베이스 + 도형 레이어 합성) ─
     const updateChipDisplay = (chipEl, st) => {

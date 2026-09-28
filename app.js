@@ -469,9 +469,16 @@ class App {
     this.selected = null;
     this.selectedPart = 'all';
     this._render();
+    
+    // 로딩 시각적 피드백 제공
+    document.body.style.cursor = 'wait';
 
-    // 3. 화면 밖 오프스크린 wrapper 생성
-    const offscreen = document.createElement('div');
+    // 4. 브라우저 프리징(멈춤) 방지를 위한 비동기 분리
+    // 무거운 DOM 복제 및 html2canvas 작업을 이벤트 루프 다음 틱으로 넘겨 
+    // UI 업데이트(버튼 눌림 상태 등)가 화면에 먼저 그려질 수 있도록 숨통을 틔워줌
+    setTimeout(() => {
+      // 3. 화면 밖 오프스크린 wrapper 생성
+      const offscreen = document.createElement('div');
     offscreen.id = 'offscreen-export-wrapper';
     const isSheetsOnly = scope === 'sheets-only' || scope === 'current-sheet-only';
     offscreen.style.cssText = [
@@ -914,6 +921,7 @@ class App {
       this.selected = prevSelected;
       this.selectedPart = prevSelectedPart;
       this._render();
+      document.body.style.cursor = '';
 
       const mimeMap = { png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', webp:'image/webp' };
       // 인코딩 품질 0.85로 하향 (속도 및 메모리 최적화)
@@ -935,9 +943,11 @@ class App {
       this.selected = prevSelected;
       this.selectedPart = prevSelectedPart;
       this._render();
+      document.body.style.cursor = '';
       console.error('[EXPORT ERROR]', err);
       this._alert('내보내기 중 오류가 발생했습니다.\n' + err.message);
     });
+    }, 50); // 50ms 대기 후 무거운 작업 시작 (UI 렌더링 시간 확보)
   }
 
   

@@ -809,11 +809,6 @@ class App {
         // 기존 모드: 캔버스 뒤에 시트를 순서대로 append
         // sheets-only 모드: 시트 사이에 1px 세로 구분선 삽입
         targetCharacters.forEach((char, charIdx) => {
-          if (scope === 'sheets-only' && charIdx > 0) {
-            const divider = document.createElement('div');
-            divider.style.cssText = 'flex:none;width:1px;height:830px;background:#d0d0d0;align-self:center;';
-            offscreen.appendChild(divider);
-          }
           offscreen.appendChild(buildSheetEl(char, charIdx, scope));
         });
       }

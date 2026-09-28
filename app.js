@@ -738,6 +738,10 @@ class App {
         sheet.style.setProperty('--cs-body-text', th.body);
         sheet.style.setProperty('--cs-sheet-bg', th.bg);
         sheet.style.backgroundColor = th.bg;
+        // 최외곽 래퍼(clonedRef)에도 동일한 배경색 적용:
+        // html2canvas의 overflow:visible + border 조합 버그로
+        // 테두리 바깥 1~2px에 흰색 배경이 노출되는 문제 방지.
+        clonedRef.style.backgroundColor = th.bg;
 
         // 'sheets-only' 또는 'current-sheet-only' 모드 시 아웃라인 완전 제거
         if (groupScopeForBorder === 'sheets-only' || groupScopeForBorder === 'current-sheet-only') {

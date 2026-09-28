@@ -429,7 +429,7 @@ class App {
   _export(isPreview = false) {
     const fmt = document.getElementById('export-fmt')?.value || 'png';
     let dpr = +(document.getElementById('export-dpr')?.value || 1.5);
-    if (isPreview) dpr = 1; // 미리보기 시에는 무조건 1배율로 고정해 렌더링 속도 최적화
+    if (isPreview) dpr = 0.7; // 미리보기 시 0.7배율로 강제 축소해 초고속 렌더링
     const scope = document.getElementById('export-scope')?.value || 'all';
 
     // 1. 현재 화면의 활성 캐릭터 데이터 최신 동기화 (텍스트, 슬롯, 컬러칩, 테마, 스티커 100%)
@@ -767,16 +767,16 @@ class App {
 
         // ★ 1. 캐릭터별 고유 테마 색상 주입
         const th = char.theme || { main: '#2E2E2E', sub: '#E6E6E6', title: '#FFFFFF', body: '#1E293B', bg: '#FFFFFF' };
-        sheet.style.setProperty('--cs-main-color', th.main);
-        sheet.style.setProperty('--cs-sub-color', th.sub);
-        sheet.style.setProperty('--cs-title-text', th.title);
-        sheet.style.setProperty('--cs-body-text', th.body);
-        sheet.style.setProperty('--cs-sheet-bg', th.bg);
-        sheet.style.backgroundColor = th.bg;
+        sheet.style.setProperty('--cs-main-color', th.main || '#2E2E2E');
+        sheet.style.setProperty('--cs-sub-color', th.sub || '#E6E6E6');
+        sheet.style.setProperty('--cs-title-text', th.title || '#FFFFFF');
+        sheet.style.setProperty('--cs-body-text', th.body || '#1E293B');
+        sheet.style.setProperty('--cs-sheet-bg', th.bg || '#FFFFFF');
+        sheet.style.backgroundColor = th.bg || '#FFFFFF';
         // 최외곽 래퍼(clonedRef)에도 동일한 배경색 적용:
         // html2canvas의 overflow:visible + border 조합 버그로
         // 테두리 바깥 1~2px에 흰색 배경이 노출되는 문제 방지.
-        clonedRef.style.backgroundColor = th.bg;
+        clonedRef.style.backgroundColor = th.bg || '#FFFFFF';
 
         // 'sheets-only' 또는 'current-sheet-only' 모드 시 아웃라인 완전 제거
         if (groupScopeForBorder === 'sheets-only' || groupScopeForBorder === 'current-sheet-only') {

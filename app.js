@@ -621,7 +621,7 @@ class App {
 
         // color: themeKey가 있으면 char.theme에서 직접 가져옴
         //        없으면 liveEl computed color를 fallback으로 사용
-        const fieldColor = (tf.themeKey && th[tf.themeKey]) ? th[tf.themeKey] : cs.color;
+        const fieldColor = (tf.themeKey && char.theme && char.theme[tf.themeKey]) ? char.theme[tf.themeKey] : cs.color;
 
         div.style.cssText = [
           'font-family:' + cs.fontFamily,

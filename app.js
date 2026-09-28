@@ -3265,7 +3265,12 @@ class App {
           });
         }
         if (!merged.chips || typeof merged.chips !== 'object') merged.chips = {};
-        if (!merged.theme || typeof merged.theme !== 'object') merged.theme = { ...def.theme };
+        // theme 보정: 이전 버전 저장 파일에서 body/title 등 일부 필드 누락 시
+        // def.theme을 기본값으로 깔고 saved.theme으로 덮어씌워 모든 필드 보장
+        merged.theme = {
+          ...def.theme,
+          ...(merged.theme && typeof merged.theme === 'object' ? merged.theme : {})
+        };
         if (!Array.isArray(merged.freeObjects)) merged.freeObjects = [];
         return merged;
       });

@@ -476,8 +476,10 @@ class App {
     offscreen.style.cssText = [
       'position:absolute', 'top:0', 'left:-99999px',
       'width:max-content', 'height:max-content',
-      'background:#ffffff', 
-      'padding:' + (isSheetsOnly ? '4px' : '24px'),
+      'background:#ffffff',
+      // sheets-only 모드: padding이 있으면 흰 배경이 시트 가장자리에 흰 선으로 보임.
+      // box-shadow는 sheets-only 시 이미 제거되므로 padding 0이 안전.
+      'padding:' + (isSheetsOnly ? '0' : '24px'),
       'display:flex', 'flex-direction:row',
       'align-items:center', 'justify-content:center',
       'gap:' + (isSheetsOnly ? '0' : '24px'),

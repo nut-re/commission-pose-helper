@@ -3256,9 +3256,9 @@ class App {
     }
     // ──────────────────────────────────────────────────────────────
 
-    if (data.sheetTheme && typeof this._applySheetTheme === 'function') {
-      this._applySheetTheme(data.sheetTheme, data.sheetTheme.presetId || 'mono');
-    }
+    // 각 캐릭터가 자신의 theme을 독립적으로 보유하므로 전역 sheetTheme은 적용하지 않음.
+    // 활성 캐릭터의 테마는 위 _switchCharacter 호출에서 이미 적용됨.
+    // (backwards compat: data.sheetTheme은 저장은 유지하되 로드 시 무시)
     if (data.compDesc && typeof this._applyCompDescTheme === 'function') {
       this.compDesc = { ...this.compDesc, ...data.compDesc };
       this._applyCompDescTheme(this.compDesc.theme);
@@ -3879,6 +3879,12 @@ class App {
       this.sheetTheme = { ...this.sheetTheme, ...theme };
       if (activePresetId !== null) this.sheetTheme.presetId = activePresetId;
 
+      // ★ 테마 변경을 즉시 활성 캐릭터에만 반영 (다른 캐릭터의 테마에 영향 없음)
+      const _activeChar = this.characters?.find(c => c.id === this.activeCharId);
+      if (_activeChar) {
+        _activeChar.theme = { ...this.sheetTheme };
+      }
+
       sheetEl.style.setProperty('--cs-main-color', this.sheetTheme.main);
       sheetEl.style.setProperty('--cs-sub-color', this.sheetTheme.sub);
       sheetEl.style.setProperty('--cs-title-text', this.sheetTheme.title);
@@ -3904,6 +3910,14 @@ class App {
 
       if (typeof this._syncCompDescWithSheetTheme === 'function') {
         this._syncCompDescWithSheetTheme();
+      }
+    };
+
+    // ★ 모든 캐릭터에 현재 테마 일괄 적용 (향후 "전체 동일 테마 적용" 옵션에서 호출)
+    this._applyThemeToAllCharacters = () => {
+      const snapshot = { ...this.sheetTheme };
+      if (this.characters) {
+        this.characters.forEach(c => { c.theme = { ...snapshot }; });
       }
     };
 

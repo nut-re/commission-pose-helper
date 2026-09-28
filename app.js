@@ -591,14 +591,17 @@ class App {
       });
 
       // 텍스트 필드 데이터 주입 및 정적 Div 치환
+      // themeKey: 해당 필드가 따라야 할 char.theme의 키
+      //   → liveEl 기준 computed color 대신 char.theme에서 직접 주입해
+      //     활성 캐릭터 색상이 비활성 캐릭터 시트에 번지는 현상 방지
       const TEXT_FIELDS = [
-        { id: 'cs-name-input',      val: char.name || (char.letter + '.'), isMulti: false },
-        { id: 'cs-orig-name-input', val: char.origName || '',              isMulti: false },
-        { id: 'cs-spec-input',      val: char.spec || '',                  isMulti: false },
-        { id: 'cs-keyword-input',   val: char.keywords || '',              isMulti: false },
-        { id: 'cs-keypoint-input',  val: char.keypoints || '',             isMulti: true },
-        { id: 'cs-features-input',  val: char.features || '',              isMulti: true },
-        { id: 'cs-source-input',    val: char.source || '',                isMulti: false }
+        { id: 'cs-name-input',      val: char.name || (char.letter + '.'), isMulti: false, themeKey: 'title' },
+        { id: 'cs-orig-name-input', val: char.origName || '',              isMulti: false, themeKey: 'title' },
+        { id: 'cs-spec-input',      val: char.spec || '',                  isMulti: false, themeKey: 'title' },
+        { id: 'cs-keyword-input',   val: char.keywords || '',              isMulti: false, themeKey: 'body'  },
+        { id: 'cs-keypoint-input',  val: char.keypoints || '',             isMulti: true,  themeKey: 'body'  },
+        { id: 'cs-features-input',  val: char.features || '',              isMulti: true,  themeKey: 'body'  },
+        { id: 'cs-source-input',    val: char.source || '',                isMulti: false, themeKey: 'body'  }
       ];
 
       TEXT_FIELDS.forEach(tf => {
@@ -616,12 +619,16 @@ class App {
           div.textContent = tf.val || '';
         }
 
+        // color: themeKey가 있으면 char.theme에서 직접 가져옴
+        //        없으면 liveEl computed color를 fallback으로 사용
+        const fieldColor = (tf.themeKey && th[tf.themeKey]) ? th[tf.themeKey] : cs.color;
+
         div.style.cssText = [
           'font-family:' + cs.fontFamily,
           'font-size:' + cs.fontSize,
           'font-weight:' + cs.fontWeight,
           'font-style:' + cs.fontStyle,
-          'color:' + cs.color,
+          'color:' + fieldColor,
           'text-align:' + cs.textAlign,
           'letter-spacing:' + cs.letterSpacing,
           'line-height:' + (cs.lineHeight === 'normal' ? '1.45' : cs.lineHeight),

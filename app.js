@@ -476,9 +476,8 @@ class App {
     offscreen.style.cssText = [
       'position:absolute', 'top:0', 'left:-99999px',
       'width:max-content', 'height:max-content',
-      'background:#ffffff',
-      // sheets-only 모드: padding이 있으면 흰 배경이 시트 가장자리에 흰 선으로 보임.
-      // box-shadow는 sheets-only 시 이미 제거되므로 padding 0이 안전.
+      // sheets-only: 흰 배경이 구분선/가장자리 주변에 번지는 것을 막기 위해 transparent 사용
+      'background:' + (isSheetsOnly ? 'transparent' : '#ffffff'),
       'padding:' + (isSheetsOnly ? '0' : '24px'),
       'display:flex', 'flex-direction:row',
       'align-items:center', 'justify-content:center',
@@ -807,8 +806,14 @@ class App {
         offscreen.appendChild(rightWrap);
       } else {
         // 기존 모드: 캔버스 뒤에 시트를 순서대로 append
-        // sheets-only 모드: 시트 사이에 1px 세로 구분선 삽입
+        // sheets-only 모드: 시트 사이에 구분선 삽입
         targetCharacters.forEach((char, charIdx) => {
+          if (scope === 'sheets-only' && charIdx > 0) {
+            const divider = document.createElement('div');
+            // 중간 회색: 어두운 테마에서도 흰색으로 보이지 않고, offscreen이 transparent이므로 번짐 없음
+            divider.style.cssText = 'flex:none;width:2px;height:830px;background:#888888;align-self:center;';
+            offscreen.appendChild(divider);
+          }
           offscreen.appendChild(buildSheetEl(char, charIdx, scope));
         });
       }
@@ -835,7 +840,8 @@ class App {
     const fontReady = typeof document.fonts !== 'undefined' ? document.fonts.ready : Promise.resolve();
     Promise.all([fontReady, Promise.all(imgPromises), new Promise(r => setTimeout(r, 100))])
     .then(() => html2canvas(offscreen, {
-      backgroundColor: '#ffffff',
+      // sheets-only: offscreen이 transparent이므로 배경도 null(투명)로 설정해 흰 번짐 방지
+      backgroundColor: isSheetsOnly ? null : '#ffffff',
       scale: dpr,
       width:  captureW,
       height: captureH,

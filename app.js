@@ -576,6 +576,7 @@ class App {
 
     // ── 3-B. 캐릭터 시트 복제 헬퍼 (각 캐릭터별 데이터 100% 반영)
     const clonedSheetsInfo = [];
+    const styleCache = {}; // 성능 최적화를 위한 CSS 스타일 캐시 (Layout Thrashing 방지)
 
     // ── 시트 1장을 DOM 요소로 빌드하는 헬퍼 함수
     const buildSheetEl = (char, charIdx, groupScopeForBorder) => {
@@ -608,8 +609,28 @@ class App {
       TEXT_FIELDS.forEach(tf => {
         const el = clonedRef.querySelector('#' + tf.id);
         if (!el) return;
-        const liveEl = document.getElementById(tf.id);
-        const cs = window.getComputedStyle(liveEl || el);
+        
+        // CSS 스타일 연산 결과를 캐싱해 리플로우(Reflow) 병목 완벽 제거
+        let cs = styleCache[tf.id];
+        if (!cs) {
+          const liveEl = document.getElementById(tf.id);
+          const computed = window.getComputedStyle(liveEl || el);
+          cs = {
+            fontFamily: computed.fontFamily,
+            fontSize: computed.fontSize,
+            fontWeight: computed.fontWeight,
+            fontStyle: computed.fontStyle,
+            color: computed.color,
+            textAlign: computed.textAlign,
+            letterSpacing: computed.letterSpacing,
+            lineHeight: computed.lineHeight,
+            padding: computed.padding,
+            margin: computed.margin,
+            width: computed.width
+          };
+          styleCache[tf.id] = cs;
+        }
+
         const div = document.createElement('div');
         div.id = el.id;
         div.className = el.className;

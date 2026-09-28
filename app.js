@@ -811,7 +811,7 @@ class App {
           if (scope === 'sheets-only' && charIdx > 0) {
             const divider = document.createElement('div');
             // 중간 회색: 어두운 테마에서도 흰색으로 보이지 않고, offscreen이 transparent이므로 번짐 없음
-            divider.style.cssText = 'flex:none;width:2px;height:830px;background:#888888;align-self:center;';
+            divider.style.cssText = 'flex:none;width:1px;height:830px;background:#aaaaaa;align-self:center;';
             offscreen.appendChild(divider);
           }
           offscreen.appendChild(buildSheetEl(char, charIdx, scope));

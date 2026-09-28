@@ -895,7 +895,8 @@ class App {
       this._render();
 
       const mimeMap = { png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', webp:'image/webp' };
-      const dataUrl = canvas.toDataURL(mimeMap[fmt] || 'image/png', 0.95);
+      // 인코딩 품질 0.85로 하향 (속도 및 메모리 최적화)
+      const dataUrl = canvas.toDataURL(mimeMap[fmt] || 'image/png', 0.85);
 
       if (isPreview) {
         const modal = document.getElementById('preview-modal');

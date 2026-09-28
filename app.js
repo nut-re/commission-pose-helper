@@ -428,7 +428,8 @@ class App {
   }
   _export(isPreview = false) {
     const fmt = document.getElementById('export-fmt')?.value || 'png';
-    const dpr = +(document.getElementById('export-dpr')?.value || 2);
+    let dpr = +(document.getElementById('export-dpr')?.value || 1.5);
+    if (isPreview) dpr = 1; // 미리보기 시에는 무조건 1배율로 고정해 렌더링 속도 최적화
     const scope = document.getElementById('export-scope')?.value || 'all';
 
     // 1. 현재 화면의 활성 캐릭터 데이터 최신 동기화 (텍스트, 슬롯, 컬러칩, 테마, 스티커 100%)

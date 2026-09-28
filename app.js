@@ -3958,6 +3958,25 @@ class App {
       });
     }
 
+    // ★ 모든 시트에 동일 테마 적용 버튼
+    const applyAllBtn = document.getElementById('cs-theme-apply-all-btn');
+    if (applyAllBtn) {
+      applyAllBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (typeof this._applyThemeToAllCharacters === 'function') {
+          this._applyThemeToAllCharacters();
+        }
+        // 클릭 피드백: 버튼 텍스트 → "✓ 완료" 1.2초 후 복구
+        applyAllBtn.classList.add('is-done');
+        applyAllBtn.textContent = '✓ 완료';
+        clearTimeout(applyAllBtn._doneTimer);
+        applyAllBtn._doneTimer = setTimeout(() => {
+          applyAllBtn.classList.remove('is-done');
+          applyAllBtn.textContent = '적용';
+        }, 1200);
+      });
+    }
+
     // 프리셋 버튼들 렌더링
     if (gridEl) {
       gridEl.innerHTML = '';

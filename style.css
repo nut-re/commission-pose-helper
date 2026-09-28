@@ -1357,6 +1357,37 @@ body {
   margin-bottom: 12px;
 }
 
+/* 모든 시트 동일 테마 적용 행 — 위 행과 시각적으로 이어지도록 margin-top 제거 */
+.cs-theme-apply-all-row {
+  margin-top: -8px; /* link-dummy-row의 margin-bottom(12px)에서 이 행의 간격(4px)만큼 당김 */
+  margin-bottom: 12px;
+}
+
+/* 전체 적용 버튼 */
+.cs-theme-apply-all-btn {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font);
+  color: var(--c-accent, #5b6bff);
+  background: transparent;
+  border: 1.5px solid var(--c-accent, #5b6bff);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1.6;
+}
+.cs-theme-apply-all-btn:hover {
+  background: var(--c-accent, #5b6bff);
+  color: #fff;
+}
+.cs-theme-apply-all-btn.is-done {
+  background: var(--c-accent, #5b6bff);
+  color: #fff;
+  border-color: var(--c-accent, #5b6bff);
+}
+
 .cs-theme-link-label {
   font-size: 11px;
   font-weight: 700;

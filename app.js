@@ -687,12 +687,6 @@ class App {
         el.replaceWith(div);
       });
 
-      // 출수란(cs-source-box): 내용이 비어있으면 항목 자체 숨기기
-      const sourceVal = (char.source || '').trim();
-      if (!sourceVal) {
-        clonedRef.querySelector('.cs-source-box')?.remove();
-      }
-
       // 컬러칩 5종 주입 (베이스 색상/그라데이션/이미지 + 도형 레이어)
       const chips = char.chips || {};
       clonedRef.querySelectorAll('.cs-color-swatch').forEach(sw => {
@@ -3745,20 +3739,9 @@ class App {
         const el = document.getElementById(id);
         if (el && !el._boundLive) {
           el._boundLive = true;
-          el.addEventListener('input', () => {
-            saveCurrentCharacterData();
-            // 출수 란: 비어있으면 .cs-source-box 자체 숨기기
-            if (id === 'cs-source-input') {
-              const box = el.closest('.cs-source-box');
-              if (box) box.style.display = el.value.trim() ? '' : 'none';
-            }
-          });
+          el.addEventListener('input', () => saveCurrentCharacterData());
         }
       });
-      // 캐릭터 전환 시 출수 란 초기 표시 상태 동기화
-      const srcEl = document.getElementById('cs-source-input');
-      const srcBox = srcEl?.closest('.cs-source-box');
-      if (srcEl && srcBox) srcBox.style.display = srcEl.value.trim() ? '' : 'none';
       ['cs-keypoint-input', 'cs-features-input'].forEach(id => {
         const el = document.getElementById(id);
         if (el && !el._boundLive) {

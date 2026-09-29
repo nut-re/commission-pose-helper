@@ -687,6 +687,11 @@ class App {
         el.replaceWith(div);
       });
 
+      // [Export 전용] 출처가 비어있으면 복제 시트에서만 .cs-source-box 제거
+      if (!(char.source || '').trim()) {
+        clonedRef.querySelector('.cs-source-box')?.remove();
+      }
+
       // 컬러칩 5종 주입 (베이스 색상/그라데이션/이미지 + 도형 레이어)
       const chips = char.chips || {};
       clonedRef.querySelectorAll('.cs-color-swatch').forEach(sw => {

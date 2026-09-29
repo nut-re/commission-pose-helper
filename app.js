@@ -621,7 +621,7 @@ class App {
         { id: 'cs-keyword-input',   val: getVal(char.keywords, 'keywords', koDefaults.kw, enDefaults.kw, 'sheet_keyword'), isMulti: false, themeKey: 'body'  },
         { id: 'cs-keypoint-input',  val: getVal(char.keypoints, 'keypoints', koDefaults.kp, enDefaults.kp, 'sheet_keypoint_pl'), isMulti: true,  themeKey: 'body'  },
         { id: 'cs-features-input',  val: getVal(char.features, 'features', koDefaults.f, enDefaults.f, 'sheet_feature_pl'), isMulti: true,  themeKey: 'body'  },
-        { id: 'cs-source-input',    val: getVal(char.source, 'source', koDefaults.s, enDefaults.s, 'sheet_source_pl'), isMulti: false, themeKey: 'body'  }
+        { id: 'cs-source-input',    val: char.source || '', isMulti: false, themeKey: 'body'  }
       ];
 
       TEXT_FIELDS.forEach(tf => {

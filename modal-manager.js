@@ -52,7 +52,7 @@
     if (resetBtn && typeof clearAllCallback === 'function') {
       resetBtn.addEventListener('click', () => {
         mmConfirm(
-          '정말 전체 초기화하시겠습니까?<br>작성 중인 모든 오브젝트와 참고자료가 완전히 삭제됩니다.',
+          window.t ? window.t('msg_reset_warn') : '정말 전체 초기화하시겠습니까?<br>작성 중인 모든 오브젝트와 참고자료가 완전히 삭제됩니다.',
           () => clearAllCallback()
         );
       });

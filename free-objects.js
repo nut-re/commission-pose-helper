@@ -228,7 +228,7 @@
         textEl.contentEditable = 'false';
         el.classList.remove('is-editing');
         const trimmed = textEl.innerText.trim();
-        obj.content = trimmed || '텍스트 입력';
+        obj.content = trimmed || (window.t ? window.t('txt_input_default') : '텍스트 입력');
         textEl.innerText = obj.content;
       });
 
@@ -540,7 +540,7 @@
     if (addTextBtn) {
       addTextBtn.addEventListener('click', e => {
         e.stopPropagation();
-        createFreeObject('', 460, 150, 120, 36, 'text', '텍스트 입력');
+        createFreeObject('', 460, 150, 120, 36, 'text', (window.t ? window.t('txt_input_default') : '텍스트 입력'));
       });
     }
 

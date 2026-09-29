@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Commission Helper – 커미션 신청서 제작 툴</title>
+  <title data-i18n="header_title">Commission Helper – 커미션 신청서 제작 툴</title>
   <meta name="description" content="커미션 신청서·연성 지시서를 빠르게 제작하는 브라우저 기반 구도 설명 툴">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M 4 32 C 4 22, 28 22, 28 32' fill='none' stroke='%23000000' stroke-width='2'/%3E%3Ccircle cx='16' cy='12' r='8.5' fill='none' stroke='%23000000' stroke-width='2'/%3E%3Cline x1='16' y1='3.5' x2='16' y2='20.5' stroke='%23000000' stroke-width='2'/%3E%3Cline x1='7.5' y1='12' x2='24.5' y2='12' stroke='%23000000' stroke-width='2'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css?v=20260928_V187">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="i18n.js"></script>
 </head>
 <body class="">
 
@@ -20,41 +21,41 @@
   <div class="logo-area">
     <i class="fa-solid fa-file-signature logo-icon"></i>
     <span class="logo-title">Commission Helper</span>
-    <span class="logo-sub">커미션 신청서 제작 툴</span>
+    <span class="logo-sub" data-i18n="header_sub">커미션 신청서 제작 툴</span>
   </div>
   <div class="header-actions">
-    <button id="tutorial-btn" class="icon-btn" title="사용 안내 보기" aria-label="사용 안내 보기">
+    <button id="tutorial-btn" class="icon-btn" data-i18n-title="btn_tutorial_title" data-i18n-aria="btn_tutorial_title" title="사용 안내 보기" aria-label="사용 안내 보기">
       <i class="fa-solid fa-book-open" aria-hidden="true"></i>
     </button>
-    <button id="undo-btn" class="icon-btn" title="실행 취소 (Ctrl+Z)" aria-label="실행 취소" disabled>
+    <button id="undo-btn" class="icon-btn" data-i18n-title="btn_undo_title" data-i18n-aria="btn_undo_title" title="실행 취소 (Ctrl+Z)" aria-label="실행 취소" disabled>
       <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
     </button>
-    <button id="redo-btn" class="icon-btn" title="다시 실행 (Ctrl+Y)" aria-label="다시 실행" disabled>
+    <button id="redo-btn" class="icon-btn" data-i18n-title="btn_redo_title" data-i18n-aria="btn_redo_title" title="다시 실행 (Ctrl+Y)" aria-label="다시 실행" disabled>
       <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
     </button>
     <div class="h-sep"></div>
 
-    <button id="reset-btn" class="hdr-btn ghost-btn danger-btn" title="전체 초기화">
-      <i class="fa-solid fa-trash-can" aria-hidden="true"></i><span class="btn-text"> 초기화</span>
+    <button id="reset-btn" class="hdr-btn ghost-btn danger-btn" title="전체 초기화" data-i18n-title="btn_reset_title">
+      <i class="fa-solid fa-trash-can" aria-hidden="true"></i><span class="btn-text" data-i18n="btn_reset"> 초기화</span>
     </button>
-    <button id="load-btn" class="hdr-btn ghost-btn" title="프로젝트 불러오기">
-      <i class="fa-solid fa-folder-open" aria-hidden="true"></i><span class="btn-text"> 불러오기</span>
+    <button id="load-btn" class="hdr-btn ghost-btn" title="프로젝트 불러오기" data-i18n-title="btn_load_title">
+      <i class="fa-solid fa-folder-open" aria-hidden="true"></i><span class="btn-text" data-i18n="btn_load"> 불러오기</span>
     </button>
     <input type="file" id="load-file" accept=".json" style="display:none">
-    <button id="save-btn" class="hdr-btn ghost-btn" title="프로젝트 저장">
-      <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i><span class="btn-text"> 저장</span>
+    <button id="save-btn" class="hdr-btn ghost-btn" title="프로젝트 저장" data-i18n-title="btn_save_title">
+      <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i><span class="btn-text" data-i18n="btn_save"> 저장</span>
     </button>
     <div class="h-sep"></div>
     <div class="export-group">
-      <select id="export-scope" title="내보내기 범위 선택" style="padding: 0 8px; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-panel); color: var(--c-text); font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; outline: none; transition: border-color 0.2s;">
-        <option value="all" selected>🌟 전체 합본 (포즈 + 모든 캐릭터)</option>
-        <option value="all-split">⚖️ 캔버스 중앙 + 캐릭터 양분할</option>
-        <option value="current">👤 현재 캐릭터만 (포즈 + 1인)</option>
-        <option value="sheets-only">📑 캐릭터 시트만 (N인 가로 합본)</option>
-        <option value="current-sheet-only">📄 현재 캐릭터 시트만 (1인 단독)</option>
-        <option value="canvas-only">🖼️ 포즈 캔버스만</option>
+      <select id="export-scope" data-i18n-title="export_scope" title="내보내기 범위 선택" style="padding: 0 8px; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-panel); color: var(--c-text); font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; outline: none; transition: border-color 0.2s;">
+        <option value="all" selected data-i18n="opt_all">🌟 전체 합본 (포즈 + 모든 캐릭터)</option>
+        <option value="all-split" data-i18n="opt_all_split">⚖️ 캔버스 중앙 + 캐릭터 양분할</option>
+        <option value="current" data-i18n="opt_current">👤 현재 캐릭터만 (포즈 + 1인)</option>
+        <option value="sheets-only" data-i18n="opt_sheets">📑 캐릭터 시트만 (N인 가로 합본)</option>
+        <option value="current-sheet-only" data-i18n="opt_current_sheet">📄 현재 캐릭터 시트만 (1인 단독)</option>
+        <option value="canvas-only" data-i18n="opt_canvas">🖼️ 포즈 캔버스만</option>
       </select>
-      <select id="export-dpr" title="내보내기 배율" style="padding: 0 8px; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-panel); color: var(--c-text); font-family: inherit; font-size: 13px; cursor: pointer; outline: none; transition: border-color 0.2s;">
+      <select id="export-dpr" data-i18n-title="export_scale" title="내보내기 배율" style="padding: 0 8px; border: 1px solid var(--c-border); border-radius: 6px; background: var(--c-panel); color: var(--c-text); font-family: inherit; font-size: 13px; cursor: pointer; outline: none; transition: border-color 0.2s;">
         <option value="1">1x</option>
         <option value="1.5" selected>1.5x</option>
         <option value="2">2x</option>
@@ -65,11 +66,11 @@
         <option value="webp">WEBP</option>
         <option value="svg">SVG</option>
       </select>
-      <button id="preview-btn" class="hdr-btn ghost-btn" title="출력 이미지 미리보기">
-        <i class="fa-solid fa-eye" aria-hidden="true"></i> 미리보기
+      <button id="preview-btn" class="hdr-btn ghost-btn" title="출력 이미지 미리보기" data-i18n-title="btn_preview_title">
+        <i class="fa-solid fa-eye" aria-hidden="true"></i><span data-i18n="btn_preview"> 미리보기</span>
       </button>
-      <button id="export-btn" class="hdr-btn primary-hdr-btn" aria-label="이미지 내보내기">
-        <i class="fa-solid fa-download" aria-hidden="true"></i> 내보내기
+      <button id="export-btn" class="hdr-btn primary-hdr-btn" aria-label="이미지 내보내기" data-i18n-aria="btn_export_aria">
+        <i class="fa-solid fa-download" aria-hidden="true"></i><span data-i18n="btn_export"> 내보내기</span>
       </button>
     </div>
   </div>
@@ -83,23 +84,23 @@
 
     <!-- § 캔버스 설정 -->
     <div class="side-section">
-      <div class="side-section-hdr"><i class="fa-solid fa-crop-simple"></i> 캔버스</div>
-      <label class="lbl" for="canvas-ratio">종횡비</label>
+      <div class="side-section-hdr"><i class="fa-solid fa-crop-simple"></i> <span data-i18n="panel_canvas">캔버스</span></div>
+      <label class="lbl" for="canvas-ratio" data-i18n="lbl_ratio">종횡비</label>
       <select id="canvas-ratio" class="ctrl">
-        <option value="1:1" selected>정사각형 (1:1)</option>
-        <option value="3:4">세로 (3:4)</option>
-        <option value="2:3">세로 (2:3)</option>
-        <option value="9:16">세로 (9:16)</option>
-        <option value="4:3">가로 (4:3)</option>
-        <option value="16:9">가로 (16:9)</option>
-        <option value="3:1">가로 헤더 (3:1)</option>
-        <option value="custom">사용자 지정</option>
+        <option value="1:1" selected data-i18n="opt_sq">정사각형 (1:1)</option>
+        <option value="3:4" data-i18n="opt_v34">세로 (3:4)</option>
+        <option value="2:3" data-i18n="opt_v23">세로 (2:3)</option>
+        <option value="9:16" data-i18n="opt_v916">세로 (9:16)</option>
+        <option value="4:3" data-i18n="opt_h43">가로 (4:3)</option>
+        <option value="16:9" data-i18n="opt_h169">가로 (16:9)</option>
+        <option value="3:1" data-i18n="opt_h31">가로 헤더 (3:1)</option>
+        <option value="custom" data-i18n="opt_custom">사용자 지정</option>
       </select>
       <div id="custom-size" class="two-col" style="display:none">
-        <div><label class="lbl" for="cw">가로 비율</label><input type="number" id="cw" class="ctrl" value="4" min="1" max="100" step="any" placeholder="4"></div>
-        <div><label class="lbl" for="ch">세로 비율</label><input type="number" id="ch" class="ctrl" value="3" min="1" max="100" step="any" placeholder="3"></div>
+        <div><label class="lbl" for="cw" data-i18n="lbl_cw">가로 비율</label><input type="number" id="cw" class="ctrl" value="4" min="1" max="100" step="any" placeholder="4"></div>
+        <div><label class="lbl" for="ch" data-i18n="lbl_ch">세로 비율</label><input type="number" id="ch" class="ctrl" value="3" min="1" max="100" step="any" placeholder="3"></div>
       </div>
-      <label class="lbl" for="bg-picker">캔버스 배경</label>
+      <label class="lbl" for="bg-picker" data-i18n="lbl_bg">캔버스 배경</label>
       <div class="color-row">
         <input type="color" id="bg-picker" class="swatch" value="#ffffff">
         <input type="text"  id="bg-hex"    class="ctrl mono" value="#ffffff">
@@ -109,29 +110,29 @@
 
     <!-- § 그리기 도구 -->
     <div class="side-section">
-      <div class="side-section-hdr"><i class="fa-solid fa-toolbox"></i> 그리기 도구</div>
+      <div class="side-section-hdr"><i class="fa-solid fa-toolbox"></i> <span data-i18n="panel_tools">그리기 도구</span></div>
       <div class="tool-grid">
-        <button class="tool-btn is-active" data-tool="select" title="선택 (V)"><i class="fa-solid fa-arrow-pointer" aria-hidden="true"></i></button>
-        <button class="tool-btn" data-tool="pen"    title="펜 (P)"><i class="fa-solid fa-pen" aria-hidden="true"></i></button>
-        <button class="tool-btn" data-tool="eraser" title="지우개 (E)"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button>
-        <button class="tool-btn" data-tool="text"   title="텍스트 (T)"><i class="fa-solid fa-font" aria-hidden="true"></i></button>
-        <button class="tool-btn" data-tool="arrow"  title="화살표 (A)"><i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i></button>
-        <button class="tool-btn" data-tool="rect"   title="사각형 (R)"><i class="fa-regular fa-square" aria-hidden="true"></i></button>
-        <button class="tool-btn" data-tool="circle" title="원 (C)"><i class="fa-regular fa-circle" aria-hidden="true"></i></button>
-        <button class="tool-btn" data-tool="image"  title="이미지 삽입"><i class="fa-solid fa-image" aria-hidden="true"></i></button>
+        <button class="tool-btn is-active" data-tool="select" data-i18n-title="tool_select" title="선택 (V)"><i class="fa-solid fa-arrow-pointer" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="pen"    data-i18n-title="tool_pen" title="펜 (P)"><i class="fa-solid fa-pen" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="eraser" data-i18n-title="tool_eraser" title="지우개 (E)"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="text"   data-i18n-title="tool_text" title="텍스트 (T)"><i class="fa-solid fa-font" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="arrow"  data-i18n-title="tool_arrow" title="화살표 (A)"><i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="rect"   data-i18n-title="tool_rect" title="사각형 (R)"><i class="fa-regular fa-square" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="circle" data-i18n-title="tool_circle" title="원 (C)"><i class="fa-regular fa-circle" aria-hidden="true"></i></button>
+        <button class="tool-btn" data-tool="image"  data-i18n-title="tool_img" title="이미지 삽입"><i class="fa-solid fa-image" aria-hidden="true"></i></button>
       </div>
       <input type="file" id="img-file" accept="image/*" style="display:none">
 
       <div id="tool-opts" class="sub-box" style="display:none">
-        <label class="lbl" for="shape-w">선/테두리 굵기 <span id="sw-val">4</span>px</label>
+        <label class="lbl" for="shape-w"><span data-i18n="lbl_stroke_w">선/테두리 굵기</span> <span id="sw-val">4</span>px</label>
         <input type="range" id="shape-w" class="ctrl-bar-range" min="1" max="40" value="4">
         <div id="shape-style-wrapper">
-          <label class="lbl" for="shape-style" style="margin-top:6px;">스타일</label>
+          <label class="lbl" for="shape-style" style="margin-top:6px;" data-i18n="lbl_style">스타일</label>
           <select id="shape-style" class="ctrl">
-            <option value="stroke">기본</option>
-            <option value="fill">채우기 (도형 전용)</option>
-            <option value="both">검은 테두리 추가</option>
-            <option value="outline-white">흰 테두리 추가</option>
+            <option value="stroke" data-i18n="opt_style_stroke">기본</option>
+            <option value="fill" data-i18n="opt_style_fill">채우기 (도형 전용)</option>
+            <option value="both" data-i18n="opt_style_both">검은 테두리 추가</option>
+            <option value="outline-white" data-i18n="opt_style_outline_white">흰 테두리 추가</option>
           </select>
         </div>
       </div>
@@ -139,65 +140,65 @@
 
     <!-- § 색상 설정 (독립 패널) -->
     <div class="side-section">
-      <div class="side-section-hdr"><i class="fa-solid fa-palette"></i> 색상</div>
+      <div class="side-section-hdr"><i class="fa-solid fa-palette"></i> <span data-i18n="panel_colors">색상</span></div>
       <div class="color-row">
         <input type="color" id="tool-picker" class="swatch" value="#000000">
         <input type="text"  id="tool-hex"    class="ctrl mono" value="#000000">
-        <button id="eye-btn" class="icon-sm" title="스포이드" aria-label="스포이드" style="display:none"><i class="fa-solid fa-eye-dropper" aria-hidden="true"></i></button>
+        <button id="eye-btn" class="icon-sm" data-i18n-title="btn_eye_title" title="스포이드" aria-label="스포이드" style="display:none"><i class="fa-solid fa-eye-dropper" aria-hidden="true"></i></button>
       </div>
       <div id="recent-colors" class="cs-chip-row"></div>
     </div>
 
     <!-- § 인물 추가 -->
     <div class="side-section">
-      <button id="add-dummy" class="big-btn primary-btn">
-        <i class="fa-solid fa-user-plus"></i> 인물 추가
+      <button id="add-dummy" class="big-btn primary-btn" data-i18n="btn_add_char">
+        <i class="fa-solid fa-user-plus"></i> <span data-i18n="btn_add_char">인물 추가</span>
       </button>
     </div>
 
     <!-- § 선택 객체 속성 -->
     <div class="side-section" id="props" style="display:none">
-      <div class="side-section-hdr"><i class="fa-solid fa-sliders"></i> 선택 객체</div>
+      <div class="side-section-hdr"><i class="fa-solid fa-sliders"></i> <span data-i18n="lbl_sel_obj">선택 객체</span></div>
 
       <!-- 인물 전용 -->
       <div id="dummy-props" style="display:none">
-        <label class="lbl">편집 모드</label>
+        <label class="lbl" data-i18n="lbl_edit_mode">편집 모드</label>
         <div class="mode-bar">
-          <button id="mode-xform" class="mode-btn is-active"><i class="fa-solid fa-arrows-up-down-left-right" aria-hidden="true"></i> 전체 변형</button>
-          <button id="mode-pose"  class="mode-btn"><i class="fa-solid fa-person-rays" aria-hidden="true"></i> 관절 포즈</button>
+          <button id="mode-xform" class="mode-btn is-active"><i class="fa-solid fa-arrows-up-down-left-right" aria-hidden="true"></i> <span data-i18n="btn_mode_xform">전체 변형</span></button>
+          <button id="mode-pose"  class="mode-btn"><i class="fa-solid fa-person-rays" aria-hidden="true"></i> <span data-i18n="btn_mode_pose">관절 포즈</span></button>
         </div>
         <div class="two-btn-row">
-          <button id="dummy-flip"  class="action-btn"><i class="fa-solid fa-left-right" aria-hidden="true"></i> 좌우반전</button>
-          <button id="dummy-reset" class="action-btn"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 포즈 초기화</button>
+          <button id="dummy-flip"  class="action-btn"><i class="fa-solid fa-left-right" aria-hidden="true"></i> <span data-i18n="btn_flip">좌우반전</span></button>
+          <button id="dummy-reset" class="action-btn"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> <span data-i18n="btn_reset_pose">포즈 초기화</span></button>
         </div>
         <div class="two-btn-row" style="margin-top:6px;">
-          <button id="pose-copy"  class="action-btn"><i class="fa-regular fa-copy" aria-hidden="true"></i> 포즈 복사</button>
-          <button id="pose-paste" class="action-btn" disabled><i class="fa-solid fa-paste" aria-hidden="true"></i> 포즈 붙여넣기</button>
+          <button id="pose-copy"  class="action-btn"><i class="fa-regular fa-copy" aria-hidden="true"></i> <span data-i18n="btn_copy_pose">포즈 복사</span></button>
+          <button id="pose-paste" class="action-btn" disabled><i class="fa-solid fa-paste" aria-hidden="true"></i> <span data-i18n="btn_paste_pose">포즈 붙여넣기</span></button>
         </div>
 
 
         <!-- ★ 파츠 & 레이어 (상단으로 승격 + 일체화) -->
         <div class="parts-layer-section">
-          <label class="lbl" for="part-sel" style="margin-top:12px;">선택된 파츠 (레이어 전용)</label>
+          <label class="lbl" for="part-sel" style="margin-top:12px;" data-i18n="lbl_part_sel">선택된 파츠 (레이어 전용)</label>
           <select id="part-sel" class="ctrl">
-            <option value="all">전체</option>
-            <option value="head">머리</option>
-            <option value="neck">목</option>
-            <option value="chest">상체</option>
-            <option value="waist">허리</option>
-            <option value="pelvis">골반</option>
-            <option value="lUpperArm">왼 위팔</option>
-            <option value="lLowerArm">왼 아래팔</option>
-            <option value="lHand">왼 손</option>
-            <option value="rUpperArm">오른 위팔</option>
-            <option value="rLowerArm">오른 아래팔</option>
-            <option value="rHand">오른 손</option>
-            <option value="lThigh">왼 허벅지</option>
-            <option value="lCalf">왼 종아리</option>
-            <option value="lFoot">왼 발</option>
-            <option value="rThigh">오른 허벅지</option>
-            <option value="rCalf">오른 종아리</option>
-            <option value="rFoot">오른 발</option>
+            <option value="all" data-i18n="opt_part_all">전체</option>
+            <option value="head" data-i18n="opt_part_head">머리</option>
+            <option value="neck" data-i18n="opt_part_neck">목</option>
+            <option value="chest" data-i18n="opt_part_chest">상체</option>
+            <option value="waist" data-i18n="opt_part_waist">허리</option>
+            <option value="pelvis" data-i18n="opt_part_pelvis">골반</option>
+            <option value="lUpperArm" data-i18n="opt_part_lUpperArm">왼 위팔</option>
+            <option value="lLowerArm" data-i18n="opt_part_lLowerArm">왼 아래팔</option>
+            <option value="lHand" data-i18n="opt_part_lHand">왼 손</option>
+            <option value="rUpperArm" data-i18n="opt_part_rUpperArm">오른 위팔</option>
+            <option value="rLowerArm" data-i18n="opt_part_rLowerArm">오른 아래팔</option>
+            <option value="rHand" data-i18n="opt_part_rHand">오른 손</option>
+            <option value="lThigh" data-i18n="opt_part_lThigh">왼 허벅지</option>
+            <option value="lCalf" data-i18n="opt_part_lCalf">왼 종아리</option>
+            <option value="lFoot" data-i18n="opt_part_lFoot">왼 발</option>
+            <option value="rThigh" data-i18n="opt_part_rThigh">오른 허벅지</option>
+            <option value="rCalf" data-i18n="opt_part_rCalf">오른 종아리</option>
+            <option value="rFoot" data-i18n="opt_part_rFoot">오른 발</option>
           </select>
 
           <!-- 레이어 (파츠 바로 아래) -->
@@ -205,14 +206,14 @@
             <label class="lbl" id="layer-lbl" style="margin:0;">레이어</label>
             <div style="display:flex; align-items:center; gap:5px;">
               <span id="layer-depth-badge" class="layer-depth-badge">기본</span>
-              <button id="l-reset" class="layer-reset-btn" title="레이어 오프셋 초기화" aria-label="레이어 오프셋 초기화"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+              <button id="l-reset" class="layer-reset-btn" title="레이어 오프셋 초기화" aria-label="레이어 오프셋 초기화" data-i18n-title="btn_reset_layer" data-i18n-aria="btn_reset_layer"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
             </div>
           </div>
           <div class="layer-row">
-            <button id="l-front" class="layer-btn" title="맨 앞" aria-label="맨 앞으로"><i class="fa-solid fa-angles-up" aria-hidden="true"></i></button>
-            <button id="l-fwd"   class="layer-btn" title="앞으로" aria-label="앞으로"><i class="fa-solid fa-angle-up" aria-hidden="true"></i></button>
-            <button id="l-bwd"   class="layer-btn" title="뒤로" aria-label="뒤로"><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>
-            <button id="l-back"  class="layer-btn" title="맨 뒤" aria-label="맨 뒤로"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></button>
+            <button id="l-front" class="layer-btn" data-i18n-title="btn_layer_front" data-i18n-aria="btn_layer_front" title="맨 앞" aria-label="맨 앞으로"><i class="fa-solid fa-angles-up" aria-hidden="true"></i></button>
+            <button id="l-fwd"   class="layer-btn" data-i18n-title="btn_layer_fwd" data-i18n-aria="btn_layer_fwd" title="앞으로" aria-label="앞으로"><i class="fa-solid fa-angle-up" aria-hidden="true"></i></button>
+            <button id="l-bwd"   class="layer-btn" data-i18n-title="btn_layer_bwd" data-i18n-aria="btn_layer_bwd" title="뒤로" aria-label="뒤로"><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>
+            <button id="l-back"  class="layer-btn" data-i18n-title="btn_layer_back" data-i18n-aria="btn_layer_back" title="맨 뒤" aria-label="맨 뒤로"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></button>
           </div>
         </div>
 
@@ -220,11 +221,11 @@
 
       <!-- 텍스트 전용 -->
       <div id="text-props" style="display:none">
-        <label class="lbl" for="text-content-input">텍스트 내용</label>
-        <textarea id="text-content-input" class="ctrl text-content-area" rows="3" placeholder="내용을 입력하세요"></textarea>
-        <label class="lbl" for="font-size" style="margin-top:8px;">글자 크기 <span id="fs-val">24</span>px</label>
+        <label class="lbl" for="text-content-input" data-i18n="lbl_txt_content">텍스트 내용</label>
+        <textarea id="text-content-input" class="ctrl text-content-area" rows="3" data-i18n-placeholder="pl_txt_content" placeholder="내용을 입력하세요"></textarea>
+        <label class="lbl" for="font-size" style="margin-top:8px;"><span data-i18n="lbl_txt_size">글자 크기</span> <span id="fs-val">24</span>px</label>
         <input type="range" id="font-size" class="ctrl-bar-range" min="10" max="80" value="24">
-        <p class="text-edit-hint">💡 글자를 더블클릭해도 바로 수정할 수 있어요</p>
+        <p class="text-edit-hint">💡 <span data-i18n="txt_edit_hint">글자를 더블클릭해도 바로 수정할 수 있어요</span></p>
       </div>
 
       <!-- 이미지 전용 -->
@@ -234,8 +235,8 @@
       <!-- 공통: 크기 -->
       <div style="padding-top:10px; border-top:1px solid var(--c-border);">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;">
-          <label class="lbl" for="obj-scale" style="margin:0;">크기</label>
-          <button id="obj-scale-reset" class="layer-reset-btn" title="기본 크기로 리셋" aria-label="기본 크기로 리셋"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+          <label class="lbl" for="obj-scale" style="margin:0;" data-i18n="lbl_scale">크기</label>
+          <button id="obj-scale-reset" class="layer-reset-btn" data-i18n-title="btn_reset_scale" title="기본 크기로 리셋" aria-label="기본 크기로 리셋"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <input type="range" id="obj-scale" class="ctrl-bar-range" min="10" max="1500" step="1" value="100" style="flex:1;">
@@ -246,25 +247,25 @@
 
       <!-- 스틱맨 전용: 포즈 프리셋 (크기 밑으로 이동) -->
       <div id="pose-presets-section" style="display:none; padding-top:12px; border-top:1px solid var(--c-border); margin-top:6px;">
-        <label class="lbl" style="margin:0; margin-bottom:8px;">포즈 프리셋</label>
+        <label class="lbl" style="margin:0; margin-bottom:8px;" data-i18n="lbl_pose_presets">포즈 프리셋</label>
         <div id="pose-presets-list" class="ctrl-bar-preset-grid"></div>
       </div>
 
       <!-- 공통: 레이어 (인물 제외 – 인물은 위에 파츠와 묶여있음) -->
       <div id="common-layer-section">
-        <label class="lbl" id="layer-lbl-common">레이어</label>
+        <label class="lbl" id="layer-lbl-common" data-i18n="lbl_layer">레이어</label>
         <div class="layer-row">
-          <button id="l-front-common" class="layer-btn" title="맨 앞" aria-label="맨 앞으로"><i class="fa-solid fa-angles-up" aria-hidden="true"></i></button>
-          <button id="l-fwd-common"   class="layer-btn" title="앞으로" aria-label="앞으로"><i class="fa-solid fa-angle-up" aria-hidden="true"></i></button>
-          <button id="l-bwd-common"   class="layer-btn" title="뒤로" aria-label="뒤로"><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>
-          <button id="l-back-common"  class="layer-btn" title="맨 뒤" aria-label="맨 뒤로"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></button>
+          <button id="l-front-common" class="layer-btn" data-i18n-title="btn_layer_front" data-i18n-aria="btn_layer_front" title="맨 앞" aria-label="맨 앞으로"><i class="fa-solid fa-angles-up" aria-hidden="true"></i></button>
+          <button id="l-fwd-common"   class="layer-btn" data-i18n-title="btn_layer_fwd" data-i18n-aria="btn_layer_fwd" title="앞으로" aria-label="앞으로"><i class="fa-solid fa-angle-up" aria-hidden="true"></i></button>
+          <button id="l-bwd-common"   class="layer-btn" data-i18n-title="btn_layer_bwd" data-i18n-aria="btn_layer_bwd" title="뒤로" aria-label="뒤로"><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>
+          <button id="l-back-common"  class="layer-btn" data-i18n-title="btn_layer_back" data-i18n-aria="btn_layer_back" title="맨 뒤" aria-label="맨 뒤로"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></button>
         </div>
       </div>
 
       <!-- 공통: 복제/삭제 -->
       <div class="two-btn-row">
-        <button id="obj-dup" class="action-btn"><i class="fa-solid fa-copy" aria-hidden="true"></i> 복제</button>
-        <button id="obj-del" class="action-btn is-danger"><i class="fa-solid fa-trash" aria-hidden="true"></i> 삭제</button>
+        <button id="obj-dup" class="action-btn"><i class="fa-solid fa-copy" aria-hidden="true"></i> <span data-i18n="btn_dup">복제</span></button>
+        <button id="obj-del" class="action-btn is-danger"><i class="fa-solid fa-trash" aria-hidden="true"></i> <span data-i18n="btn_del">삭제</span></button>
       </div>
     </div>
   </aside>
@@ -289,19 +290,19 @@
           <g id="g-obj"></g>
           <g id="g-ctrl"></g>
         </svg>
-        <div class="canvas-watermark" title="제작자">틀 제작 @nut__guryoyo</div>
+        <div class="canvas-watermark" data-i18n="txt_watermark">틀 제작 @nut__guryoyo</div>
       </div>
 
       <!-- ═══ 구도 설명란 (Composition Description) ═══ -->
       <div id="cs-comp-outer" class="cs-comp-outer">
         <!-- 헤더 바 -->
         <div id="cs-comp-header" class="cs-comp-header">
-          <span class="cs-comp-title">구도 설명</span>
+          <span class="cs-comp-title" data-i18n="comp_title">구도 설명</span>
           <div class="cs-comp-actions">
-            <button id="cs-comp-theme-btn" class="cs-comp-desc-btn" title="구도 설명란 테마 및 폰트 설정">
-              <i class="fa-solid fa-palette" aria-hidden="true"></i> 테마/폰트
+            <button id="cs-comp-theme-btn" class="cs-comp-desc-btn" title="구도 설명란 테마 및 폰트 설정" data-i18n-title="btn_theme_font_title">
+              <i class="fa-solid fa-palette" aria-hidden="true"></i> <span data-i18n="btn_theme_font">테마/폰트</span>
             </button>
-            <button id="cs-comp-fold-btn" class="cs-comp-desc-btn cs-comp-fold-btn" title="구도 설명란 접기/펼치기" aria-label="구도 설명란 접기/펼치기">
+            <button id="cs-comp-fold-btn" class="cs-comp-desc-btn cs-comp-fold-btn" title="구도 설명란 접기/펼치기" aria-label="구도 설명란 접기/펼치기" data-i18n-title="btn_fold_comp_title" data-i18n-aria="btn_fold_comp_title">
               <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
             </button>
           </div>
@@ -309,68 +310,68 @@
 
         <!-- 본체 슬라이드 영역 (단일 회색 서술 텍스트창) -->
         <div id="cs-comp-body" class="cs-comp-body">
-          <div id="cs-comp-features-input" class="cs-comp-single-textarea" contenteditable="true" placeholder="- 전체적인 구도, 카메라 시점, 조명/분위기 등을 서술해 주세요."></div>
+          <div id="cs-comp-features-input" class="cs-comp-single-textarea" contenteditable="true" data-i18n-placeholder="comp_pl" placeholder="- 전체적인 구도, 카메라 시점, 조명/분위기 등을 서술해 주세요."></div>
         </div>
 
         <!-- 테마/폰트 팝업 -->
         <div id="cs-comp-theme-popup" class="cs-comp-theme-popup" style="display:none;">
-          <div class="cs-comp-popup-sec-title">테마 연동</div>
+          <div class="cs-comp-popup-sec-title" data-i18n="lbl_theme_link">테마 연동</div>
           <div class="cs-comp-popup-row" style="margin-bottom:12px;">
-            <label class="cs-comp-popup-label" for="cs-comp-link-sheet-toggle">🔗 시트 테마와 연동</label>
+            <label class="cs-comp-popup-label" for="cs-comp-link-sheet-toggle" data-i18n="lbl_theme_link_sub">🔗 시트 테마와 연동</label>
             <label class="cs-toggle-switch" for="cs-comp-link-sheet-toggle">
               <input type="checkbox" id="cs-comp-link-sheet-toggle">
               <span class="cs-toggle-slider"></span>
             </label>
           </div>
 
-          <div class="cs-comp-popup-sec-title">테마 색상</div>
+          <div class="cs-comp-popup-sec-title" data-i18n="lbl_theme_color">테마 색상</div>
           <div class="cs-comp-popup-row">
-            <label class="cs-comp-popup-label" for="cs-comp-main-picker">헤더 바 색상</label>
+            <label class="cs-comp-popup-label" for="cs-comp-main-picker" data-i18n="lbl_theme_hdr">헤더 바 색상</label>
             <div style="display:flex; align-items:center; gap:6px;">
               <input type="color" id="cs-comp-main-picker" class="swatch" value="#2E2E2E" style="width:28px;height:28px;">
               <input type="text" id="cs-comp-main-hex" class="ctrl mono" value="#2E2E2E" style="width:68px;height:28px;font-size:11px;">
             </div>
           </div>
           <div class="cs-comp-popup-row">
-            <label class="cs-comp-popup-label" for="cs-comp-sub-picker">서브 타이틀 배경</label>
+            <label class="cs-comp-popup-label" for="cs-comp-sub-picker" data-i18n="lbl_theme_sub_bg">서브 타이틀 배경</label>
             <div style="display:flex; align-items:center; gap:6px;">
               <input type="color" id="cs-comp-sub-picker" class="swatch" value="#E6E6E6" style="width:28px;height:28px;">
               <input type="text" id="cs-comp-sub-hex" class="ctrl mono" value="#E6E6E6" style="width:68px;height:28px;font-size:11px;">
             </div>
           </div>
           <div class="cs-comp-popup-row">
-            <label class="cs-comp-popup-label" for="cs-comp-bg-picker">전체 배경색</label>
+            <label class="cs-comp-popup-label" for="cs-comp-bg-picker" data-i18n="lbl_theme_bg">전체 배경색</label>
             <div style="display:flex; align-items:center; gap:6px;">
               <input type="color" id="cs-comp-bg-picker" class="swatch" value="#FFFFFF" style="width:28px;height:28px;">
               <input type="text" id="cs-comp-bg-hex" class="ctrl mono" value="#FFFFFF" style="width:68px;height:28px;font-size:11px;">
             </div>
           </div>
           <div class="cs-comp-popup-row">
-            <label class="cs-comp-popup-label" for="cs-comp-body-picker">본문 글자색</label>
+            <label class="cs-comp-popup-label" for="cs-comp-body-picker" data-i18n="lbl_theme_body">본문 글자색</label>
             <div style="display:flex; align-items:center; gap:6px;">
               <input type="color" id="cs-comp-body-picker" class="swatch" value="#1E293B" style="width:28px;height:28px;">
               <input type="text" id="cs-comp-body-hex" class="ctrl mono" value="#1E293B" style="width:68px;height:28px;font-size:11px;">
             </div>
           </div>
 
-          <div class="cs-comp-popup-sec-title">글자 설정</div>
+          <div class="cs-comp-popup-sec-title" data-i18n="lbl_font_setting">글자 설정</div>
           <div class="cs-comp-popup-row">
-            <label class="cs-comp-popup-label" for="cs-comp-fs-range">글자 크기 (<span id="cs-comp-fs-val">13</span>px)</label>
+            <label class="cs-comp-popup-label" for="cs-comp-fs-range"><span data-i18n="lbl_txt_size">글자 크기</span> (<span id="cs-comp-fs-val">13</span>px)</label>
             <input type="range" id="cs-comp-fs-range" class="ctrl-bar-range" min="11" max="18" value="13" style="width:120px;">
           </div>
           <div class="cs-comp-popup-row">
-            <label class="cs-comp-popup-label" for="cs-comp-fw-select">글자 굵기</label>
+            <label class="cs-comp-popup-label" for="cs-comp-fw-select" data-i18n="lbl_font_weight">글자 굵기</label>
             <select id="cs-comp-fw-select" class="ctrl" style="width:120px;height:28px;font-size:12px;">
-              <option value="300">얇게 (Light)</option>
-              <option value="400" selected>보통 (Regular)</option>
-              <option value="500">중간 (Medium)</option>
-              <option value="700">굵게 (Bold)</option>
+              <option value="300" data-i18n="opt_fw_300">얇게 (Light)</option>
+              <option value="400" selected data-i18n="opt_fw_400">보통 (Regular)</option>
+              <option value="500" data-i18n="opt_fw_500">중간 (Medium)</option>
+              <option value="700" data-i18n="opt_fw_700">굵게 (Bold)</option>
             </select>
           </div>
 
           <div style="margin-top:10px; display:flex; justify-content:flex-end;">
             <button id="cs-comp-reset-btn" class="cs-comp-action-btn" style="flex:none; padding:0 12px; height:28px; font-size:11px;">
-              <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 기본값으로 초기화
+              <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> <span data-i18n="btn_reset_val">기본값으로 초기화</span>
             </button>
           </div>
         </div>
@@ -385,7 +386,7 @@
       <div class="cs-bookmark-tabs" id="cs-bookmark-tabs">
         <!-- JS에 의해 A, B, C 책갈피 탭들이 세로로 생성됨 -->
       </div>
-      <button id="cs-add-char-btn" class="cs-bookmark-tab add-tab" title="새 캐릭터 정보 시트 추가" aria-label="새 캐릭터 추가">
+      <button id="cs-add-char-btn" class="cs-bookmark-tab add-tab" title="새 캐릭터 정보 시트 추가" aria-label="새 캐릭터 추가" data-i18n-title="btn_add_char_title" data-i18n-aria="btn_add_char_title">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
       </button>
       <button id="ref-toggle" class="cs-bookmark-tab toggle-tab" title="신청서 패널 접기/펼치기" aria-label="신청서 패널 접기/펼치기">
@@ -398,14 +399,14 @@
       <div class="cs-sheet-wrap" id="cs-sheet-wrap">
         <!-- 오른쪽 패널 우측 상단 플로팅 버튼 그룹 -->
         <div class="cs-panel-float-group">
-          <button id="cs-theme-toggle-btn" class="cs-panel-float-btn" title="신청서 테마 색상 일괄 변경">
-            <i class="fa-solid fa-palette" aria-hidden="true"></i> 시트 테마
+          <button id="cs-theme-toggle-btn" class="cs-panel-float-btn" title="신청서 테마 색상 일괄 변경" data-i18n-title="btn_sheet_theme_title">
+            <i class="fa-solid fa-palette" aria-hidden="true"></i> <span data-i18n="btn_theme_toggle">시트 테마</span>
           </button>
-          <button id="add-free-img-btn" class="cs-panel-float-btn" title="패널 여백에 자유 이미지 추가">
-            <i class="fa-solid fa-image" aria-hidden="true"></i> 이미지 추가
+          <button id="add-free-img-btn" class="cs-panel-float-btn" title="패널 여백에 자유 이미지 추가" data-i18n-title="btn_add_img_title">
+            <i class="fa-solid fa-image" aria-hidden="true"></i> <span data-i18n="btn_add_img">이미지 추가</span>
           </button>
-          <button id="add-free-text-btn" class="cs-panel-float-btn" title="패널 여백에 자유 텍스트 추가">
-            <i class="fa-solid fa-font" aria-hidden="true"></i> 텍스트 추가
+          <button id="add-free-text-btn" class="cs-panel-float-btn" title="패널 여백에 자유 텍스트 추가" data-i18n-title="btn_add_text_title">
+            <i class="fa-solid fa-font" aria-hidden="true"></i> <span data-i18n="btn_add_text">텍스트 추가</span>
           </button>
         </div>
         <input type="file" id="free-img-file" accept="image/*" style="display:none">
@@ -418,8 +419,8 @@
             <div class="cs-hdr-bar">
               <input type="text" id="cs-name-input" class="cs-name-input" value="A." placeholder="A.">
               <div class="cs-char-info-box">
-                <input type="text" id="cs-orig-name-input" class="cs-info-input" value="원어 이름" placeholder="원어 이름">
-                <input type="text" id="cs-spec-input" class="cs-info-input" value="키 / 체형" placeholder="키 / 체형">
+                <input type="text" id="cs-orig-name-input" class="cs-info-input" value="원어 이름" placeholder="원어 이름" data-i18n-placeholder="sheet_orig_name">
+                <input type="text" id="cs-spec-input" class="cs-info-input" value="키 / 체형" placeholder="키 / 체형" data-i18n-placeholder="sheet_spec">
               </div>
             </div>
             <!-- (2) 3:4 MAIN IMAGE SLOT -->
@@ -461,15 +462,15 @@
           <!-- LEFT: KEYWORDS + KEY POINTS -->
           <div class="cs-col-left">
             <div class="cs-keyword-box">
-              <input type="text" id="cs-keyword-input" class="cs-keyword-input" value="#성격 키워드 #성격 키워드 #성격 키워드" placeholder="#성격 키워드">
+              <input type="text" id="cs-keyword-input" class="cs-keyword-input" value="#성격 키워드 #성격 키워드 #성격 키워드" placeholder="#성격 키워드" data-i18n-placeholder="sheet_keyword">
             </div>
             <div class="cs-block-box">
               <div class="cs-block-title" style="display: flex; justify-content: space-between; align-items: center;">
-                <span>중요 포인트</span>
-                <button class="cs-align-toggle" data-target="cs-keypoint-input" title="텍스트 정렬 전환 (좌/중/우)"><i class="fa-solid fa-align-left"></i></button>
+                <span data-i18n="sheet_keypoint_title">중요 포인트</span>
+                <button class="cs-align-toggle" data-target="cs-keypoint-input" title="텍스트 정렬 전환 (좌/중/우)" data-i18n-title="btn_align_toggle"><i class="fa-solid fa-align-left"></i></button>
               </div>
               <div class="cs-textarea-wrapper">
-                <div id="cs-keypoint-input" class="cs-block-textarea" data-align="left" contenteditable="true" placeholder="빠지면 안 되는 중요한 특징을 서술해 주세요.">빠지면 안 되는 중요한 특징을 서술해 주세요.</div>
+                <div id="cs-keypoint-input" class="cs-block-textarea" data-align="left" contenteditable="true" data-i18n-placeholder="sheet_keypoint_pl" placeholder="빠지면 안 되는 중요한 특징을 서술해 주세요."><span data-i18n="sheet_keypoint_pl">빠지면 안 되는 중요한 특징을 서술해 주세요.</span></div>
               </div>
             </div>
           </div>
@@ -489,13 +490,13 @@
             <div class="cs-block-box">
               <div class="cs-block-title cs-block-title-sub" style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: baseline; gap: 4px;">
-                  <span>외관 특징</span>
-                  <span class="cs-sub-note">보는 사람 기준 서술</span>
+                  <span data-i18n="sheet_feature_title">외관 특징</span>
+                  <span class="cs-sub-note" data-i18n="sheet_feature_sub">보는 사람 기준 서술</span>
                 </div>
-                <button class="cs-align-toggle" data-target="cs-features-input" title="텍스트 정렬 전환 (좌/중/우)"><i class="fa-solid fa-align-left"></i></button>
+                <button class="cs-align-toggle" data-target="cs-features-input" title="텍스트 정렬 전환 (좌/중/우)" data-i18n-title="btn_align_toggle"><i class="fa-solid fa-align-left"></i></button>
               </div>
               <div class="cs-textarea-wrapper">
-                <div id="cs-features-input" class="cs-block-textarea" data-align="left" contenteditable="true" placeholder="- 외관 특징을 서술해 주세요.">- 외관 특징을 서술해 주세요.<br>- 외관 특징을 서술해 주세요.<br>- 외관 특징을 서술해 주세요.<br>- 외관 특징을 서술해 주세요.</div>
+                <div id="cs-features-input" class="cs-block-textarea" data-align="left" contenteditable="true" data-i18n-placeholder="sheet_feature_pl" placeholder="- 외관 특징을 서술해 주세요."><span data-i18n="sheet_feature_pl">- 외관 특징을 서술해 주세요.</span><br><span data-i18n="sheet_feature_pl">- 외관 특징을 서술해 주세요.</span><br><span data-i18n="sheet_feature_pl">- 외관 특징을 서술해 주세요.</span><br><span data-i18n="sheet_feature_pl">- 외관 특징을 서술해 주세요.</span></div>
               </div>
             </div>
           </div>
@@ -511,11 +512,11 @@
         <!-- FOOTER: 출처 란 & 고정 워터마크 (40px 바닥 여백 활용) -->
         <div class="cs-footer-bar">
           <div class="cs-source-box">
-            <label class="cs-source-label" for="cs-source-input">출처 :</label>
-            <input type="text" id="cs-source-input" class="cs-source-input" placeholder="@nut__commission / 등 자료 출처">
+            <label class="cs-source-label" for="cs-source-input" data-i18n="sheet_source">출처 :</label>
+            <input type="text" id="cs-source-input" class="cs-source-input" placeholder="@nut__commission / 등 자료 출처" data-i18n-placeholder="sheet_source_pl">
           </div>
-          <div class="cs-watermark-fixed" title="제작자">
-            <span>틀 제작 @nut__guryoyo</span>
+          <div class="cs-watermark-fixed">
+            <span data-i18n="txt_watermark">틀 제작 @nut__guryoyo</span>
           </div>
         </div>
 
@@ -544,7 +545,7 @@
     <div class="color-row">
       <input type="color" id="cs-chip-picker" class="swatch">
       <input type="text"  id="cs-chip-hex"    class="ctrl mono" maxlength="7" placeholder="#ffffff">
-      <button id="cs-chip-clear-btn" class="icon-sm" title="흰색으로 초기화" aria-label="흰색으로 초기화"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+      <button id="cs-chip-clear-btn" class="icon-sm" data-i18n-title="btn_reset_white" title="흰색으로 초기화" aria-label="흰색으로 초기화"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -556,16 +557,16 @@
     <div class="cs-chip-grad-row">
       <span class="cs-chip-grad-label">방향</span>
       <div class="cs-chip-grad-dirs">
-        <button class="cs-chip-grad-dir is-active" data-deg="180" title="위 → 아래">
+        <button class="cs-chip-grad-dir is-active" data-deg="180" data-i18n-title="dir_180" title="위 → 아래">
           <i class="fa-solid fa-arrow-down" style="pointer-events:none"></i>
         </button>
-        <button class="cs-chip-grad-dir" data-deg="90" title="왼 → 오른">
+        <button class="cs-chip-grad-dir" data-deg="90" data-i18n-title="dir_90" title="왼 → 오른">
           <i class="fa-solid fa-arrow-down" style="transform:rotate(-90deg);pointer-events:none"></i>
         </button>
-        <button class="cs-chip-grad-dir" data-deg="135" title="↖ → ↘">
+        <button class="cs-chip-grad-dir" data-deg="135" data-i18n-title="dir_135" title="↖ → ↘">
           <i class="fa-solid fa-arrow-down" style="transform:rotate(-45deg);pointer-events:none"></i>
         </button>
-        <button class="cs-chip-grad-dir" data-deg="45" title="↙ → ↗">
+        <button class="cs-chip-grad-dir" data-deg="45" data-i18n-title="dir_45" title="↙ → ↗">
           <i class="fa-solid fa-arrow-down" style="transform:rotate(-135deg);pointer-events:none"></i>
         </button>
       </div>
@@ -584,7 +585,7 @@
   <div id="cs-chip-tab-image" class="cs-chip-tab-panel" style="display:none;">
     <div id="cs-chip-img-drop" class="cs-chip-img-drop">
       <i class="fa-solid fa-cloud-arrow-up"></i>
-      <span>클릭 또는 드래그하여<br>업로드</span>
+      <span data-i18n="lbl_drop_img">클릭 또는 드래그하여<br>업로드</span>
     </div>
     <input type="file" id="cs-chip-img-file" accept="image/*" style="display:none;">
      <button id="cs-chip-img-clear" class="cs-chip-img-clear-btn" style="display:none;">
@@ -635,14 +636,14 @@
 <!-- ═══════════════ SHEET THEME POPUP ═══════════════ -->
 <div id="cs-theme-popup" class="cs-theme-popup" style="display:none;">
   <div class="cs-theme-popup-hdr">
-    <span><i class="fa-solid fa-palette" aria-hidden="true"></i> 시트 테마 컬러</span>
-    <button id="cs-theme-popup-close" class="icon-sm" title="닫기" aria-label="닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    <span><i class="fa-solid fa-palette" aria-hidden="true"></i> <span data-i18n="lbl_theme_popup_title">시트 테마 컬러</span></span>
+    <button id="cs-theme-popup-close" class="icon-sm" title="닫기" aria-label="닫기" data-i18n-title="btn_close_title" data-i18n-aria="btn_close_title"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
   </div>
   
   <div class="cs-theme-popup-body">
     <!-- 인물 더미 색상 연동 토글 -->
     <div class="cs-theme-link-dummy-row">
-      <label class="cs-theme-link-label" for="theme-link-dummy-toggle"><i class="fa-solid fa-link" aria-hidden="true"></i> 인물(더미) 색상과 연동</label>
+      <label class="cs-theme-link-label" for="theme-link-dummy-toggle"><i class="fa-solid fa-link" aria-hidden="true"></i> <span data-i18n="lbl_link_dummy">인물(더미) 색상과 연동</span></label>
       <label class="cs-toggle-switch" for="theme-link-dummy-toggle" title="인물 더미의 색상을 시트 메인 테마 색상으로 자동 동기화합니다.">
         <input type="checkbox" id="theme-link-dummy-toggle">
         <span class="cs-toggle-slider"></span>
@@ -651,46 +652,46 @@
 
     <!-- 모든 시트에 동일 테마 적용 버튼 -->
     <div class="cs-theme-link-dummy-row cs-theme-apply-all-row">
-      <label class="cs-theme-link-label"><i class="fa-solid fa-clone" aria-hidden="true"></i> 모든 시트에 동일 테마 적용</label>
-      <button id="cs-theme-apply-all-btn" class="cs-theme-apply-all-btn" title="현재 테마를 모든 캐릭터 시트에 일괄 적용합니다.">적용</button>
+      <label class="cs-theme-link-label"><i class="fa-solid fa-clone" aria-hidden="true"></i> <span data-i18n="btn_apply_all_sheets">모든 시트에 동일 테마 적용</span></label>
+      <button id="cs-theme-apply-all-btn" class="cs-theme-apply-all-btn" title="현재 테마를 모든 캐릭터 시트에 일괄 적용합니다." data-i18n="btn_apply" data-i18n-title="btn_apply_title">적용</button>
     </div>
 
     <!-- 테마 프리셋 -->
-    <div class="cs-theme-sec-title">테마 프리셋</div>
+    <div class="cs-theme-sec-title" data-i18n="lbl_theme_presets">테마 프리셋</div>
     <div class="cs-theme-presets-grid" id="cs-theme-presets-grid"></div>
 
     <!-- 세부 색상 커스텀 -->
-    <div class="cs-theme-sec-title" style="margin-top:12px;">세부 색상 커스텀</div>
+    <div class="cs-theme-sec-title" style="margin-top:12px;" data-i18n="lbl_theme_custom">세부 색상 커스텀</div>
     <div class="cs-theme-custom-rows">
       <div class="cs-theme-color-row">
-        <label class="cs-theme-color-label" for="theme-color-main">메인 테마</label>
+        <label class="cs-theme-color-label" for="theme-color-main" data-i18n="lbl_theme_main">메인 테마</label>
         <input type="color" id="theme-color-main" class="swatch cs-theme-swatch" value="#2E2E2E">
         <input type="text" id="theme-hex-main" class="ctrl mono cs-theme-hex" maxlength="7" value="#2E2E2E">
       </div>
       <div class="cs-theme-color-row">
-        <label class="cs-theme-color-label" for="theme-color-sub">서브 배경</label>
+        <label class="cs-theme-color-label" for="theme-color-sub" data-i18n="lbl_theme_sub">서브 배경</label>
         <input type="color" id="theme-color-sub" class="swatch cs-theme-swatch" value="#E6E6E6">
         <input type="text" id="theme-hex-sub" class="ctrl mono cs-theme-hex" maxlength="7" value="#E6E6E6">
       </div>
       <div class="cs-theme-color-row">
-        <label class="cs-theme-color-label" for="theme-color-title">제목 글자</label>
+        <label class="cs-theme-color-label" for="theme-color-title" data-i18n="lbl_theme_title_txt">제목 글자</label>
         <input type="color" id="theme-color-title" class="swatch cs-theme-swatch" value="#FFFFFF">
         <input type="text" id="theme-hex-title" class="ctrl mono cs-theme-hex" maxlength="7" value="#FFFFFF">
       </div>
       <div class="cs-theme-color-row">
-        <label class="cs-theme-color-label" for="theme-color-body">본문 글자</label>
+        <label class="cs-theme-color-label" for="theme-color-body" data-i18n="lbl_theme_body_txt">본문 글자</label>
         <input type="color" id="theme-color-body" class="swatch cs-theme-swatch" value="#1E293B">
         <input type="text" id="theme-hex-body" class="ctrl mono cs-theme-hex" maxlength="7" value="#1E293B">
       </div>
       <div class="cs-theme-color-row">
-        <label class="cs-theme-color-label" for="theme-color-bg">시트 배경</label>
+        <label class="cs-theme-color-label" for="theme-color-bg" data-i18n="lbl_theme_sheet_bg">시트 배경</label>
         <input type="color" id="theme-color-bg" class="swatch cs-theme-swatch" value="#FFFFFF">
         <input type="text" id="theme-hex-bg" class="ctrl mono cs-theme-hex" maxlength="7" value="#FFFFFF">
       </div>
     </div>
 
     <button id="cs-theme-reset-btn" class="cs-chip-img-clear-btn" style="margin-top:12px;">
-      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 기본 차콜 테마로 리셋
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> <span data-i18n="btn_reset_theme_charcoal">기본 차콜 테마로 리셋</span>
     </button>
   </div>
 </div>
@@ -699,8 +700,8 @@
 <div id="preview-modal" class="modal-backdrop" style="display:none">
   <div class="modal-box">
     <div class="modal-header">
-      <span><i class="fa-solid fa-eye" aria-hidden="true"></i> 내보내기 미리보기</span>
-      <button id="preview-close" class="icon-btn" aria-label="미리보기 닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      <span><i class="fa-solid fa-eye" aria-hidden="true"></i> <span data-i18n="modal_preview_title">내보내기 미리보기</span></span>
+      <button id="preview-close" class="icon-btn" aria-label="미리보기 닫기" data-i18n-aria="btn_close_preview_aria"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
     </div>
     <div class="modal-body" id="preview-body">
       <img id="preview-img" alt="미리보기" style="max-width:100%;border-radius:6px;">
@@ -708,8 +709,8 @@
     <div class="modal-footer">
       <span class="modal-info" id="preview-info"></span>
       <div style="display:flex;gap:8px">
-        <button id="preview-close2" class="hdr-btn">닫기</button>
-        <button id="preview-save"   class="hdr-btn primary-hdr-btn"><i class="fa-solid fa-download" aria-hidden="true"></i> 저장</button>
+        <button id="preview-close2" class="hdr-btn" data-i18n="btn_close">닫기</button>
+        <button id="preview-save"   class="hdr-btn primary-hdr-btn"><i class="fa-solid fa-download" aria-hidden="true"></i> <span data-i18n="btn_save">저장</span></button>
       </div>
     </div>
   </div>
@@ -720,7 +721,7 @@
   <div class="modal-box crop-box">
     <div class="modal-header">
       <span><i class="fa-solid fa-crop" aria-hidden="true"></i> 이미지 크롭</span>
-      <button id="crop-close" class="icon-btn" aria-label="크롭 창 닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      <button id="crop-close" class="icon-btn" aria-label="크롭 창 닫기" data-i18n-aria="btn_close_crop_aria"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
     </div>
     <div class="modal-body" style="padding:16px;">
       <div class="crop-container" id="crop-container">
@@ -742,14 +743,14 @@
 <div id="confirm-modal" class="modal-backdrop" style="display:none">
   <div class="modal-box confirm-box">
     <div class="modal-header">
-      <span><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> 확인</span>
+      <span data-i18n="modal_confirm_title"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> 확인</span>
     </div>
     <div class="modal-body">
       <p id="confirm-msg" style="padding:10px 0;font-size:14px;line-height:1.6;"></p>
     </div>
     <div class="modal-footer">
-      <button id="confirm-no"  class="hdr-btn">취소</button>
-      <button id="confirm-yes" class="hdr-btn primary-hdr-btn danger-hdr">확인</button>
+      <button id="confirm-no"  class="hdr-btn" data-i18n="btn_cancel">취소</button>
+      <button id="confirm-yes" class="hdr-btn primary-hdr-btn danger-hdr" data-i18n="btn_ok">확인</button>
     </div>
   </div>
 </div>
@@ -758,15 +759,15 @@
 <div id="prompt-modal" class="modal-backdrop" style="display:none">
   <div class="modal-box confirm-box">
     <div class="modal-header">
-      <span><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> 입력</span>
+      <span data-i18n="modal_prompt_title"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> 입력</span>
     </div>
     <div class="modal-body" style="display:flex; flex-direction:column; gap:12px; padding:15px 20px;">
       <p id="prompt-msg" style="font-size:14px;line-height:1.6;margin:0;"></p>
       <input type="text" id="prompt-input" style="width:100%; box-sizing:border-box; height:36px; border:1px solid var(--c-border); border-radius:6px; padding:0 12px; font-family:inherit; font-size:14px;" />
     </div>
     <div class="modal-footer">
-      <button id="prompt-no"  class="hdr-btn">취소</button>
-      <button id="prompt-yes" class="hdr-btn primary-hdr-btn">확인</button>
+      <button id="prompt-no"  class="hdr-btn" data-i18n="btn_cancel">취소</button>
+      <button id="prompt-yes" class="hdr-btn primary-hdr-btn" data-i18n="btn_ok">확인</button>
     </div>
   </div>
 </div>
@@ -775,13 +776,13 @@
 <div id="alert-modal" class="modal-backdrop" style="display:none">
   <div class="modal-box confirm-box">
     <div class="modal-header">
-      <span><i class="fa-solid fa-circle-info" aria-hidden="true"></i> 알림</span>
+      <span data-i18n="modal_alert_title"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> 알림</span>
     </div>
     <div class="modal-body">
       <p id="alert-msg" style="padding:10px 0;font-size:14px;line-height:1.6;"></p>
     </div>
     <div class="modal-footer">
-      <button id="alert-ok" class="hdr-btn primary-hdr-btn">확인</button>
+      <button id="alert-ok" class="hdr-btn primary-hdr-btn" data-i18n="btn_ok">확인</button>
     </div>
   </div>
 </div>
@@ -814,7 +815,7 @@
   <div class="modal-box tutorial-box">
     <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
       <span id="tutorial-modal-title"><i class="fa-solid fa-book-open" aria-hidden="true"></i> 사용 안내</span>
-      <button id="tutorial-close-top" class="icon-btn" title="닫기" aria-label="닫기" style="background: none; border: none; cursor: pointer; color: var(--c-text); font-size: 16px;">
+      <button id="tutorial-close-top" class="icon-btn" title="닫기" aria-label="닫기" data-i18n-title="btn_close_title" data-i18n-aria="btn_close_title" style="background: none; border: none; cursor: pointer; color: var(--c-text); font-size: 16px;">
         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
       </button>
     </div>
@@ -892,7 +893,7 @@
 
     </div>
     <div class="modal-footer" style="justify-content: flex-end;">
-      <button id="tutorial-close-btn" class="hdr-btn primary-hdr-btn">닫기</button>
+      <button id="tutorial-close-btn" class="hdr-btn primary-hdr-btn" data-i18n="btn_close">닫기</button>
     </div>
   </div>
 </div>
@@ -902,7 +903,7 @@
   <div class="modal-box startup-box">
     <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
       <span id="startup-modal-title"><i class="fa-solid fa-palette" aria-hidden="true"></i> Commission Helper란?</span>
-      <button id="startup-close-top" class="icon-btn" title="닫기" aria-label="닫기" style="background: none; border: none; cursor: pointer; color: var(--c-text); font-size: 16px;">
+      <button id="startup-close-top" class="icon-btn" title="닫기" aria-label="닫기" data-i18n-title="btn_close_title" data-i18n-aria="btn_close_title" style="background: none; border: none; cursor: pointer; color: var(--c-text); font-size: 16px;">
         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
       </button>
     </div>
@@ -915,7 +916,7 @@
       </p>
       <div class="startup-btn-row">
         <button id="startup-tutorial-btn" class="hdr-btn primary-hdr-btn">사용 안내 보기</button>
-        <button id="startup-close-btn" class="hdr-btn">닫기</button>
+        <button id="startup-close-btn" class="hdr-btn" data-i18n="btn_close">닫기</button>
       </div>
     </div>
   </div>

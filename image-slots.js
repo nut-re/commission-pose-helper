@@ -30,7 +30,7 @@ function getBgPopup() {
   bgPopupEl.className = 'slot-bg-popup';
   bgPopupEl.id = 'slot-bg-popup';
   bgPopupEl.innerHTML =
-    '<div class="slot-bg-popup-title">슬롯 배경색</div>' +
+    '<div class="slot-bg-popup-title">' + (window.t ? window.t('lbl_slot_bg') : '슬롯 배경색') + '</div>' +
     '<div class="slot-bg-color-row">' +
       '<input type="color" class="slot-bg-native" id="slot-bg-native" value="#ffffff">' +
       '<input type="text" class="slot-bg-hex" id="slot-bg-hex" value="#ffffff" maxlength="7">' +
@@ -167,17 +167,17 @@ function initImageSlot(box) {
   // 플레이스홀더
   var ph = document.createElement('div');
   ph.className = 'slot-placeholder';
-  ph.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i><span>클릭 또는 드래그하여<br>업로드</span>';
+  ph.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i><span>' + (window.t ? window.t('lbl_drop_img') : '클릭 또는 드래그하여<br>업로드') + '</span>';
   wrap.appendChild(ph);
 
   // 오버레이 (0도 리셋 버튼 포함)
   var ov = document.createElement('div');
   ov.className = 'img-slot-overlay';
   ov.innerHTML =
-    '<button class="slot-ov-btn" data-action="reset-rot" title="회전 0° 리셋"><i class="fa-solid fa-rotate-left"></i></button>' +
-    '<button class="slot-ov-btn" data-action="replace" title="이미지 교체"><i class="fa-solid fa-arrow-rotate-right"></i></button>' +
-    '<button class="slot-ov-btn" data-action="bg" title="배경색"><i class="fa-solid fa-palette"></i></button>' +
-    '<button class="slot-ov-btn is-danger" data-action="delete" title="삭제"><i class="fa-solid fa-trash"></i></button>';
+    '<button class="slot-ov-btn" data-action="reset-rot" title="' + (window.t ? window.t('btn_reset_rot_title') : '회전 0° 리셋') + '"><i class="fa-solid fa-rotate-left"></i></button>' +
+    '<button class="slot-ov-btn" data-action="replace" title="' + (window.t ? window.t('btn_replace_img_title') : '이미지 교체') + '"><i class="fa-solid fa-arrow-rotate-right"></i></button>' +
+    '<button class="slot-ov-btn" data-action="bg" title="' + (window.t ? window.t('btn_bg_color_title') : '배경색') + '"><i class="fa-solid fa-palette"></i></button>' +
+    '<button class="slot-ov-btn is-danger" data-action="delete" title="' + (window.t ? window.t('btn_del') : '삭제') + '"><i class="fa-solid fa-trash"></i></button>';
   wrap.appendChild(ov);
 
   // 회전 슬라이더 (0도 클릭 리셋 뱃지)
@@ -185,7 +185,7 @@ function initImageSlot(box) {
   rotRow.className = 'slot-rotate-row';
   rotRow.innerHTML =
     '<input type="range" class="slot-rotate-slider" min="-180" max="180" step="1" value="0">' +
-    '<span class="slot-rotate-label" title="클릭 시 0°로 리셋">0°</span>';
+    '<span class="slot-rotate-label" title="' + (window.t ? window.t('title_reset_0') : '클릭 시 0°로 리셋') + '">0°</span>';
   wrap.appendChild(rotRow);
 
   box.appendChild(wrap);

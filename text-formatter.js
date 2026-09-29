@@ -20,16 +20,16 @@
     toolbarEl = document.createElement('div');
     toolbarEl.id = 'cs-text-formatting-bar';
     toolbarEl.innerHTML = [
-      '<button class="canvas-tool-btn" id="canvas-tool-dec-size" title="폰트 크기 줄이기"><i class="fa-solid fa-minus"></i></button>',
+      '<button class="canvas-tool-btn" id="canvas-tool-dec-size" data-i18n-title="tool_font_dec" title="폰트 크기 줄이기"><i class="fa-solid fa-minus"></i></button>',
       '<span class="canvas-tool-size-val" id="canvas-tool-size-disp">14px</span>',
-      '<button class="canvas-tool-btn" id="canvas-tool-inc-size" title="폰트 크기 키우기"><i class="fa-solid fa-plus"></i></button>',
+      '<button class="canvas-tool-btn" id="canvas-tool-inc-size" data-i18n-title="tool_font_inc" title="폰트 크기 키우기"><i class="fa-solid fa-plus"></i></button>',
       '<div class="canvas-tool-sep"></div>',
-      '<button class="canvas-tool-btn" id="canvas-tool-bold" title="선택 부분 / 전체 굵게 (Bold)"><b>B</b></button>',
-      '<button class="canvas-tool-btn" id="canvas-tool-italic" title="선택 부분 / 전체 기울임 (Italic)"><i>I</i></button>',
+      '<button class="canvas-tool-btn" id="canvas-tool-bold" data-i18n-title="tool_font_bold" title="선택 부분 / 전체 굵게 (Bold)"><b>B</b></button>',
+      '<button class="canvas-tool-btn" id="canvas-tool-italic" data-i18n-title="tool_font_italic" title="선택 부분 / 전체 기울임 (Italic)"><i>I</i></button>',
       '<div class="canvas-tool-sep"></div>',
-      '<button class="canvas-tool-btn" id="canvas-tool-bullet-btn" title="말머리 기호 삽입"><i class="fa-solid fa-list-ul"></i></button>',
+      '<button class="canvas-tool-btn" id="canvas-tool-bullet-btn" data-i18n-title="tool_font_bullet" title="말머리 기호 삽입"><i class="fa-solid fa-list-ul"></i></button>',
       '<div class="canvas-tool-sep"></div>',
-      '<button class="canvas-tool-btn" id="canvas-tool-reset" title="서식 초기화"><i class="fa-solid fa-rotate-left"></i></button>'
+      '<button class="canvas-tool-btn" id="canvas-tool-reset" data-i18n-title="tool_font_reset" title="서식 초기화"><i class="fa-solid fa-rotate-left"></i></button>'
     ].join('');
     document.body.appendChild(toolbarEl);
 

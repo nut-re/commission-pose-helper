@@ -417,7 +417,7 @@ class App {
     document.getElementById('preview-save')?.addEventListener('click', () => {
       const fmt = document.getElementById('export-fmt')?.value || 'png';
       const href = document.getElementById('preview-img')?.src;
-      if (href) this._download(href, `commission_layout.${fmt}`);
+      if (href) this._download(href, `nut-Commission-Helper.${fmt}`);
       this._closePreview();
     });
   }
@@ -603,14 +603,26 @@ class App {
       // themeKey: 해당 필드가 따라야 할 char.theme의 키
       //   → liveEl 기준 computed color 대신 char.theme에서 직접 주입해
       //     활성 캐릭터 색상이 비활성 캐릭터 시트에 번지는 현상 방지
+      const koDefaults = { orig: '원어 이름', spec: '키 / 체형', kw: '#성격 키워드 #성격 키워드 #성격 키워드', kp: '빠지면 안 되는 중요한 특징을 서술해 주세요.', f: '- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.', s: '@nut__commission / 등 자료 출처' };
+      const enDefaults = { orig: 'Original Name', spec: 'Height / Build', kw: '#Personality Keywords #Personality Keywords #Personality Keywords', kp: 'Describe essential details that must be preserved.', f: '- Describe the character\'s appearance.\n- Describe the character\'s appearance.\n- Describe the character\'s appearance.\n- Describe the character\'s appearance.', s: '@nut__commission / Reference Credits' };
+      
+      const getVal = (val, key, kDef, eDef, tKey) => {
+        if (!val || val === kDef || val === eDef) {
+          if (tKey === 'sheet_keyword') return window.t ? window.t(tKey) + ' ' + window.t(tKey) + ' ' + window.t(tKey) : val;
+          if (tKey === 'sheet_feature_pl') return window.t ? [window.t(tKey), window.t(tKey), window.t(tKey), window.t(tKey)].join('\n') : val;
+          return window.t ? window.t(tKey) : val;
+        }
+        return val;
+      };
+
       const TEXT_FIELDS = [
         { id: 'cs-name-input',      val: char.name || (char.letter + '.'), isMulti: false, themeKey: 'title' },
-        { id: 'cs-orig-name-input', val: char.origName || '',              isMulti: false, themeKey: 'title' },
-        { id: 'cs-spec-input',      val: char.spec || '',                  isMulti: false, themeKey: 'title' },
-        { id: 'cs-keyword-input',   val: char.keywords || '',              isMulti: false, themeKey: 'body'  },
-        { id: 'cs-keypoint-input',  val: char.keypoints || '',             isMulti: true,  themeKey: 'body'  },
-        { id: 'cs-features-input',  val: char.features || '',              isMulti: true,  themeKey: 'body'  },
-        { id: 'cs-source-input',    val: char.source || '',                isMulti: false, themeKey: 'body'  }
+        { id: 'cs-orig-name-input', val: getVal(char.origName, 'origName', koDefaults.orig, enDefaults.orig, 'sheet_orig_name'), isMulti: false, themeKey: 'title' },
+        { id: 'cs-spec-input',      val: getVal(char.spec, 'spec', koDefaults.spec, enDefaults.spec, 'sheet_spec'), isMulti: false, themeKey: 'title' },
+        { id: 'cs-keyword-input',   val: getVal(char.keywords, 'keywords', koDefaults.kw, enDefaults.kw, 'sheet_keyword'), isMulti: false, themeKey: 'body'  },
+        { id: 'cs-keypoint-input',  val: getVal(char.keypoints, 'keypoints', koDefaults.kp, enDefaults.kp, 'sheet_keypoint_pl'), isMulti: true,  themeKey: 'body'  },
+        { id: 'cs-features-input',  val: getVal(char.features, 'features', koDefaults.f, enDefaults.f, 'sheet_feature_pl'), isMulti: true,  themeKey: 'body'  },
+        { id: 'cs-source-input',    val: getVal(char.source, 'source', koDefaults.s, enDefaults.s, 'sheet_source_pl'), isMulti: false, themeKey: 'body'  }
       ];
 
       TEXT_FIELDS.forEach(tf => {
@@ -933,9 +945,9 @@ class App {
         const info  = document.getElementById('preview-info');
         if (modal) openModalWithFocus(modal, document.getElementById('preview-btn'));
         if (img)   img.src = dataUrl;
-        if (info)  info.textContent = '출력 해상도: ' + canvas.width + ' x ' + canvas.height + ' px | ' + fmt.toUpperCase() + ' (' + (scope === 'all' ? '전체 합본' : scope === 'all-split' ? '캔버스 중앙 양분할' : scope === 'current' ? '현재 1인' : scope === 'sheets-only' ? '시트만' : scope === 'current-sheet-only' ? '현재 1인 시트만' : '포즈만') + ')';
+        if (info)  info.textContent = (window.t ? window.t('txt_resolution') : '출력 해상도: ') + canvas.width + ' x ' + canvas.height + ' px | ' + fmt.toUpperCase() + ' (' + (scope === 'all' ? (window.t ? window.t('scope_all') : '전체 합본') : scope === 'all-split' ? (window.t ? window.t('scope_all_split') : '캔버스 중앙 양분할') : scope === 'current' ? (window.t ? window.t('scope_current') : '현재 1인') : scope === 'sheets-only' ? (window.t ? window.t('scope_sheets_only') : '시트만') : scope === 'current-sheet-only' ? (window.t ? window.t('scope_current_sheet') : '현재 1인 시트만') : (window.t ? window.t('scope_pose_only') : '포즈만')) + ')';
       } else {
-        this._download(dataUrl, 'commission_layout.' + fmt);
+        this._download(dataUrl, 'nut-Commission-Helper.' + fmt);
         announceStatus('이미지 내보내기가 완료되었습니다.');
       }
     }).catch(err => {
@@ -1591,9 +1603,10 @@ class App {
       rThigh:'오른 허벅지', rCalf:'오른 종아리', rFoot:'오른 발' };
     const t = lbl[this.selectedPart] || this.selectedPart;
     const layerLbl = document.getElementById('layer-lbl');
-    if (layerLbl) layerLbl.textContent = `레이어 (${t})`;
+    const localizedPart = window.t && window.t('opt_part_' + this.selectedPart) !== 'opt_part_' + this.selectedPart ? window.t('opt_part_' + this.selectedPart) : t;
+    if (layerLbl) layerLbl.textContent = (window.t ? window.t('lbl_layer') : '레이어') + ` (${localizedPart})`;
     const commonLbl = document.getElementById('layer-lbl-common');
-    if (commonLbl) commonLbl.textContent = `레이어`;
+    if (commonLbl) commonLbl.textContent = window.t ? window.t('lbl_layer') : `레이어`;
 
     // 레이어 깊이 뱃지 업데이트
     this._updateLayerDepthBadge();
@@ -1616,15 +1629,15 @@ class App {
       const baseZ = (obj.zIndex || 0) * 100;
 
       if (offset === 0) {
-        badge.textContent = '기본';
+        badge.textContent = window.t ? window.t('lbl_layer_def') : '기본';
         badge.className = 'layer-depth-badge badge-default';
       } else if (offset > 0) {
         const crossed = otherZs.filter(z => z > baseZ && z <= effectiveZ).length;
-        badge.textContent = crossed > 0 ? `↑ 앞 (${crossed}개 추월)` : `↑ 앞 +${offset}`;
+        badge.textContent = crossed > 0 ? (window.t ? `↑ ${window.t('badge_fwd')} (${crossed}${window.t('badge_overtake')})` : `↑ 앞 (${crossed}개 추월)`) : (window.t ? `↑ ${window.t('badge_fwd')} +${offset}` : `↑ 앞 +${offset}`);
         badge.className = 'layer-depth-badge badge-front';
       } else {
         const crossed = otherZs.filter(z => z < baseZ && z >= effectiveZ).length;
-        badge.textContent = crossed > 0 ? `↓ 뒤 (${crossed}개 뒤로)` : `↓ 뒤 ${offset}`;
+        badge.textContent = crossed > 0 ? (window.t ? `↓ ${window.t('badge_bwd')} (${crossed}${window.t('badge_behind')})` : `↓ 뒤 (${crossed}개 뒤로)`) : (window.t ? `↓ ${window.t('badge_bwd')} ${offset}` : `↓ 뒤 ${offset}`);
         badge.className = 'layer-depth-badge badge-back';
       }
     } else {
@@ -1632,7 +1645,7 @@ class App {
       const sorted = [...this.objects].sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
       const rank = sorted.findIndex(o => o.id === obj.id) + 1;
       const total = sorted.length;
-      badge.textContent = `${rank} / ${total}번째`;
+      badge.textContent = window.t ? `${rank} / ${total}${window.t('badge_th')}` : `${rank} / ${total}번째`;
       badge.className = 'layer-depth-badge badge-default';
     }
   }
@@ -3269,7 +3282,7 @@ class App {
       activeCharId: this.activeCharId
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
-    this._download(URL.createObjectURL(blob), 'commission_project.json');
+    this._download(URL.createObjectURL(blob), 'nut-Commission-Helper.json');
   }
 
   _loadProject(data) {
@@ -3500,11 +3513,12 @@ class App {
         // 프리셋 버튼 생성
         const btn = document.createElement('button');
         btn.className = 'ctrl-bar-preset-btn';
-        btn.title = `${preset.name} 포즈 적용`;
+        btn.title = (window.t ? window.t('pose_' + preset.name) : preset.name) + (window.t ? window.t('pose_apply') : ' 포즈 적용');
         
         const nameSpan = document.createElement('span');
         nameSpan.className = 'ctrl-bar-preset-name';
-        nameSpan.textContent = preset.name;
+        nameSpan.setAttribute('data-i18n', 'pose_' + preset.name);
+        nameSpan.textContent = window.t ? window.t('pose_' + preset.name) : preset.name;
         btn.appendChild(nameSpan);
 
         // 클릭 이벤트: 포즈 적용
@@ -3513,7 +3527,7 @@ class App {
 
           const s = this.selected;
           if (!s || s.type !== 'stickman') {
-            this._alert('포즈를 적용할 인물을 먼저 선택해 주세요.');
+            this._alert(window.t ? window.t('msg_need_char') : '포즈를 적용할 인물을 먼저 선택해 주세요.');
             return;
           }
           this._pushHistory();
@@ -3533,10 +3547,10 @@ class App {
           const delBtn = document.createElement('button');
           delBtn.className = 'ctrl-bar-preset-del-btn';
           delBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-          delBtn.title = '프리셋 삭제';
+          delBtn.title = window.t ? window.t('btn_del_preset') : '프리셋 삭제';
           delBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            this._confirm(`'${preset.name}' 프리셋을 삭제하시겠습니까?`, () => {
+            this._confirm(window.t ? window.t('msg_del_preset').replace('{0}', preset.name) : `'${preset.name}' 프리셋을 삭제하시겠습니까?`, () => {
               customPresets.splice(i - this.defaultPresets.length, 1);
               localStorage.setItem('custom_pose_presets', JSON.stringify(customPresets));
               this._renderPresets();
@@ -3550,16 +3564,16 @@ class App {
         // 빈 슬롯 생성
         const btn = document.createElement('button');
         btn.className = 'ctrl-bar-preset-btn empty';
-        btn.innerHTML = '<i class="fa-solid fa-plus" style="margin-right:4px;"></i> 저장';
-        btn.title = '현재 선택된 포즈를 이 슬롯에 저장';
+        btn.innerHTML = '<i class="fa-solid fa-plus" style="margin-right:4px;"></i>' + (window.t ? window.t('btn_save') : ' 저장');
+        btn.title = window.t ? window.t('title_save_preset') : '현재 선택된 포즈를 이 슬롯에 저장';
 
         btn.addEventListener('click', () => {
           const s = this.selected;
           if (!s || s.type !== 'stickman') {
-            this._alert('포즈를 저장할 인물을 먼저 선택해 주세요.');
+            this._alert(window.t ? window.t('msg_need_char') : '포즈를 저장할 인물을 먼저 선택해 주세요.');
             return;
           }
-          this._prompt('새 프리셋 이름을 입력해 주세요:', '', (name) => {
+          this._prompt(window.t ? window.t('msg_input_preset') : '새 프리셋 이름을 입력해 주세요:', '', (name) => {
             if (!name) return;
             const trimmed = name.trim();
             if (!trimmed) return;
@@ -3752,10 +3766,10 @@ class App {
         tab.className = 'cs-bookmark-tab' + (char.id === this.activeCharId ? ' is-active' : '');
         tab.dataset.charId = char.id;
         tab.textContent = char.letter;
-        tab.title = `캐릭터 ${char.letter}. 시트 (드래그하여 순서 변경 가능)`;
+        tab.title = window.t ? window.t('tab_char_sheet_title').replace('{0}', char.letter) : `캐릭터 ${char.letter}. 시트 (드래그하여 순서 변경 가능)`;
         tab.setAttribute('role', 'tab');
         tab.setAttribute('tabindex', '0');
-        tab.setAttribute('aria-label', `캐릭터 ${char.letter} 시트`);
+        tab.setAttribute('aria-label', window.t ? window.t('tab_char_sheet_aria').replace('{0}', char.letter) : `캐릭터 ${char.letter} 시트`);
         tab.setAttribute('aria-selected', char.id === this.activeCharId ? 'true' : 'false');
         tab.draggable = true;
 
@@ -3826,7 +3840,7 @@ class App {
             if (this.characters.length <= 1) return;
 
             const charLabel = char.name || (char.letter + '.');
-            this._confirm(`캐릭터 [ ${charLabel} ] 시트를 정말 삭제하시겠습니까?<br>작성된 프로필 텍스트와 업로드한 이미지가 모두 삭제됩니다.`, () => {
+            this._confirm(window.t ? window.t('msg_del_char_sheet').replace('{0}', charLabel) : `캐릭터 [ ${charLabel} ] 시트를 정말 삭제하시겠습니까?<br>작성된 프로필 텍스트와 업로드한 이미지가 모두 삭제됩니다.`, () => {
               const wasActive = (char.id === this.activeCharId);
               this.characters = this.characters.filter(c => c.id !== char.id);
               if (wasActive) {
@@ -3861,7 +3875,7 @@ class App {
       addCharBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (this.characters.length >= 8) {
-          this._alert('캐릭터 시트는 최대 8명까지 추가할 수 있습니다.');
+          this._alert(window.t ? window.t('msg_max_char') : '캐릭터 시트는 최대 8명까지 추가할 수 있습니다.');
           return;
         }
         saveCurrentCharacterData();
@@ -4039,11 +4053,11 @@ class App {
         }
         // 클릭 피드백: 버튼 텍스트 → "✓ 완료" 1.2초 후 복구
         applyAllBtn.classList.add('is-done');
-        applyAllBtn.textContent = '✓ 완료';
+        applyAllBtn.textContent = window.t ? window.t('btn_apply_done') : '✓ 완료';
         clearTimeout(applyAllBtn._doneTimer);
         applyAllBtn._doneTimer = setTimeout(() => {
           applyAllBtn.classList.remove('is-done');
-          applyAllBtn.textContent = '적용';
+          applyAllBtn.textContent = window.t ? window.t('btn_apply') : '적용';
         }, 1200);
       });
     }
@@ -4060,7 +4074,7 @@ class App {
             <div class="cs-theme-ctrl-bar-preset-preview-main" style="background:${p.main}"></div>
             <div class="cs-theme-ctrl-bar-preset-preview-sub" style="background:${p.sub}"></div>
           </div>
-          <span>${p.name}</span>
+          <span>${window.t ? window.t('theme_' + p.id) || p.name : p.name}</span>
         `;
         btn.addEventListener('click', (e) => {
           e.stopPropagation();

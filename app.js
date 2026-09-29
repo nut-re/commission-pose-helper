@@ -417,7 +417,7 @@ class App {
     document.getElementById('preview-save')?.addEventListener('click', () => {
       const fmt = document.getElementById('export-fmt')?.value || 'png';
       const href = document.getElementById('preview-img')?.src;
-      if (href) this._download(href, `commission_layout.${fmt}`);
+      if (href) this._download(href, `nut-Commission-Helper.${fmt}`);
       this._closePreview();
     });
   }
@@ -935,7 +935,7 @@ class App {
         if (img)   img.src = dataUrl;
         if (info)  info.textContent = '출력 해상도: ' + canvas.width + ' x ' + canvas.height + ' px | ' + fmt.toUpperCase() + ' (' + (scope === 'all' ? '전체 합본' : scope === 'all-split' ? '캔버스 중앙 양분할' : scope === 'current' ? '현재 1인' : scope === 'sheets-only' ? '시트만' : scope === 'current-sheet-only' ? '현재 1인 시트만' : '포즈만') + ')';
       } else {
-        this._download(dataUrl, 'commission_layout.' + fmt);
+        this._download(dataUrl, 'nut-Commission-Helper.' + fmt);
         announceStatus('이미지 내보내기가 완료되었습니다.');
       }
     }).catch(err => {
@@ -3269,7 +3269,7 @@ class App {
       activeCharId: this.activeCharId
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
-    this._download(URL.createObjectURL(blob), 'commission_project.json');
+    this._download(URL.createObjectURL(blob), 'nut-Commission-Helper.json');
   }
 
   _loadProject(data) {

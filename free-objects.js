@@ -61,12 +61,12 @@
         '<div class="free-obj-handle handle-tr" data-handle="tr"></div>',
         '<div class="free-obj-handle handle-bl" data-handle="bl"></div>',
         '<div class="free-obj-handle handle-br" data-handle="br"></div>',
-        '<div class="free-obj-handle handle-rot-top" data-handle="rot" title="드래그하여 회전"><i class="fa-solid fa-rotate"></i></div>',
+        '<div class="free-obj-handle handle-rot-top" data-handle="rot" data-i18n-title="btn_rot_drag" title="드래그하여 회전"><i class="fa-solid fa-rotate"></i></div>',
         '<div class="free-obj-toolbar">',
-        (obj.type === 'text' ? '  <button class="free-tb-btn" data-act="style" title="텍스트 서식/스타일"><i class="fa-solid fa-font"></i></button>' : ''),
-        '  <button class="free-tb-btn" data-act="front" title="맨 위로 보내기"><i class="fa-solid fa-layer-group"></i></button>',
-        '  <button class="free-tb-btn" data-act="back" title="맨 아래로 보내기"><i class="fa-solid fa-layer-group fa-flip-vertical"></i></button>',
-        '  <button class="free-tb-btn is-danger" data-act="del" title="삭제"><i class="fa-solid fa-trash"></i></button>',
+        (obj.type === 'text' ? '  <button class="free-tb-btn" data-act="style" data-i18n-title="btn_text_style" title="텍스트 서식/스타일"><i class="fa-solid fa-font"></i></button>' : ''),
+        '  <button class="free-tb-btn" data-act="front" data-i18n-title="btn_layer_front" title="맨 위로 보내기"><i class="fa-solid fa-layer-group"></i></button>',
+        '  <button class="free-tb-btn" data-act="back" data-i18n-title="btn_layer_back" title="맨 아래로 보내기"><i class="fa-solid fa-layer-group fa-flip-vertical"></i></button>',
+        '  <button class="free-tb-btn is-danger" data-act="del" data-i18n-title="btn_del" title="삭제"><i class="fa-solid fa-trash"></i></button>',
         '</div>'
       ].join('');
 
@@ -404,7 +404,7 @@
     rowWeight.className = 'canvas-tool-row';
     const isBold = obj.fontWeight === '700' || obj.fontWeight === 'bold';
     rowWeight.innerHTML = `
-      <button class="canvas-tool-btn ${isBold ? 'active' : ''}" data-action="bold" title="굵게" style="width:100%;">B (굵은 글씨)</button>
+      <button class="canvas-tool-btn ${isBold ? 'active' : ''}" data-action="bold" data-i18n-title="btn_text_bold" title="굵게" style="width:100%;"><span data-i18n="btn_text_bold_label">B (굵은 글씨)</span></button>
     `;
 
     // 컬러 (프리셋 5종 + 네이티브 컬러피커)

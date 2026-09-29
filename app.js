@@ -3606,11 +3606,11 @@ class App {
     return {
       id, letter,
       name: letter + '.',
-      origName: '원어 이름',
-      spec: '키 / 체형',
-      keywords: '#성격 키워드 #성격 키워드 #성격 키워드',
-      keypoints: '빠지면 안 되는 중요한 특징을 서술해 주세요.',
-      features: '- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.\n- 외관 특징을 서술해 주세요.',
+      origName: '',
+      spec: '',
+      keywords: '',
+      keypoints: '',
+      features: '',
       source: '',
       images: {
         'main-img': s(), 'sub-1': s(), 'sub-2': s(), 'sub-3': s(), 'sub-4': s()
@@ -3693,8 +3693,8 @@ class App {
       const srcEl  = document.getElementById('cs-source-input');
 
       if (nameEl) nameEl.value = target.name || (target.letter + '.');
-      if (origEl) origEl.value = target.origName || '원어 이름';
-      if (specEl) specEl.value = target.spec || '키 / 체형';
+      if (origEl) origEl.value = target.origName || '';
+      if (specEl) specEl.value = target.spec || '';
       if (kwEl)   kwEl.value = target.keywords || '';
       if (kpEl) {
         kpEl.innerText = target.keypoints || '';
@@ -3900,7 +3900,7 @@ class App {
         if (icon) {
           icon.className = isCollapsed ? 'fa-solid fa-chevron-left' : 'fa-solid fa-chevron-right';
         }
-        toggleBtn.title = isCollapsed ? '신청서 패널 펼치기' : '신청서 패널 접기';
+        toggleBtn.title = isCollapsed ? (window.t ? window.t('btn_panel_expand') : '신청서 패널 펼치기') : (window.t ? window.t('btn_panel_collapse') : '신청서 패널 접기');
         setTimeout(() => this._applyRatio(), 100);
       });
     }
@@ -4270,7 +4270,7 @@ class App {
       if (e) e.stopPropagation();
       this.compDesc.folded = !this.compDesc.folded;
       if (outerEl) outerEl.classList.toggle('folded', this.compDesc.folded);
-      if (foldBtn) foldBtn.title = this.compDesc.folded ? '구도 설명란 펼치기' : '구도 설명란 접기';
+      if (foldBtn) foldBtn.title = this.compDesc.folded ? (window.t ? window.t('btn_comp_expand') : '구도 설명란 펼치기') : (window.t ? window.t('btn_comp_collapse') : '구도 설명란 접기');
       setTimeout(() => this._applyRatio(), 300); // CSS 전환(0.28s) 완료 후 재계산
     };
 

@@ -419,8 +419,8 @@
             <div class="cs-hdr-bar">
               <input type="text" id="cs-name-input" class="cs-name-input" value="A." placeholder="A.">
               <div class="cs-char-info-box">
-                <input type="text" id="cs-orig-name-input" class="cs-info-input" value="원어 이름" placeholder="원어 이름" data-i18n-placeholder="sheet_orig_name">
-                <input type="text" id="cs-spec-input" class="cs-info-input" value="키 / 체형" placeholder="키 / 체형" data-i18n-placeholder="sheet_spec">
+                <input type="text" id="cs-orig-name-input" class="cs-info-input" placeholder="원어 이름" data-i18n-placeholder="sheet_orig_name">
+                <input type="text" id="cs-spec-input" class="cs-info-input" placeholder="키 / 체형" data-i18n-placeholder="sheet_spec">
               </div>
             </div>
             <!-- (2) 3:4 MAIN IMAGE SLOT -->
@@ -462,7 +462,7 @@
           <!-- LEFT: KEYWORDS + KEY POINTS -->
           <div class="cs-col-left">
             <div class="cs-keyword-box">
-              <input type="text" id="cs-keyword-input" class="cs-keyword-input" value="#성격 키워드 #성격 키워드 #성격 키워드" placeholder="#성격 키워드" data-i18n-placeholder="sheet_keyword">
+              <input type="text" id="cs-keyword-input" class="cs-keyword-input" placeholder="#성격 키워드" data-i18n-placeholder="sheet_keyword">
             </div>
             <div class="cs-block-box">
               <div class="cs-block-title" style="display: flex; justify-content: space-between; align-items: center;">
@@ -470,7 +470,7 @@
                 <button class="cs-align-toggle" data-target="cs-keypoint-input" title="텍스트 정렬 전환 (좌/중/우)" data-i18n-title="btn_align_toggle"><i class="fa-solid fa-align-left"></i></button>
               </div>
               <div class="cs-textarea-wrapper">
-                <div id="cs-keypoint-input" class="cs-block-textarea" data-align="left" contenteditable="true" data-i18n-placeholder="sheet_keypoint_pl" placeholder="빠지면 안 되는 중요한 특징을 서술해 주세요."><span data-i18n="sheet_keypoint_pl">빠지면 안 되는 중요한 특징을 서술해 주세요.</span></div>
+                <div id="cs-keypoint-input" class="cs-block-textarea" data-align="left" contenteditable="true" data-i18n-placeholder="sheet_keypoint_pl" placeholder="빠지면 안 되는 중요한 특징을 서술해 주세요."></div>
               </div>
             </div>
           </div>
@@ -496,7 +496,7 @@
                 <button class="cs-align-toggle" data-target="cs-features-input" title="텍스트 정렬 전환 (좌/중/우)" data-i18n-title="btn_align_toggle"><i class="fa-solid fa-align-left"></i></button>
               </div>
               <div class="cs-textarea-wrapper">
-                <div id="cs-features-input" class="cs-block-textarea" data-align="left" contenteditable="true" data-i18n-placeholder="sheet_feature_pl" placeholder="- 외관 특징을 서술해 주세요."><span data-i18n="sheet_feature_pl">- 외관 특징을 서술해 주세요.</span><br><span data-i18n="sheet_feature_pl">- 외관 특징을 서술해 주세요.</span><br><span data-i18n="sheet_feature_pl">- 외관 특징을 서술해 주세요.</span><br><span data-i18n="sheet_feature_pl">- 외관 특징을 서술해 주세요.</span></div>
+                <div id="cs-features-input" class="cs-block-textarea" data-align="left" contenteditable="true" data-i18n-placeholder="sheet_feature_pl" placeholder="- 외관 특징을 서술해 주세요."></div>
               </div>
             </div>
           </div>
@@ -533,10 +533,10 @@
   <div class="cs-chip-popup-header">
     <span class="cs-chip-popup-label" id="cs-chip-popup-label">THEMA</span>
     <div class="cs-chip-popup-tabs">
-      <button class="cs-chip-tab is-active" data-tab="color"    title="단색"><i class="fa-solid fa-palette"></i> 색상</button>
-      <button class="cs-chip-tab"        data-tab="gradient" title="그라디언트"><i class="fa-solid fa-circle-half-stroke"></i> 그라디</button>
-      <button class="cs-chip-tab"        data-tab="image"    title="이미지"><i class="fa-solid fa-image"></i> 이미지</button>
-      <button class="cs-chip-tab"        data-tab="draw"     title="도형 그리기"><i class="fa-solid fa-shapes"></i> 도형</button>
+      <button class="cs-chip-tab is-active" data-tab="color"    data-i18n-title="tab_color_title" title="단색"><i class="fa-solid fa-palette"></i> <span data-i18n="tab_color">색상</span></button>
+      <button class="cs-chip-tab"        data-tab="gradient" data-i18n-title="tab_grad_title" title="그라디언트"><i class="fa-solid fa-circle-half-stroke"></i> <span data-i18n="tab_grad">그라디</span></button>
+      <button class="cs-chip-tab"        data-tab="image"    data-i18n-title="tab_img_title" title="이미지"><i class="fa-solid fa-image"></i> <span data-i18n="tab_img">이미지</span></button>
+      <button class="cs-chip-tab"        data-tab="draw"     data-i18n-title="tab_draw_title" title="도형 그리기"><i class="fa-solid fa-shapes"></i> <span data-i18n="tab_draw">도형</span></button>
     </div>
   </div>
 
@@ -555,7 +555,7 @@
     <div id="cs-chip-grad-preview" class="cs-chip-grad-preview"></div>
     <!-- 방향 선택 -->
     <div class="cs-chip-grad-row">
-      <span class="cs-chip-grad-label">방향</span>
+      <span class="cs-chip-grad-label" data-i18n="lbl_direction">방향</span>
       <div class="cs-chip-grad-dirs">
         <button class="cs-chip-grad-dir is-active" data-deg="180" data-i18n-title="dir_180" title="위 → 아래">
           <i class="fa-solid fa-arrow-down" style="pointer-events:none"></i>
@@ -573,9 +573,9 @@
     </div>
     <!-- 색상 정지점 -->
     <div class="cs-chip-grad-row cs-chip-grad-color-row">
-      <span class="cs-chip-grad-label">색상</span>
+      <span class="cs-chip-grad-label" data-i18n="lbl_color">색상</span>
       <div id="cs-chip-grad-stops" class="cs-chip-grad-stops"></div>
-      <button id="cs-chip-grad-add" class="cs-chip-grad-add-btn" title="색상 추가" aria-label="그라디언트 색상 추가">
+      <button id="cs-chip-grad-add" class="cs-chip-grad-add-btn" data-i18n-title="btn_add_color" title="색상 추가" aria-label="그라디언트 색상 추가">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
       </button>
     </div>
@@ -585,11 +585,11 @@
   <div id="cs-chip-tab-image" class="cs-chip-tab-panel" style="display:none;">
     <div id="cs-chip-img-drop" class="cs-chip-img-drop">
       <i class="fa-solid fa-cloud-arrow-up"></i>
-      <span data-i18n="lbl_drop_img">클릭 또는 드래그하여<br>업로드</span>
+      <span data-i18n="lbl_drop_img">클릭 또는 드래그</span>
     </div>
     <input type="file" id="cs-chip-img-file" accept="image/*" style="display:none;">
      <button id="cs-chip-img-clear" class="cs-chip-img-clear-btn" style="display:none;">
-      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 이미지 제거
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> <span data-i18n="btn_remove_img">이미지 제거</span>
     </button>
   </div>
 
@@ -600,7 +600,7 @@
       <label class="cs-chip-toggle-label" for="cs-chip-draw-toggle">
         <input type="checkbox" id="cs-chip-draw-toggle">
         <span class="cs-chip-toggle-slider"></span>
-        <span class="cs-chip-toggle-text">도형 레이어 적용</span>
+        <span class="cs-chip-toggle-text" data-i18n="lbl_shape_layer">도형 레이어 적용</span>
       </label>
       <span id="cs-chip-draw-status-badge" class="cs-chip-status-badge off">OFF</span>
     </div>
@@ -610,14 +610,15 @@
 
     <!-- 도형 선택 (6종) -->
     <div class="cs-chip-draw-row">
-      <span class="cs-chip-draw-label">도형</span>
+      <span class="cs-chip-draw-label" data-i18n="lbl_shape">도형</span>
       <div class="cs-chip-draw-shapes">
-        <button class="cs-chip-draw-shape is-active" data-shape="circle"   title="채워진 원">●</button>
-        <button class="cs-chip-draw-shape"        data-shape="oval"     title="세로 타원 (동공)">⬯</button>
-        <button class="cs-chip-draw-shape"        data-shape="ring"     title="선만 있는 원 (윤곽)">○</button>
-        <button class="cs-chip-draw-shape"        data-shape="dot"      title="작은 채워진 원">•</button>
-        <button class="cs-chip-draw-shape"        data-shape="bullseye" title="외곽 링 + 중심 점 (◎)">◎</button>
-        <button class="cs-chip-draw-shape"        data-shape="sparkle"  title="반짝이 4포인트 (✦)">✦</button>
+        <button class="cs-chip-draw-shape is-active" data-shape="circle"   data-i18n-title="shape_circle" title="채워진 원">●</button>
+        <button class="cs-chip-draw-shape"        data-shape="oval"     data-i18n-title="shape_oval" title="세로 타원 (동공)">⬯</button>
+        <button class="cs-chip-draw-shape"        data-shape="ring"     data-i18n-title="shape_ring" title="선만 있는 원 (윤곽)">○</button>
+        <button class="cs-chip-draw-shape"        data-shape="dot"      data-i18n-title="shape_dot" title="작은 채워진 원">•</button>
+        <button class="cs-chip-draw-shape"        data-shape="bullseye" data-i18n-title="shape_bullseye" title="외곽 링 + 중심 점 (◎)">◎</button>
+        <button class="cs-chip-draw-shape"        data-shape="sparkle"  data-i18n-title="shape_sparkle" title="반짝이 4포인트 (✦)">✦</button>
+      </div>
       </div>
     </div>
     <!-- 색상 + 크기 -->

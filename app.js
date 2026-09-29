@@ -4739,7 +4739,7 @@ class App {
 
         if (gradStops.length > 2) {
           const rm = document.createElement('button');
-          rm.className = 'cs-chip-grad-rm-btn'; rm.title = '이 색상 제거';
+          rm.className = 'cs-chip-grad-rm-btn'; rm.title = '이 색상 제거'; rm.setAttribute('data-i18n-title', 'btn_remove_this_color');
           rm.innerHTML = '<i class="fa-solid fa-xmark"></i>';
           rm.addEventListener('click', (e) => {
             e.stopPropagation(); gradStops.splice(i, 1); renderGradStops(); updateGradPreview();

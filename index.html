@@ -619,17 +619,16 @@
         <button class="cs-chip-draw-shape"        data-shape="bullseye" data-i18n-title="shape_bullseye" title="외곽 링 + 중심 점 (◎)">◎</button>
         <button class="cs-chip-draw-shape"        data-shape="sparkle"  data-i18n-title="shape_sparkle" title="반짝이 4포인트 (✦)">✦</button>
       </div>
-      </div>
     </div>
     <!-- 색상 + 크기 -->
     <div class="cs-chip-draw-row">
-      <span class="cs-chip-draw-label">색상</span>
+      <span class="cs-chip-draw-label" data-i18n="lbl_color">색상</span>
       <input type="color" id="cs-chip-draw-color" class="swatch cs-chip-draw-swatch" value="#1a1a1a">
-      <span class="cs-chip-draw-label" style="margin-left:4px;">크기</span>
+      <span class="cs-chip-draw-label" data-i18n="lbl_size" style="margin-left:4px;">크기</span>
       <input type="range" id="cs-chip-draw-size" class="cs-chip-draw-range" min="15" max="90" value="65">
     </div>
     <button id="cs-chip-draw-clear" class="cs-chip-img-clear-btn" style="margin-top:8px;">
-      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 초기화
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> <span data-i18n="btn_reset_title">초기화</span>
     </button>
   </div>
 </div>

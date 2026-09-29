@@ -415,10 +415,9 @@ class App {
       if (e.target.id === 'preview-modal') this._closePreview();
     });
     document.getElementById('preview-save')?.addEventListener('click', () => {
-      const fmt = document.getElementById('export-fmt')?.value || 'png';
-      const href = document.getElementById('preview-img')?.src;
-      if (href) this._download(href, `nut-Commission-Helper.${fmt}`);
+      // 미리보기 이미지(0.7배율)를 저장하지 않고, 실제 설정된 배율로 다시 export
       this._closePreview();
+      this._export(false);
     });
   }
 

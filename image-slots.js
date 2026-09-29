@@ -167,7 +167,7 @@ function initImageSlot(box) {
   // 플레이스홀더
   var ph = document.createElement('div');
   ph.className = 'slot-placeholder';
-  ph.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i><span>' + (window.t ? window.t('lbl_drop_img') : '클릭 또는 드래그하여<br>업로드') + '</span>';
+  ph.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i><span data-i18n="lbl_drop_img">' + (window.t ? window.t('lbl_drop_img') : '클릭 또는 드래그') + '</span>';
   wrap.appendChild(ph);
 
   // 오버레이 (0도 리셋 버튼 포함)

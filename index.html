@@ -791,21 +791,21 @@
 <div id="mobile-warning-modal" class="modal-backdrop mobile-warning-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="mobile-warning-title" aria-describedby="mobile-warning-desc">
   <div class="modal-box confirm-box mobile-warning-box">
     <div class="modal-header">
-      <span id="mobile-warning-title"><i class="fa-solid fa-desktop" aria-hidden="true"></i> 데스크톱 사용 권장</span>
+      <span id="mobile-warning-title" data-i18n="modal_mobile_title"><i class="fa-solid fa-desktop" aria-hidden="true"></i> 데스크톱 사용 권장</span>
     </div>
     <div class="modal-body" style="display:block;padding:20px 24px;">
       <div class="mobile-warning-icon" aria-hidden="true">🖥️</div>
-      <p id="mobile-warning-desc" class="mobile-warning-text">
+      <p id="mobile-warning-desc" class="mobile-warning-text" data-i18n="mobile_warn_desc">
         이 웹앱은 <strong>데스크톱 환경에서의 사용을 권장</strong>합니다.
       </p>
       <ul class="mobile-warning-list">
-        <li><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> 마우스·키보드 기반 조작으로 설계되어, 터치 환경에서는 일부 기능이 정상적으로 작동하지 않을 수 있습니다.</li>
-        <li><i class="fa-solid fa-display" aria-hidden="true"></i> 캔버스 편집, 레이어 조작, 속성 패널 등은 넓은 화면과 정밀한 포인팅 장치에 최적화되어 있습니다.</li>
-        <li><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> 더 나은 경험을 위해 <strong>PC 또는 태블릿(가로 모드)</strong>에서 이용해 주세요.</li>
+        <li><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> <span data-i18n="mobile_warn_li1">마우스·키보드 기반 조작으로 설계되어, 터치 환경에서는 일부 기능이 정상적으로 작동하지 않을 수 있습니다.</span></li>
+        <li><i class="fa-solid fa-display" aria-hidden="true"></i> <span data-i18n="mobile_warn_li2">캔버스 편집, 레이어 조작, 속성 패널 등은 넓은 화면과 정밀한 포인팅 장치에 최적화되어 있습니다.</span></li>
+        <li><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> <span data-i18n="mobile_warn_li3">더 나은 경험을 위해 <strong>PC 또는 태블릿(가로 모드)</strong>에서 이용해 주세요.</span></li>
       </ul>
     </div>
     <div class="modal-footer" style="justify-content:center;gap:10px;">
-      <button id="mobile-warning-ok" class="hdr-btn primary-hdr-btn" style="min-width:120px;">알겠습니다</button>
+      <button id="mobile-warning-ok" class="hdr-btn primary-hdr-btn" style="min-width:120px;" data-i18n="btn_mobile_ok">알겠습니다</button>
     </div>
   </div>
 </div>
@@ -814,80 +814,82 @@
 <div id="tutorial-modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tutorial-modal-title">
   <div class="modal-box tutorial-box">
     <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
-      <span id="tutorial-modal-title"><i class="fa-solid fa-book-open" aria-hidden="true"></i> 사용 안내</span>
+      <span id="tutorial-modal-title" data-i18n="modal_tutorial_title"><i class="fa-solid fa-book-open" aria-hidden="true"></i> 사용 안내</span>
       <button id="tutorial-close-top" class="icon-btn" title="닫기" aria-label="닫기" data-i18n-title="btn_close_title" data-i18n-aria="btn_close_title" style="background: none; border: none; cursor: pointer; color: var(--c-text); font-size: 16px;">
         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
       </button>
     </div>
     <div class="modal-body tutorial-modal-body">
       <section class="tut-section">
-        <h2 class="tut-h2">📐 각 영역의 역할</h2>
-        <div class="tut-callout" style="margin-bottom: 14px;">
+        <h2 class="tut-h2" data-i18n="tut_h2_role">📐 각 영역의 역할</h2>
+        <div class="tut-callout" style="margin-bottom: 14px;" data-i18n="tut_role_callout">
           💡 좌측 캔버스와 우측 캐릭터 시트는 서로 완전히 별개입니다. 둘 다 함께 활용할 수도 있고, 필요한 한쪽만 작성하여 내보낼 수도 있습니다.
         </div>
         <ul class="tut-list">
-          <li><strong>좌측패널:</strong> 중앙 및 우측 패널 작성에 도움이 되는 도구 패널입니다.</li>
-          <li><strong>중앙 캔버스:</strong> 인물을 조작해 원하는 구도를 지정할 수 있습니다.</li>
-          <li><strong>구도 설명:</strong> 캔버스 하단의 [구도 설명] 패널을 통해 원하는 구도를 글로 적을 수 있습니다. 해당 패널을 접거나 펼치면 내보내는 이미지에도 반영됩니다.</li>
-          <li><strong>캐릭터 시트:</strong> 탭(A, B, C…)을 통해 캐릭터 시트를 작성하고 관리할 수 있습니다.</li>
+          <li data-i18n="tut_role_li1"><strong>좌측패널:</strong> 중앙 및 우측 패널 작성에 도움이 되는 도구 패널입니다.</li>
+          <li data-i18n="tut_role_li2"><strong>중앙 캔버스:</strong> 인물을 조작해 원하는 구도를 지정할 수 있습니다.</li>
+          <li data-i18n="tut_role_li3"><strong>구도 설명:</strong> 캔버스 하단의 [구도 설명] 패널을 통해 원하는 구도를 글로 적을 수 있습니다. 해당 패널을 접거나 펼치면 내보내는 이미지에도 반영됩니다.</li>
+          <li data-i18n="tut_role_li4"><strong>캐릭터 시트:</strong> 탭(A, B, C…)을 통해 캐릭터 시트를 작성하고 관리할 수 있습니다.</li>
         </ul>
       </section>
 
       <section class="tut-section">
-        <h2 class="tut-h2">🕹️ 중앙 캔버스 인물 조작</h2>
+        <h2 class="tut-h2" data-i18n="tut_h2_canvas">🕹️ 중앙 캔버스 인물 조작</h2>
         <ul class="tut-list">
-          <li><strong>이동 / 크기 / 회전:</strong> 인물을 한 번 클릭해 드래그하거나, 테두리 핸들로 크기·회전을 조절합니다.</li>
-          <li><strong>포즈 편집 (더블클릭):</strong> 인물을 더블클릭 또는 좌측 패널의 [관절 포즈] 모드를 선택하면 파란 관절 핸들이 나타나 직접 포즈를 잡을 수 있습니다. 머리 파츠를 돌려 시선 방향도 조정할 수 있습니다.</li>
-          <li><strong>파츠 앞뒤 순서 (레이어) 변경:</strong> 더블클릭 상태에서 특정 파츠(예: 팔)를 클릭한 뒤 좌측 패널의 레이어 버튼(앞으로/뒤로)을 누르면 겹침 순서를 바꿀 수 있습니다.</li>
-          <li><strong>포즈 복사/붙여넣기:</strong> 좌측 패널의 [포즈 복사]로 다른 인물에게 붙여넣을 수 있습니다.</li>
-          <li><strong>포즈 프리셋:</strong> 기존에 만들어 둔 포즈를 활용하거나, 직접 프리셋을 만들어 저장할 수 있습니다.</li>
+          <li data-i18n="tut_canvas_li1"><strong>이동 / 크기 / 회전:</strong> 일반 모드에서 인물을 드래그하면 인물 전체가 이동합니다. 인물의 테두리 핸들을 사용해 크기와 회전을 조절할 수 있습니다.</li>
+          <li data-i18n="tut_canvas_li2"><strong>포즈 편집:</strong> 인물을 한 번 클릭하거나 좌측 패널의 [관절 포즈] 모드를 선택하면 파란 관절 핸들이 나타나 포즈 편집 모드로 진입합니다. 관절 핸들을 드래그해 인물의 포즈를 조정할 수 있으며, 머리 파츠를 회전해 시선 방향도 변경할 수 있습니다.</li>
+          <li data-i18n="tut_canvas_li3"><strong>파츠 앞뒤 순서 (레이어) 변경:</strong> 포즈 편집 모드에서 특정 파츠(예: 팔)를 선택한 뒤, 좌측 패널의 레이어 버튼(앞으로/뒤로)을 누르면 겹침 순서를 바꿀 수 있습니다.</li>
+          <li data-i18n="tut_canvas_li4"><strong>포즈 복사/붙여넣기:</strong> 좌측 패널의 [포즈 복사]로 다른 인물에게 붙여넣을 수 있습니다.</li>
+          <li data-i18n="tut_canvas_li5"><strong>포즈 프리셋:</strong> 기존에 만들어 둔 포즈를 활용하거나, 직접 프리셋을 만들어 저장할 수 있습니다.</li>
         </ul>
-        <div class="tut-callout tut-warn">
-          ⚠️ 포즈가 안 움직이고 크기만 커지는데요? 인물을 <strong>더블클릭</strong>하지 않은 상태입니다!
+        <div class="tut-callout tut-warn" data-i18n="tut_canvas_warn1">
+          ⚠️ <strong>포즈가 안 움직이고 인물 전체만 이동하거나 크기만 바뀌나요?</strong><br>
+          인물을 한 번 클릭해 관절 핸들을 표시하거나, 좌측 패널에서 [관절 포즈] 모드를 선택해 보세요.
         </div>
-        <div class="tut-callout tut-warn">
-          ⚠️ 팔·다리의 앞뒤 겹침이 이상해요! <strong>더블클릭</strong> 후 해당 파츠를 선택하고 좌측 레이어 버튼을 눌러보세요.
+        <div class="tut-callout tut-warn" data-i18n="tut_canvas_warn2">
+          ⚠️ <strong>팔이나 다리의 앞뒤 겹침이 이상한가요?</strong><br>
+          포즈 편집 모드에서 해당 파츠를 선택한 뒤 좌측 레이어 버튼으로 순서를 조정해 보세요.
         </div>
       </section>
 
       <section class="tut-section">
-        <h2 class="tut-h2">🖊️ 그리기 도구</h2>
+        <h2 class="tut-h2" data-i18n="tut_h2_draw">🖊️ 그리기 도구</h2>
         <ul class="tut-list">
-          <li><strong>선택:</strong> 좌측 패널에서 선택, 펜, 텍스트, 도형 등을 선택해 캔버스에 설명을 추가할 수 있습니다.</li>
+          <li data-i18n="tut_draw_li1"><strong>선택:</strong> 좌측 패널에서 선택, 펜, 텍스트, 도형 등을 선택해 캔버스에 설명을 추가할 수 있습니다.</li>
         </ul>
       </section>
 
       <section class="tut-section">
-        <h2 class="tut-h2">📋 캐릭터 시트 작성하기</h2>
+        <h2 class="tut-h2" data-i18n="tut_h2_sheet">📋 캐릭터 시트 작성하기</h2>
         <ul class="tut-list">
-          <li><strong>이미지 슬롯:</strong> 빈 슬롯을 클릭해 이미지를 넣고, <strong>추가된 이미지를 다시 클릭하여 크롭(구도)을 수정</strong>할 수 있습니다.</li>
-          <li><strong>컬러파레트:</strong> 단색, 그라디언트, 도형 기능을 제공하며, 이미지를 넣을 수도 있습니다. 특이동공, 투톤 등의 색상 표현에 활용해보세요.</li>
-          <li><strong>자유 꾸미기:</strong> 시트 상단의 [이미지 추가], [텍스트 추가] 버튼 등으로 정해진 슬롯 외에도 시트의 빈 공간을 자유롭게 채울 수 있습니다. SD나 의상 설명 등을 추가하는 데 활용할 수 있습니다.</li>
+          <li data-i18n="tut_sheet_li1"><strong>이미지 슬롯:</strong> 빈 슬롯을 클릭해 이미지를 넣고, <strong>추가된 이미지를 다시 클릭하여 크롭(구도)을 수정</strong>할 수 있습니다.</li>
+          <li data-i18n="tut_sheet_li2"><strong>컬러파레트:</strong> 단색, 그라디언트, 도형 기능을 제공하며, 이미지를 넣을 수도 있습니다. 특이동공, 투톤 등의 색상 표현에 활용해보세요.</li>
+          <li data-i18n="tut_sheet_li3"><strong>자유 꾸미기:</strong> 시트 상단의 [이미지 추가], [텍스트 추가] 버튼 등으로 정해진 슬롯 외에도 시트의 빈 공간을 자유롭게 채울 수 있습니다. SD나 의상 설명 등을 추가하는 데 활용할 수 있습니다.</li>
         </ul>
       </section>
 
       <section class="tut-section">
-        <h2 class="tut-h2">📑 다중 캐릭터 관리</h2>
+        <h2 class="tut-h2" data-i18n="tut_h2_multi">📑 다중 캐릭터 관리</h2>
         <ul class="tut-list">
-          <li>우측 탭(A, B, C…)을 클릭해 캐릭터를 추가하고 탭을 위아래로 드래그해 순서를 바꿀 수 있습니다. 작성한 시트를 삭제할 수 있으며, 삭제한 시트는 복구할 수 없습니다.</li>
-          <li>시트 테마 색상을 변경해 전체 시트 분위기를 한 번에 바꿀 수 있습니다.</li>
+          <li data-i18n="tut_multi_li1">우측 탭(A, B, C…)을 클릭해 캐릭터를 추가하고 탭을 위아래로 드래그해 순서를 바꿀 수 있습니다. 작성한 시트를 삭제할 수 있으며, 삭제한 시트는 복구할 수 없습니다.</li>
+          <li data-i18n="tut_multi_li2">시트 테마 색상을 변경해 전체 시트 분위기를 한 번에 바꿀 수 있습니다.</li>
         </ul>
       </section>
 
       <section class="tut-section">
-        <h2 class="tut-h2">💾 저장 &amp; 내보내기</h2>
+        <h2 class="tut-h2" data-i18n="tut_h2_save">💾 저장 &amp; 내보내기</h2>
         <ul class="tut-list">
-          <li><strong>저장:</strong> [저장] 버튼으로 작업 전체를 .json 파일로 보관하고 언제든 다시 불러올 수 있습니다.</li>
-          <li><strong>내보내기:</strong> 상단 [내보내기]에서 전체 합본 / 캐릭터 시트만 / 포즈 캔버스만 등 원하는 부분만 선택해 이미지로 저장합니다.</li>
+          <li data-i18n="tut_save_li1"><strong>저장:</strong> [저장] 버튼으로 작업 전체를 .json 파일로 보관하고 언제든 다시 불러올 수 있습니다.</li>
+          <li data-i18n="tut_save_li2"><strong>내보내기:</strong> 상단 [내보내기]에서 전체 합본 / 캐릭터 시트만 / 포즈 캔버스만 등 원하는 부분만 선택해 이미지로 저장합니다.</li>
         </ul>
       </section>
 
       <section class="tut-section">
-        <h2 class="tut-h2">⌨️ 접근성 안내</h2>
+        <h2 class="tut-h2" data-i18n="tut_h2_a11y">⌨️ 접근성 안내</h2>
         <ul class="tut-list">
-          <li>PC 환경에 맞춰 제작되었으며, 모바일에서는 정상적으로 사용할 수 없습니다.</li>
-          <li>상단 메뉴 및 우측 정보 입력칸은 키보드(Tab)로 탐색할 수 있습니다.</li>
-          <li>단, 캔버스의 구도 배치와 포즈 드래그 조작은 마우스 또는 펜 입력이 필요합니다.</li>
+          <li data-i18n="tut_a11y_li1">PC 환경에 맞춰 제작되었으며, 모바일에서는 정상적으로 사용할 수 없습니다.</li>
+          <li data-i18n="tut_a11y_li2">상단 메뉴 및 우측 정보 입력칸은 키보드(Tab)로 탐색할 수 있습니다.</li>
+          <li data-i18n="tut_a11y_li3">단, 캔버스의 구도 배치와 포즈 드래그 조작은 마우스 또는 펜 입력이 필요합니다.</li>
         </ul>
       </section>
 
@@ -902,20 +904,20 @@
 <div id="startup-modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="startup-modal-title">
   <div class="modal-box startup-box">
     <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
-      <span id="startup-modal-title"><i class="fa-solid fa-palette" aria-hidden="true"></i> Commission Helper란?</span>
+      <span id="startup-modal-title" data-i18n="modal_startup_title"><i class="fa-solid fa-palette" aria-hidden="true"></i> Commission Helper란?</span>
       <button id="startup-close-top" class="icon-btn" title="닫기" aria-label="닫기" data-i18n-title="btn_close_title" data-i18n-aria="btn_close_title" style="background: none; border: none; cursor: pointer; color: var(--c-text); font-size: 16px;">
         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
       </button>
     </div>
     <div class="modal-body startup-modal-body">
-      <p class="startup-desc">
+      <p class="startup-desc" data-i18n="startup_desc">
         커미션 신청서 및 구도 지시서를 구성할 수 있는 제작 도구입니다.
       </p>
       <p class="startup-sub-desc">
-        추가 안내는 상단 헤더의 책 아이콘(<i class="fa-solid fa-book-open" aria-hidden="true"></i>) 또는<br>아래 버튼을 통해 확인하실 수 있습니다.
+        <span data-i18n="startup_sub_desc_1">추가 안내는 상단 헤더의 책 아이콘(</span><i class="fa-solid fa-book-open" aria-hidden="true"></i><span data-i18n="startup_sub_desc_2">) 또는<br>아래 버튼을 통해 확인하실 수 있습니다.</span>
       </p>
       <div class="startup-btn-row">
-        <button id="startup-tutorial-btn" class="hdr-btn primary-hdr-btn">사용 안내 보기</button>
+        <button id="startup-tutorial-btn" class="hdr-btn primary-hdr-btn" data-i18n="btn_startup_tutorial">사용 안내 보기</button>
         <button id="startup-close-btn" class="hdr-btn" data-i18n="btn_close">닫기</button>
       </div>
     </div>

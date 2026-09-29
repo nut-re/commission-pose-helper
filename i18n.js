@@ -335,7 +335,56 @@ const I18N_DICT = {
     pose_팔스트레칭: "팔 스트레칭",
     "pose_팔 스트레칭": "팔 스트레칭",
     pose_무릎에손: "무릎에 손",
-    "pose_무릎에 손": "무릎에 손"
+    "pose_무릎에 손": "무릎에 손",
+    
+    // Tutorial
+    modal_tutorial_title: '사용 안내',
+    
+    // Startup
+    modal_startup_title: "Commission Helper란?",
+    startup_desc: "커미션 신청서 및 구도 지시서를 구성할 수 있는 제작 도구입니다.",
+    startup_sub_desc_1: "추가 안내는 상단 헤더의 책 아이콘(",
+    startup_sub_desc_2: ") 또는<br>아래 버튼을 통해 확인하실 수 있습니다.",
+    btn_startup_tutorial: "사용 안내 보기",
+
+    // Mobile Warning
+    modal_mobile_title: "데스크톱 사용 권장",
+    mobile_warn_desc: "이 웹앱은 <strong>데스크톱 환경에서의 사용을 권장</strong>합니다.",
+    mobile_warn_li1: "마우스·키보드 기반 조작으로 설계되어, 터치 환경에서는 일부 기능이 정상적으로 작동하지 않을 수 있습니다.",
+    mobile_warn_li2: "캔버스 편집, 레이어 조작, 속성 패널 등은 넓은 화면과 정밀한 포인팅 장치에 최적화되어 있습니다.",
+    mobile_warn_li3: "더 나은 경험을 위해 <strong>PC 또는 태블릿(가로 모드)</strong>에서 이용해 주세요.",
+    btn_mobile_ok: "알겠습니다",
+
+    tut_h2_role: "📐 각 영역의 역할",
+    tut_role_callout: "💡 좌측 캔버스와 우측 캐릭터 시트는 서로 완전히 별개입니다. 둘 다 함께 활용할 수도 있고, 필요한 한쪽만 작성하여 내보낼 수도 있습니다.",
+    tut_role_li1: "<strong>좌측패널:</strong> 중앙 및 우측 패널 작성에 도움이 되는 도구 패널입니다.",
+    tut_role_li2: "<strong>중앙 캔버스:</strong> 인물을 조작해 원하는 구도를 지정할 수 있습니다.",
+    tut_role_li3: "<strong>구도 설명:</strong> 캔버스 하단의 [구도 설명] 패널을 통해 원하는 구도를 글로 적을 수 있습니다. 해당 패널을 접거나 펼치면 내보내는 이미지에도 반영됩니다.",
+    tut_role_li4: "<strong>캐릭터 시트:</strong> 탭(A, B, C…)을 통해 캐릭터 시트를 작성하고 관리할 수 있습니다.",
+    tut_h2_canvas: "🕹️ 중앙 캔버스 인물 조작",
+    tut_canvas_li1: "<strong>이동 / 크기 / 회전:</strong> 일반 모드에서 인물을 드래그하면 인물 전체가 이동합니다. 인물의 테두리 핸들을 사용해 크기와 회전을 조절할 수 있습니다.",
+    tut_canvas_li2: "<strong>포즈 편집:</strong> 인물을 한 번 클릭하거나 좌측 패널의 [관절 포즈] 모드를 선택하면 파란 관절 핸들이 나타나 포즈 편집 모드로 진입합니다. 관절 핸들을 드래그해 인물의 포즈를 조정할 수 있으며, 머리 파츠를 회전해 시선 방향도 변경할 수 있습니다.",
+    tut_canvas_li3: "<strong>파츠 앞뒤 순서 (레이어) 변경:</strong> 포즈 편집 모드에서 특정 파츠(예: 팔)를 선택한 뒤, 좌측 패널의 레이어 버튼(앞으로/뒤로)을 누르면 겹침 순서를 바꿀 수 있습니다.",
+    tut_canvas_li4: "<strong>포즈 복사/붙여넣기:</strong> 좌측 패널의 [포즈 복사]로 다른 인물에게 붙여넣을 수 있습니다.",
+    tut_canvas_li5: "<strong>포즈 프리셋:</strong> 기존에 만들어 둔 포즈를 활용하거나, 직접 프리셋을 만들어 저장할 수 있습니다.",
+    tut_canvas_warn1: "⚠️ <strong>포즈가 안 움직이고 인물 전체만 이동하거나 크기만 바뀌나요?</strong><br>인물을 한 번 클릭해 관절 핸들을 표시하거나, 좌측 패널에서 [관절 포즈] 모드를 선택해 보세요.",
+    tut_canvas_warn2: "⚠️ <strong>팔이나 다리의 앞뒤 겹침이 이상한가요?</strong><br>포즈 편집 모드에서 해당 파츠를 선택한 뒤 좌측 레이어 버튼으로 순서를 조정해 보세요.",
+    tut_h2_draw: "🖊️ 그리기 도구",
+    tut_draw_li1: "<strong>선택:</strong> 좌측 패널에서 선택, 펜, 텍스트, 도형 등을 선택해 캔버스에 설명을 추가할 수 있습니다.",
+    tut_h2_sheet: "📋 캐릭터 시트 작성하기",
+    tut_sheet_li1: "<strong>이미지 슬롯:</strong> 빈 슬롯을 클릭해 이미지를 넣고, <strong>추가된 이미지를 다시 클릭하여 크롭(구도)을 수정</strong>할 수 있습니다.",
+    tut_sheet_li2: "<strong>컬러파레트:</strong> 단색, 그라디언트, 도형 기능을 제공하며, 이미지를 넣을 수도 있습니다. 특이동공, 투톤 등의 색상 표현에 활용해보세요.",
+    tut_sheet_li3: "<strong>자유 꾸미기:</strong> 시트 상단의 [이미지 추가], [텍스트 추가] 버튼 등으로 정해진 슬롯 외에도 시트의 빈 공간을 자유롭게 채울 수 있습니다. SD나 의상 설명 등을 추가하는 데 활용할 수 있습니다.",
+    tut_h2_multi: "📑 다중 캐릭터 관리",
+    tut_multi_li1: "우측 탭(A, B, C…)을 클릭해 캐릭터를 추가하고 탭을 위아래로 드래그해 순서를 바꿀 수 있습니다. 작성한 시트를 삭제할 수 있으며, 삭제한 시트는 복구할 수 없습니다.",
+    tut_multi_li2: "시트 테마 색상을 변경해 전체 시트 분위기를 한 번에 바꿀 수 있습니다.",
+    tut_h2_save: "💾 저장 &amp; 내보내기",
+    tut_save_li1: "<strong>저장:</strong> [저장] 버튼으로 작업 전체를 .json 파일로 보관하고 언제든 다시 불러올 수 있습니다.",
+    tut_save_li2: "<strong>내보내기:</strong> 상단 [내보내기]에서 전체 합본 / 캐릭터 시트만 / 포즈 캔버스만 등 원하는 부분만 선택해 이미지로 저장합니다.",
+    tut_h2_a11y: "⌨️ 접근성 안내",
+    tut_a11y_li1: "PC 환경에 맞춰 제작되었으며, 모바일에서는 정상적으로 사용할 수 없습니다.",
+    tut_a11y_li2: "상단 메뉴 및 우측 정보 입력칸은 키보드(Tab)로 탐색할 수 있습니다.",
+    tut_a11y_li3: "단, 캔버스의 구도 배치와 포즈 드래그 조작은 마우스 또는 펜 입력이 필요합니다."
   },
   
   en: {
@@ -675,7 +724,56 @@ const I18N_DICT = {
     pose_팔스트레칭: "Arm Stretch",
     "pose_팔 스트레칭": "Arm Stretch",
     pose_무릎에손: "Hands on Knees",
-    "pose_무릎에 손": "Hands on Knees"
+    "pose_무릎에 손": "Hands on Knees",
+    
+    // Tutorial
+    modal_tutorial_title: 'Tutorial',
+
+    // Startup
+    modal_startup_title: "What is Commission Helper?",
+    startup_desc: "A creation tool to easily set up commission request forms and pose compositions.",
+    startup_sub_desc_1: "For more details, click the book icon (",
+    startup_sub_desc_2: ") in the header or the button below.",
+    btn_startup_tutorial: "View Tutorial",
+
+    // Mobile Warning
+    modal_mobile_title: "Desktop Recommended",
+    mobile_warn_desc: "This web app is <strong>recommended for desktop environments</strong>.",
+    mobile_warn_li1: "Designed for mouse and keyboard. Some features may not work properly on touch devices.",
+    mobile_warn_li2: "Canvas editing, layer controls, and property panels are optimized for larger screens and precise pointing devices.",
+    mobile_warn_li3: "For the best experience, please use a <strong>PC or tablet (landscape)</strong>.",
+    btn_mobile_ok: "I Understand",
+    
+    tut_h2_role: "📐 Role of Each Area",
+    tut_role_callout: "💡 The left canvas and the right character sheet are completely independent. You can use both together, or fill out and export only the one you need.",
+    tut_role_li1: "<strong>Left Panel:</strong> Tools for editing the canvas and character sheets.",
+    tut_role_li2: "<strong>Center Canvas:</strong> You can manipulate the figure to set your desired pose and composition.",
+    tut_role_li3: "<strong>Composition Notes:</strong> You can write down your desired composition in the [Composition Notes] panel at the bottom of the canvas. Expanding or collapsing this panel will also reflect in the exported image.",
+    tut_role_li4: "<strong>Character Sheet:</strong> You can create and manage character sheets using the tabs (A, B, C...).",
+    tut_h2_canvas: "🕹️ Adjusting Figures on the Canvas",
+    tut_canvas_li1: "<strong>Move / Resize / Rotate:</strong> In normal mode, click and drag the figure to move it. Use the handles around the figure to adjust its size and rotation.",
+    tut_canvas_li2: "<strong>Edit Pose:</strong> Click the figure once or select [Pose Editing] mode on the left panel to reveal blue joint handles and enter pose-edit mode. Drag the joint handles to adjust the pose, and rotate the head part to adjust the gaze direction.",
+    tut_canvas_li3: "<strong>Change Layer Order:</strong> While in pose-edit mode, select a specific part (e.g., arm) and click the layer buttons (Forward/Backward) on the left panel to change the overlapping order.",
+    tut_canvas_li4: "<strong>Copy/Paste Pose:</strong> Use [Copy Pose] on the left panel to copy and paste the pose to another figure.",
+    tut_canvas_li5: "<strong>Pose Presets:</strong> Apply pre-made poses or create and save your own custom pose presets.",
+    tut_canvas_warn1: "⚠️ <strong>Pose won't move, and only the whole figure moves or resizes?</strong><br>Click the figure once to reveal the joint handles, or select [Pose Editing] mode on the left panel.",
+    tut_canvas_warn2: "⚠️ <strong>Arm/leg layering looks weird!</strong><br>While in pose-edit mode, select the part and try using the layer buttons on the left panel.",
+    tut_h2_draw: "🖊️ Drawing Tools",
+    tut_draw_li1: "<strong>Select:</strong> Choose Select, Pen, Text, or Shape tools from the left panel to add annotations to the canvas.",
+    tut_h2_sheet: "📋 Creating Character Sheets",
+    tut_sheet_li1: "<strong>Image Slots:</strong> Click an empty slot to insert an image. <strong>Click the inserted image again to edit its crop/position.</strong>",
+    tut_sheet_li2: "<strong>Color Tab:</strong> Supports solid colors, gradients, and shapes, and you can also insert images. Use it to express unique features like heterochromia or two-tone hair.",
+    tut_sheet_li3: "<strong>Freeform Customization:</strong> Use [Add Image] or [Add Text] buttons at the top of the sheet to freely fill empty spaces outside the designated slots. Useful for adding chibi references or outfit descriptions.",
+    tut_h2_multi: "📑 Managing Multiple Characters",
+    tut_multi_li1: "Click the right tabs (A, B, C...) to add characters, and drag tabs up/down to reorder them. You can delete sheets, but deleted sheets cannot be recovered.",
+    tut_multi_li2: "Change the sheet theme color to update its overall look.",
+    tut_h2_save: "💾 Save &amp; Export",
+    tut_save_li1: "<strong>Save:</strong> Use the [Save] button to keep your entire project as a .json file and load it back anytime.",
+    tut_save_li2: "<strong>Export:</strong> Click [Export] at the top to save specific parts as images, such as the full combined sheet, character sheets only, or pose canvas only.",
+    tut_h2_a11y: "⌨️ Accessibility Info",
+    tut_a11y_li1: "This tool is designed for PC and may not work properly on mobile devices.",
+    tut_a11y_li2: "The top menu and right information input fields can be navigated using the keyboard (Tab).",
+    tut_a11y_li3: "However, canvas composition and pose dragging require a mouse or pen input."
   }
 };
 

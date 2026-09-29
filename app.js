@@ -948,7 +948,7 @@ class App {
         if (info)  info.textContent = (window.t ? window.t('txt_resolution') : '출력 해상도: ') + canvas.width + ' x ' + canvas.height + ' px | ' + fmt.toUpperCase() + ' (' + (scope === 'all' ? (window.t ? window.t('scope_all') : '전체 합본') : scope === 'all-split' ? (window.t ? window.t('scope_all_split') : '캔버스 중앙 양분할') : scope === 'current' ? (window.t ? window.t('scope_current') : '현재 1인') : scope === 'sheets-only' ? (window.t ? window.t('scope_sheets_only') : '시트만') : scope === 'current-sheet-only' ? (window.t ? window.t('scope_current_sheet') : '현재 1인 시트만') : (window.t ? window.t('scope_pose_only') : '포즈만')) + ')';
       } else {
         this._download(dataUrl, 'nut-Commission-Helper.' + fmt);
-        announceStatus('이미지 내보내기가 완료되었습니다.');
+        announceStatus(window.t ? window.t('status_export_done') : '이미지 내보내기가 완료되었습니다.');
       }
     }).catch(err => {
       offscreen.remove();
@@ -1435,7 +1435,7 @@ class App {
       };
       posePasteBtn.disabled = false;
       posePasteBtn.title = '복사된 포즈 붙여넣기';
-      announceStatus('포즈가 복사되었습니다.');
+      announceStatus(window.t ? window.t('status_pose_copy') : '포즈가 복사되었습니다.');
     });
     posePasteBtn.addEventListener('click', () => {
       const s = this.selected;
@@ -1446,7 +1446,7 @@ class App {
       s.facingY = this.copiedPose.facingY ?? 0;
       this._render();
       this._pushHistory();
-      announceStatus('포즈를 붙여넣기 했습니다.');
+      announceStatus(window.t ? window.t('status_pose_paste') : '포즈를 붙여넣기 했습니다.');
     });
 
     // Part selection
@@ -1536,7 +1536,7 @@ class App {
     });
     document.getElementById('obj-del').addEventListener('click', () => {
       if (!this.selected) return;
-      announceStatus('요소가 삭제되었습니다.');
+      announceStatus(window.t ? window.t('status_item_del') : '요소가 삭제되었습니다.');
       this.objects = this.objects.filter(o => o.id !== this.selected.id);
       this._select(null);
       this._pushHistory();
@@ -1560,7 +1560,7 @@ class App {
           return;
         }
         if (this.selected) {
-          announceStatus('요소가 삭제되었습니다.');
+          announceStatus(window.t ? window.t('status_item_del') : '요소가 삭제되었습니다.');
           this._pushHistory();
           this.objects = this.objects.filter(o => o.id !== this.selected.id);
           this._select(null); this._render();
@@ -2769,7 +2769,7 @@ class App {
 
   // ── ADD OBJECTS ───────────────────────────────
   addDummy(x = null, y = null, quiet = false) {
-    if (!quiet) announceStatus('인물이 추가되었습니다.');
+    if (!quiet) announceStatus(window.t ? window.t('status_char_add') : '인물이 추가되었습니다.');
     const initX = x !== null ? x : 400; // 캔버스 절대 중앙 고정 (400)
     const initY = y !== null ? y : 400; // 캔버스 절대 중앙 고정 (400)
     const col = nextColor();
@@ -2791,7 +2791,7 @@ class App {
   _addImage(src) {
     const img = new Image();
     img.onload = () => {
-      announceStatus('이미지가 추가되었습니다.');
+      announceStatus(window.t ? window.t('status_img_add') : '이미지가 추가되었습니다.');
       const maxD = 280;
       let w = img.width, h = img.height;
       const sc = Math.min(maxD / w, maxD / h, 1);
@@ -3190,7 +3190,7 @@ class App {
   _prompt(msg, defaultText, cb)    { CommissionApp.ModalManager.prompt(msg, defaultText, cb); }
 
   _clearAll() {
-    announceStatus('전체 초기화 되었습니다.');
+    announceStatus(window.t ? window.t('status_reset') : '전체 초기화 되었습니다.');
     this._select(null);
     this.objects = [];
     CommissionApp.HistoryManager.reset(); // 히스토리 초기화 (history-manager.js)
@@ -3263,7 +3263,7 @@ class App {
 
   // ── PROJECT SAVE / LOAD ───────────────────────
   _saveProject() {
-    announceStatus('프로젝트가 저장되었습니다.');
+    announceStatus(window.t ? window.t('status_proj_save') : '프로젝트가 저장되었습니다.');
     if (typeof this._saveCurrentCharacterData === 'function') {
       this._saveCurrentCharacterData();
     }
@@ -3286,7 +3286,7 @@ class App {
   }
 
   _loadProject(data) {
-    announceStatus('프로젝트를 불러왔습니다.');
+    announceStatus(window.t ? window.t('status_proj_load') : '프로젝트를 불러왔습니다.');
     this._select(null);
     document.getElementById('canvas-ratio').value = data.canvasRatio || '1:1';
     document.getElementById('cw').value = data.cw || 800;
@@ -3564,7 +3564,7 @@ class App {
         // 빈 슬롯 생성
         const btn = document.createElement('button');
         btn.className = 'ctrl-bar-preset-btn empty';
-        btn.innerHTML = '<i class="fa-solid fa-plus" style="margin-right:4px;"></i>' + (window.t ? window.t('btn_save') : ' 저장');
+        btn.innerHTML = '<i class="fa-solid fa-plus" style="margin-right:4px;"></i><span data-i18n="btn_save_preset">' + (window.t ? window.t('btn_save_preset') : '저장') + '</span>';
         btn.title = window.t ? window.t('title_save_preset') : '현재 선택된 포즈를 이 슬롯에 저장';
 
         btn.addEventListener('click', () => {
